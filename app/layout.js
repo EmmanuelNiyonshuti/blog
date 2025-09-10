@@ -1,15 +1,30 @@
-import "./globals.css";
+// app/layout.js
+import './globals.css';
+import Navbar from './components/layout/NavBar';
+import Footer from './components/layout/Footer';
 
 export const metadata = {
-  title: "NIYONSHUTI Emmanuel",
-  description: "NIYONSHUTI Emmanuel | Blog | Developer | Software developer",
+  title: {
+    default: 'NIYONSHUTI Emmanuel - Backend Developer & Tech Writer',
+    template: '%s | NIYONSHUTI Emmanuel'
+  },
+  description: 'Personal blog and portfolio of NIYONSHUTI Emmanuel, sharing insights on backend development, technology, and programming.',
+  keywords: ['backend development', 'programming', 'technology', 'web development'],
+  authors: [{ name: 'NIYONSHUTI Emmanuel' }],
+  creator: 'NIYONSHUTI Emmanuel',
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        {children}
+      <body className="min-h-screen bg-white text-gray-900 antialiased">
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
   );
