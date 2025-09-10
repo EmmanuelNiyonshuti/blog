@@ -13,13 +13,7 @@
     "lucide-react": "^0.542.0",
     "next": "15.5.2",
     "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-hook-form": "^7.47.0",
-    "js-cookie": "^3.0.5",
-    "date-fns": "^2.30.0",
-    "@tiptap/react": "^2.1.13",
-    "@tiptap/starter-kit": "^2.1.13",
-    "@tiptap/extension-placeholder": "^2.1.13"
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

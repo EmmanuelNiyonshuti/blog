@@ -4,40 +4,39 @@ import { Github, Linkedin, Twitter } from 'lucide-react';
 export default function Navbar() {
   return (
     <nav className="border-b border-gray-200 bg-white">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="text-xl font-semibold text-gray-900">
+            <Link href="/" className="text-xl font-semibold text-gray-900 hover:text-gray-700 transition-colors">
               NIYONSHUTI Emmanuel
             </Link>
           </div>
           
-          {/* Navigation Links */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
-              <Link 
-                href="/" 
-                className="text-gray-900 hover:text-gray-600 px-3 py-2 text-sm font-medium transition-colors"
-              >
-                Home
-              </Link>
-              <Link 
-                href="/about"
-                className="text-gray-900 hover:text-gray-600 px-3 py-2 text-sm font-medium transition-colors"
-              >
-                About Me
-              </Link>
-            </div>
+          {/* Navigation Links - Center */}
+          <div className="hidden md:flex items-center space-x-8">
+            <Link 
+              href="/" 
+              className="text-gray-900 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+            >
+              Home
+            </Link>
+            <Link 
+              href="/about"
+              className="text-gray-900 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+            >
+              About Me
+            </Link>
           </div>
           
-          {/* Social Links */}
+          {/* Social Links - Right */}
           <div className="flex items-center space-x-4">
             <a 
               href="https://github.com/EmmanuelNiyonshuti" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-gray-900 transition-colors"
+              title="GitHub"
             >
               <Github size={20} />
             </a>
@@ -46,6 +45,7 @@ export default function Navbar() {
               target="_blank" 
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-gray-900 transition-colors"
+              title="LinkedIn"
             >
               <Linkedin size={20} />
             </a>
@@ -54,14 +54,15 @@ export default function Navbar() {
               target="_blank" 
               rel="noopener noreferrer"
               className="text-gray-600 hover:text-gray-900 transition-colors"
+              title="Twitter/X"
             >
               <Twitter size={20} />
             </a>
           </div>
           
-          {/* Mobile menu button */}
+          {/* Mobile menu button (placeholder for now) */}
           <div className="md:hidden">
-            <button className="text-gray-900 hover:text-gray-600">
+            <button className="text-gray-900 hover:text-gray-600" title="Menu">
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
