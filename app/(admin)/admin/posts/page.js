@@ -3,7 +3,13 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import Button from '../../../components/ui/Button';
 import PostActions from '../../../components/admin/PostActions';
-import { fetchPosts } from '../../../../lib/api';
+
+async function fetchAdminPosts() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/admin/posts`, { cache: 'no-store' });
+  if (!res.ok) return [];
+  const data = await res.json();
+  return data.posts || data || [];
+}
 
 export const metadata = {
   title: 'Manage Posts - Admin',
@@ -11,7 +17,7 @@ export const metadata = {
 };
 
 export default async function AdminPostsPage() {
-  const posts = await fetchPosts();
+  const posts = await fetchAdminPosts();
 
   const formatDate = (dateString) => {
     if (!dateString) return 'Not published';

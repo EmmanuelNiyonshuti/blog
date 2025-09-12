@@ -7,8 +7,9 @@ export default function Navbar() {
     <nav className="border-b border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex-shrink-0">
+          {/* Left: Theme toggle and Logo */}
+          <div className="flex items-center space-x-3 flex-shrink-0">
+            <ThemeToggle />
             <Link href="/" className="text-xl font-semibold text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
               NIYONSHUTI Emmanuel
             </Link>
