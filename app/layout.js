@@ -22,7 +22,21 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-white text-gray-900 antialiased font-sans">
+      <body className="min-h-screen bg-white text-gray-900 antialiased font-sans dark:bg-gray-950 dark:text-gray-100">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(){
+                try {
+                  var stored = localStorage.getItem('theme') || 'system';
+                  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  var isDark = stored === 'dark' || (stored === 'system' && prefersDark);
+                  if (isDark) document.documentElement.classList.add('dark');
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
         <div className="min-h-screen flex flex-col">
           <Navbar />
           <main className="flex-grow">

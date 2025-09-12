@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { logout } from '../../../lib/api';
+// call frontend route to clear cookie reliably
 
 import { Settings, FileText, FolderOpen, Plus, LogOut } from 'lucide-react';
 
@@ -19,7 +19,9 @@ export default function AdminLayout({ children }) {
   ];
 
   const handleLogout = async () => {
-    const ok = await logout().catch(() => false);
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch {}
     router.push("/");
   };
 

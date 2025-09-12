@@ -46,14 +46,8 @@ export default async function CategoryPage({ params }) {
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          
-          {/* Sidebar - 25% width on desktop */}
-          <aside className="lg:col-span-1 order-2 lg:order-1">
-            <Sidebar categories={categories} />
-          </aside>
-          
           {/* Main Content - 75% width on desktop */}
-          <main className="lg:col-span-3 order-1 lg:order-2">
+          <main className="lg:col-span-3 order-1">
             
             {/* Category Header */}
             <div className="mb-8">
@@ -70,8 +64,12 @@ export default async function CategoryPage({ params }) {
               posts={posts}
               emptyMessage={`No posts found in the ${category.name} category yet.`}
             />
-            
           </main>
+
+          {/* Sidebar - right side on desktop */}
+          <aside className="lg:col-span-1 order-2">
+            <Sidebar categories={categories} />
+          </aside>
         </div>
       </div>
     );

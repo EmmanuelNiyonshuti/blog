@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { login } from '../../../../lib/api';
+// Use frontend API route to set cookie on same domain
 
 export default function AdminLogin() {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
@@ -15,11 +15,16 @@ export default function AdminLogin() {
     setError('');
 
     try {
-      const data = await login(credentials);
-      if (data) {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials),
+      });
+      if (response.ok) {
         router.push('/admin');
       } else {
-        setError('Login failed');
+        const data = await response.json().catch(() => ({}));
+        setError(data.error || 'Login failed');
       }
     } catch (error) {
       setError('Network error. Please try again.');
