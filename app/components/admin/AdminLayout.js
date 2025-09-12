@@ -2,10 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+
 import { Settings, FileText, FolderOpen, Plus, LogOut } from 'lucide-react';
 
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: Settings },
@@ -14,9 +17,11 @@ export default function AdminLayout({ children }) {
     { name: 'Categories', href: '/admin/categories', icon: FolderOpen },
   ];
 
-  const handleLogout = () => {
-    // TODO: Implement logout logic
-    console.log('Logout clicked');
+  const handleLogout = async () => {
+    const response = await fetch("http://localhost:5000/api/auth/logout");
+    if (response.ok){
+      router.push("/");
+    }
   };
 
   return (

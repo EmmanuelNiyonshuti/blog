@@ -1,4 +1,4 @@
-import AdminLayout from '../components/admin/AdminLayout';
+import AdminLayout from '../../components/admin/AdminLayout';
 import { FileText, FolderOpen, MessageSquare, Eye } from 'lucide-react';
 
 export const metadata = {
@@ -21,7 +21,7 @@ export default function AdminDashboard() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600 mt-2">Welcome back! Here's an overview of your blog.</p>
+          <p className="text-gray-600 mt-2">Overview</p>
         </div>
 
         {/* Stats Grid */}

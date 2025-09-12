@@ -1,7 +1,7 @@
-import AdminLayout from '../../components/admin/AdminLayout';
+import AdminLayout from '../../../components/admin/AdminLayout';
 import Link from 'next/link';
 import { Plus, Edit, Trash2, Eye } from 'lucide-react';
-import Button from '../../components/ui/Button';
+import Button from '../../../components/ui/Button';
 
 export const metadata = {
   title: 'Manage Posts - Admin',

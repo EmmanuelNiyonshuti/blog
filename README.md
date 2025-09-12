@@ -1,11 +1,9 @@
 # NIYONSHUTI Emmanuel's Blog Frontend
-
-A clean, professional frontend for NIYONSHUTI Emmanuel's personal blog built with Next.js 15, React 19, and Tailwind CSS v4. This blog focuses on backend development, programming, and technology content.
+ frontend for my personal blog built with Next.js 15, React 19, and Tailwind CSS v4.
 
 ## 🚀 Features
 
 ### Design & Layout
-- **Miguel Grinberg-inspired design** - Clean, minimal aesthetic focused on content
 - **Two-column layout** - Sidebar (25%) + Main content (75%) on desktop
 - **Fully responsive** - Mobile-first design that works on all devices
 - **Professional typography** - System fonts for fast loading and excellent readability

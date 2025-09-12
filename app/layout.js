@@ -1,22 +1,21 @@
-// app/layout.js
 import './globals.css';
 import Navbar from './components/layout/NavBar';
 import Footer from './components/layout/Footer';
 
 export const metadata = {
   title: {
-    default: 'NIYONSHUTI Emmanuel - Backend Developer & Tech Writer',
+    default: 'NIYONSHUTI Emmanuel - Software Developer & Tech Writer',
     template: '%s | NIYONSHUTI Emmanuel'
   },
-  description: 'Personal blog and portfolio of NIYONSHUTI Emmanuel, sharing insights on backend development, technology, and programming.',
-  keywords: ['backend development', 'programming', 'technology', 'web development', 'NIYONSHUTI Emmanuel'],
+  description: 'Personal blog and portfolio of NIYONSHUTI Emmanuel, sharing insights on software development, technology, and programming.',
+  keywords: ['software development', 'programming', 'technology', 'web development', 'NIYONSHUTI Emmanuel'],
   authors: [{ name: 'NIYONSHUTI Emmanuel' }],
   creator: 'NIYONSHUTI Emmanuel',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    title: 'NIYONSHUTI Emmanuel - Backend Developer & Tech Writer',
-    description: 'Personal blog and portfolio of NIYONSHUTI Emmanuel, sharing insights on backend development, technology, and programming.',
+    title: 'NIYONSHUTI Emmanuel - Software Developer & Tech Writer',
+    description: 'Personal blog and portfolio of NIYONSHUTI Emmanuel, sharing insights on software development, technology, and programming.',
   },
 };
 

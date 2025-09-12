@@ -14,7 +14,7 @@ export default function AboutPage() {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">About Me</h1>
           <p className="text-lg text-gray-600">
-            Backend Developer & Tech Enthusiast
+            software developer
           </p>
         </div>
 
@@ -84,25 +84,11 @@ export default function AboutPage() {
               ))}
             </div>
           </section>
-
-          {/* Philosophy */}
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">My Philosophy</h2>
-            <blockquote className="border-l-4 border-blue-600 pl-6 italic text-gray-700 text-lg">
-              "Good code is not just about making it work, but making it maintainable, 
-              scalable, and understandable for the next developer who reads it."
-            </blockquote>
-            <p className="text-gray-700 mt-4 leading-relaxed">
-              I believe in writing clean, well-documented code and sharing knowledge with the 
-              developer community. Continuous learning and helping others grow are core values 
-              that drive my work.
-            </p>
-          </section>
         </div>
 
         {/* Contact Section */}
         <div className="bg-gray-50 rounded-lg p-8 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Let's Connect</h2>
+          {/* <h2 className="text-2xl font-bold text-gray-900 mb-4">you can also find me on</h2> */}
           <p className="text-gray-700 mb-6">
             I'm always interested in discussing technology, sharing ideas, or collaborating on projects.
           </p>

@@ -25,17 +25,7 @@ export default async function HomePage() {
         
         {/* Main Content - 75% width on desktop */}
         <main className="lg:col-span-3 order-1 lg:order-2">
-          
-          {/* Header Section */}
-          <div className="mb-12">
-            <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Welcome to my blog
-            </h1>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              I'm a backend developer sharing insights about programming, 
-              web development, and technology. Join me on this learning journey.
-            </p>
-          </div>
+
           
           {/* Blog Posts */}
           <div className="space-y-0">

@@ -17,38 +17,6 @@ export default function Footer() {
               emmanuelniyonshuti13@gmail.com
             </a>
           </div>
-
-          {/* Social Links with Labels */}
-          <div className="flex flex-wrap items-center justify-center space-x-6">
-            <a 
-              href="https://github.com/EmmanuelNiyonshuti" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors text-sm"
-            >
-              <Github size={16} className="mr-2" />
-              GitHub
-            </a>
-            <a 
-              href="https://www.linkedin.com/in/niyonshuti-emmanuel-82877b285/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors text-sm"
-            >
-              <Linkedin size={16} className="mr-2" />
-              LinkedIn
-            </a>
-            <a 
-              href="https://x.com/emmanulio" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors text-sm"
-            >
-              <Twitter size={16} className="mr-2" />
-              Twitter
-            </a>
-          </div>
-          
           {/* Copyright */}
           <div className="text-gray-600 text-sm text-center">
             © {new Date().getFullYear()} NIYONSHUTI Emmanuel. All rights reserved.

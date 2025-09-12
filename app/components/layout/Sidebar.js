@@ -8,8 +8,7 @@ export default function Sidebar({ categories = [] }) {
         <h3 className="text-lg font-semibold text-gray-900 mb-3">About Me</h3>
         <div className="space-y-3">
           <p className="text-sm text-gray-700 leading-relaxed">
-            Backend developer passionate about creating robust, scalable solutions. 
-            I share insights about programming, web development, and technology trends.
+            Hi! my name is NIYONSHUTI Emmanuel, I am a developer. On this blog platform, I share insights about programming, web development, and technology.
           </p>
           <Link 
             href="/about" 
@@ -42,39 +41,6 @@ export default function Sidebar({ categories = [] }) {
         ) : (
           <p className="text-sm text-gray-600 italic">No categories yet.</p>
         )}
-      </div>
-      
-      {/* Recent Posts or Quick Links */}
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
-        <ul className="space-y-2">
-          <li>
-            <Link 
-              href="/about" 
-              className="block py-2 px-3 text-sm text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded transition-colors"
-            >
-              About Me
-            </Link>
-          </li>
-          <li>
-            <a 
-              href="https://github.com/EmmanuelNiyonshuti" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block py-2 px-3 text-sm text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded transition-colors"
-            >
-              GitHub Projects
-            </a>
-          </li>
-          <li>
-            <a 
-              href="mailto:emmanuelniyonshuti13@gmail.com"
-              className="block py-2 px-3 text-sm text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded transition-colors"
-            >
-              Contact Me
-            </a>
-          </li>
-        </ul>
       </div>
     </aside>
   );
