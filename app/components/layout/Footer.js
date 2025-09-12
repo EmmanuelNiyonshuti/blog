@@ -1,26 +1,9 @@
-import { Github, Linkedin, Twitter, Mail } from 'lucide-react';
-
 export default function Footer() {
   return (
-    <footer className="bg-gray-50 border-t border-gray-200 mt-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex flex-col items-center space-y-6">
-          
-          {/* Contact */}
-          <div className="text-gray-600 text-sm flex items-center flex-wrap justify-center">
-            <Mail size={16} className="mr-2" />
-            <span>Questions? Contact me at: </span>
-            <a 
-              href="mailto:emmanuelniyonshuti13@gmail.com" 
-              className="ml-1 text-blue-600 hover:text-blue-700 transition-colors font-medium"
-            >
-              emmanuelniyonshuti13@gmail.com
-            </a>
-          </div>
-          {/* Copyright */}
-          <div className="text-gray-600 text-sm text-center">
-            © {new Date().getFullYear()} NIYONSHUTI Emmanuel. All rights reserved.
-          </div>
+    <footer className="w-full border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="flex items-center justify-center">
+          <p className="text-xs text-gray-600 dark:text-gray-400">© {new Date().getFullYear()} NIYONSHUTI Emmanuel</p>
         </div>
       </div>
     </footer>

@@ -20,6 +20,7 @@ export default function RichTextEditor({ content, onChange, placeholder = 'Start
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
+    immediatelyRender: false,
   });
 
   if (!editor) {

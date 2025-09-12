@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ||
@@ -44,7 +43,7 @@ export async function middleware(request) {
   
   // If user is logged in and tries to access login page, redirect to dashboard
   if (isLoginPage) {
-    const token = await cookies().get('token')?.value;
+    const token = request.cookies.get('token')?.value;
     if (token) {
       try {
         const res = await fetch(`${API_BASE_URL}/auth/verify`, {
@@ -52,11 +51,11 @@ export async function middleware(request) {
             headers: { 'Cookie': `token=${token}` }
         })
         if (!res.ok){
-            return NextResponse.redirect(new URL(loginRoute, request.url));
+            return NextResponse.next();
         }
         return NextResponse.redirect(new URL('/admin', request.url));
       } catch (error) {
-        return NextResponse.redirect(new URL('/', request.url));
+        return NextResponse.next();
       }
     }
   }

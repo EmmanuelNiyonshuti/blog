@@ -12,7 +12,7 @@ export async function POST() {
   } catch {}
 
   const res = NextResponse.json({ success: true });
-  res.cookies.set('token', '', { path: '/', maxAge: 0 });
+  res.cookies.set('token', '', { path: '/', maxAge: 0, httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production' });
   return res;
 }
 
