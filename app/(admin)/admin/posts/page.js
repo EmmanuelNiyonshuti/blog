@@ -1,37 +1,17 @@
 import AdminLayout from '../../../components/admin/AdminLayout';
 import Link from 'next/link';
-import { Plus, Edit, Trash2, Eye } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import Button from '../../../components/ui/Button';
+import PostActions from '../../../components/admin/PostActions';
+import { fetchPosts } from '../../../../lib/api';
 
 export const metadata = {
   title: 'Manage Posts - Admin',
   description: 'Manage blog posts.',
 };
 
-// Mock data for now - replace with actual API call
-const mockPosts = [
-  {
-    id: 1,
-    title: 'Getting Started with Node.js',
-    slug: 'getting-started-nodejs',
-    status: 'published',
-    category: 'Backend',
-    createdAt: '2025-01-15T10:00:00Z',
-    publishedAt: '2025-01-15T10:00:00Z',
-  },
-  {
-    id: 2,
-    title: 'JavaScript Best Practices',
-    slug: 'javascript-best-practices',
-    status: 'draft',
-    category: 'Frontend',
-    createdAt: '2025-01-14T15:30:00Z',
-    publishedAt: null,
-  },
-];
-
-export default function AdminPostsPage() {
-  const posts = mockPosts;
+export default async function AdminPostsPage() {
+  const posts = await fetchPosts();
 
   const formatDate = (dateString) => {
     if (!dateString) return 'Not published';
@@ -108,42 +88,13 @@ export default function AdminPostsPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {post.category}
+                    {post.category?.name || post.category || '—'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {formatDate(post.publishedAt || post.createdAt)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex justify-end space-x-2">
-                      {post.status === 'published' && (
-                        <Link
-                          href={`/blog/${post.slug}`}
-                          className="text-blue-600 hover:text-blue-900"
-                          title="View Post"
-                        >
-                          <Eye size={16} />
-                        </Link>
-                      )}
-                      <Link
-                        href={`/admin/posts/${post.id}/edit`}
-                        className="text-indigo-600 hover:text-indigo-900"
-                        title="Edit Post"
-                      >
-                        <Edit size={16} />
-                      </Link>
-                      <button
-                        className="text-red-600 hover:text-red-900"
-                        title="Delete Post"
-                        onClick={() => {
-                          if (confirm('Are you sure you want to delete this post?')) {
-                            // TODO: Implement delete functionality
-                            console.log('Delete post:', post.id);
-                          }
-                        }}
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
+                    <PostActions post={post} />
                   </td>
                 </tr>
               ))}

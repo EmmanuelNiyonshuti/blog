@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import RichTextEditor from './RichTextEditor';
 import Button from '../ui/Button';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import { createPost, updatePost } from '../../../lib/api';
 
 export default function PostForm({ post = null, categories = [] }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -54,21 +55,13 @@ export default function PostForm({ post = null, categories = [] }) {
         tags: data.tags ? data.tags.split(',').map(tag => tag.trim()) : [],
       };
 
-      const url = post ? `/api/posts/${post.id}` : '/api/posts';
-      const method = post ? 'PUT' : 'POST';
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(postData),
-      });
-
-      if (response.ok) {
-        router.push('/admin/posts');
+      if (post) {
+        await updatePost(post.id, postData);
       } else {
-        throw new Error('Failed to save post');
+        await createPost(postData);
+      }
+      {
+        router.push('/admin/posts');
       }
     } catch (error) {
       console.error('Error saving post:', error);

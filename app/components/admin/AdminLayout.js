@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import { logout } from '../../../lib/api';
 
 import { Settings, FileText, FolderOpen, Plus, LogOut } from 'lucide-react';
 
@@ -18,10 +19,8 @@ export default function AdminLayout({ children }) {
   ];
 
   const handleLogout = async () => {
-    const response = await fetch("http://localhost:5000/api/auth/logout");
-    if (response.ok){
-      router.push("/");
-    }
+    const ok = await logout().catch(() => false);
+    router.push("/");
   };
 
   return (

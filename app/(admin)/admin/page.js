@@ -1,18 +1,23 @@
 import AdminLayout from '../../components/admin/AdminLayout';
 import { FileText, FolderOpen, MessageSquare, Eye } from 'lucide-react';
+import { fetchPosts, fetchCategories } from '../../../lib/api';
 
 export const metadata = {
   title: 'Admin Dashboard',
   description: 'Admin dashboard for managing blog content.',
 };
 
-export default function AdminDashboard() {
-  // TODO: Fetch real stats from API
+export default async function AdminDashboard() {
+  const [posts, categories] = await Promise.all([
+    fetchPosts(),
+    fetchCategories(),
+  ]);
+
   const stats = [
-    { name: 'Total Posts', value: '12', icon: FileText, color: 'text-blue-600' },
-    { name: 'Categories', value: '5', icon: FolderOpen, color: 'text-green-600' },
-    { name: 'Comments', value: '28', icon: MessageSquare, color: 'text-yellow-600' },
-    { name: 'Views', value: '1,234', icon: Eye, color: 'text-purple-600' },
+    { name: 'Total Posts', value: String(posts.length), icon: FileText, color: 'text-blue-600' },
+    { name: 'Categories', value: String(categories.length), icon: FolderOpen, color: 'text-green-600' },
+    { name: 'Comments', value: posts.reduce((acc, p) => acc + (p.comments?.length || 0), 0).toString(), icon: MessageSquare, color: 'text-yellow-600' },
+    { name: 'Views', value: posts.reduce((acc, p) => acc + (p.views || 0), 0).toString(), icon: Eye, color: 'text-purple-600' },
   ];
 
   return (

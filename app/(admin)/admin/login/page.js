@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { login } from '../../../../lib/api';
 
 export default function AdminLogin() {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
@@ -14,19 +15,11 @@ export default function AdminLogin() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials),
-        credentials: 'include'
-      });
-      const data = await response.json();
-      if (response.ok) {
-        //  set as httpOnly cookie by the backend
-        // localStorage.setItem('adminToken', data.token);
+      const data = await login(credentials);
+      if (data) {
         router.push('/admin');
       } else {
-        setError(data.error || 'Login failed');
+        setError('Login failed');
       }
     } catch (error) {
       setError('Network error. Please try again.');

@@ -1,21 +1,14 @@
 import AdminLayout from '../../../../components/admin/AdminLayout';
 import PostForm from '../../../../components/admin/PostForm';
+import { fetchCategories } from '../../../../../lib/api';
 
 export const metadata = {
   title: 'New Post - Admin',
   description: 'Create a new blog post.',
 };
 
-// Mock categories - replace with actual API call
-const mockCategories = [
-  { id: 1, name: 'Backend Development' },
-  { id: 2, name: 'Frontend Development' },
-  { id: 3, name: 'Database' },
-  { id: 4, name: 'DevOps' },
-  { id: 5, name: 'General' },
-];
-
-export default function NewPostPage() {
+export default async function NewPostPage() {
+  const categories = await fetchCategories();
   return (
     <AdminLayout>
       <div className="max-w-4xl">
@@ -27,7 +20,7 @@ export default function NewPostPage() {
 
         {/* Post Form */}
         <div className="bg-white shadow rounded-lg p-6">
-          <PostForm categories={mockCategories} />
+          <PostForm categories={categories} />
         </div>
       </div>
     </AdminLayout>

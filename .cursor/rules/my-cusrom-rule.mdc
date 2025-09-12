@@ -1,0 +1,21 @@
+---
+description: "Rules for clean, scalable, and maintainable Next.js + Tailwind JavaScript code"
+globs: ["**/*.js", "**/*.jsx"]
+alwaysApply: true
+---
+
+# Coding Rules
+
+- Keep code **simple and readable**, avoid unnecessary abstractions.
+- Follow **Next.js 15 App Router conventions**; use server components by default, client only when required.
+- Use **JavaScript (ES2023)** best practices: `const`/`let`, arrow functions, destructuring, async/await.
+- Keep **components small and focused**; one responsibility per component.
+- **Organize by feature/domain**, not by file type.
+- Write **descriptive names** (variables, functions, files), avoid unclear abbreviations.
+- Use **TailwindCSS exclusively** for styling
+- Prefer **composition over duplication**; extract reusable UI and logic when repeated.
+- Write **semantic HTML** and ensure accessibility (labels, alt text, ARIA roles if needed).
+- Handle **errors and edge cases** properly; never fail silently.
+- Keep **state management simple**: start with local state/hooks, lift or use context only if needed.
+- Add **comments only when logic is not obvious**, avoid noise.
+- Don’t **over-engineer**; only add abstractions when a clear pattern emerges.
