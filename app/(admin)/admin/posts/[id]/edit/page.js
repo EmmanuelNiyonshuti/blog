@@ -1,6 +1,6 @@
-import AdminLayout from '../../../../components/admin/AdminLayout';
-import PostForm from '../../../../components/admin/PostForm';
-import { fetchPostById, fetchCategories } from '../../../../../lib/api';
+import AdminLayout from '@/app/components/admin/AdminLayout';
+import PostForm from '@/app/components/admin/PostForm';
+import { fetchPostById, fetchCategories } from '@/lib/api';
 
 export const metadata = {
   title: 'Edit Post - Admin',

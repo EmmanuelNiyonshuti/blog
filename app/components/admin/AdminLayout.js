@@ -1,15 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-// call frontend route to clear cookie reliably
-
 import { Settings, FileText, FolderOpen, Plus, LogOut } from 'lucide-react';
+
+import ThemeProvider from '../ui/theme-provider';
 
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: Settings },
@@ -19,10 +21,44 @@ export default function AdminLayout({ children }) {
   ];
 
   const handleLogout = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+
     try {
-      await fetch('/api/auth/logout', { method: 'POST' });
-    } catch {}
-    router.push("/");
+      const [frontendRes, backendRes] = await Promise.allSettled([
+        await fetch('/api/logout', {
+          method: 'POST',
+          credentials: 'include'
+        }),
+        fetch('http://localhost:5000/api/auth/logout', {
+          method: 'POST',
+          credentials: 'include'
+        })
+      ]);
+      // Check if at least the frontend logout succeeded
+      const frontendSuccess = frontendRes.status === 'fulfilled' && frontendRes.value.ok;
+      const backendSuccess = backendRes.status === 'fulfilled' && backendRes.value.ok;
+
+      if (frontendSuccess) {
+        console.log('Logout successful');
+        router.push('/');
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 100);
+      } else {
+        console.error('Frontend logout failed');
+        throw new Error('Critical logout failure');
+      }
+      if (!backendSuccess) {
+        console.warn('Backend logout failed, but frontend succeeded');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      setIsLoggingOut(false);
+      alert('Logout failed. Please try again.');
+      // stay on current path
+      return;
+    }
   };
 
   return (

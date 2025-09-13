@@ -8,7 +8,6 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  // Fetch posts and categories in parallel
   const [posts, categories] = await Promise.all([
     fetchPosts(),
     fetchCategories()
@@ -19,11 +18,6 @@ export default async function HomePage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Main Content - 75% width on desktop */}
         <main className="lg:col-span-3 order-1">
-          {/* Hero */}
-          <section className="mb-8">
-            <h1 className="text-3xl lg:text-4xl font-bold tracking-tight">Latest Articles</h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">Insights on backend, JS, and modern web development.</p>
-          </section>
 
           {/* Blog Posts */}
           <div className="space-y-0">

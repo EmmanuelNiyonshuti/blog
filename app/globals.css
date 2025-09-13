@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Custom styles for the blog */
 
 /* Typography improvements */
@@ -151,16 +153,6 @@
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
-}
-
-/* Focus styles */
-button:focus,
-a:focus,
-input:focus,
-textarea:focus,
-select:focus {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
 }
 
 /* Loading animation */
