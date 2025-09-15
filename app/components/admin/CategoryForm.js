@@ -47,7 +47,8 @@ export default function CategoryForm({ category = null }) {
         await createCategory(data);
       }
       router.push('/admin/categories');
-    } catch (e) {
+      router.refresh();
+    } catch (e){
       alert('Failed to save category.');
     } finally {
       setIsSubmitting(false);

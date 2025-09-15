@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+import { API_BASE_URL } from '@/lib/api';
 const LoginForm = () => {
   console.log("loggin form......");
   const [credentials, setCredentials] = useState({ email: '', password: '' });
@@ -16,7 +17,7 @@ const LoginForm = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
