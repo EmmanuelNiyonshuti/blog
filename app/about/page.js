@@ -21,8 +21,17 @@ export default function AboutPage() {
           {/* Introduction */}
           <div className="rounded-lg p-8 mb-8 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
             <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-              Hi👋 I'm Emmanuel! I'm a software developer. Through this blog, I share
-              my learnings, experiences and insights about programming and emerging technologies.
+              Hi👋, I'm NIYONSHUTI Emmanuel. I'm a software developer with a strong focus on backend development.  
+              I started this blog to document what I learn, the experiments I try, and the small wins and challenges I encounter in programming and technology.  
+              I share insights here in a way that's authentic to my own learning journey. I live in Rwanda.
+            </p>
+
+            <p className="leading-relaxed text-gray-700 dark:text-gray-300 mt-4">
+              Thank you for visiting! I hope you find something useful or interesting. Please leave a comment if you do!
+            </p>
+
+            <p className="mt-8 text-gray-700 dark:text-gray-300 font-medium">
+              — Emmanuel
             </p>
           </div>
         </div>

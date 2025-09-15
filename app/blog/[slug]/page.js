@@ -6,7 +6,8 @@ import { fetchPostBySlug } from '../../../lib/api';
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }) {
-  const post = await fetchPostBySlug(params.slug);
+  const decodedSlug = decodeURIComponent(params.slug);
+  const post = await fetchPostBySlug(decodedSlug);
   
   if (!post) {
     return {
@@ -28,28 +29,43 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function BlogPostPage({ params }) {
-  const post = await fetchPostBySlug(params.slug);
-
+  const decodedSlug = decodeURIComponent(params.slug);
+  const post = await fetchPostBySlug(decodedSlug);
   if (!post) {
     notFound();
   }
-
+  const isExternal = post.isExternal || post.source === 'medium';
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="max-w-4xl mx-auto">
         {/* Post Content */}
         <PostDetail post={post} />
-        
-        {/* Comments Section */}
-        <div id="comments" className="mt-16 space-y-8">
-          {/* Existing Comments */}
-          {post.comments && post.comments.length > 0 && (
-            <CommentList comments={post.comments} />
-          )}
-          
-          {/* Comment Form */}
-          <CommentForm postId={post.id} />
-        </div>
+
+        {!isExternal && (
+          <div id="comments" className="mt-16 space-y-8">
+            {post.comments && post.comments.length > 0 && (
+              <CommentList comments={post.comments} />
+            )}
+            <CommentForm postId={post.id} />
+          </div>
+        )}
+        {/* For Medium posts, show a note about comments */}
+        {isExternal && (
+          <div className="mt-16 p-6 bg-gray-50 dark:bg-gray-900 rounded-lg">
+            <h3 className="text-lg font-semibold text-gray-900  dark:text-gray-100 mb-2">Want to discuss this post?</h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              This post was originally published on{' '}
+            <a
+              href={post.slug.split('?')[0]}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+            Medium.
+            </a>
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

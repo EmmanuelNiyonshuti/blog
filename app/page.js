@@ -1,6 +1,6 @@
 import PostCard from './components/blog/PostCard';
 import Sidebar from './components/layout/Sidebar';
-import { fetchPosts, fetchCategories } from "../lib/api";
+import { fetchAllPosts, fetchCategories } from "../lib/api";
 
 export const metadata = {
   title: 'Home',
@@ -9,16 +9,14 @@ export const metadata = {
 
 export default async function HomePage() {
   const [posts, categories] = await Promise.all([
-    fetchPosts(),
+    fetchAllPosts(),
     fetchCategories()
   ]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Main Content - 75% width on desktop */}
+    <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-8">
         <main className="lg:col-span-3 order-1">
-
           {/* Blog Posts */}
           <div className="space-y-0">
             {posts.length > 0 ? (
@@ -31,9 +29,7 @@ export default async function HomePage() {
               </div>
             )}
           </div>
-
-          {/* Pagination (placeholder for now) */}
-          {posts.length > 0 && (
+          {posts.length > 3 && (
             <div className="flex justify-between items-center mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
               <button disabled className="px-4 py-2 text-gray-400 cursor-not-allowed text-sm">← Newer posts</button>
               <button disabled className="px-4 py-2 text-gray-400 cursor-not-allowed text-sm">Older posts →</button>

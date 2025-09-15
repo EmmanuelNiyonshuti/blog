@@ -7,10 +7,45 @@ export default function Sidebar({ categories = [] }) {
       <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">About Me</h3>
         <div className="space-y-3">
+          <p  className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">Welcome to my blog</p>
           <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-            Hi! my name is NIYONSHUTI Emmanuel, I am a developer. On this blog platform, I share insights about programming, web development, and technology.
+          I'm a software developer with a focus on backend development, living in Rwanda.
+          <span className="block mt-2">
+          <a
+            href="https://github.com/EmmanuelNiyonshuti"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 dark:text-blue-400 hover:underline text-sm"
+          >
+            GitHub
+          </a>{' '}
+          | {' '}
+          <a
+            href="https://www.linkedin.com/in/niyonshuti-emmanuel-82877b285/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 dark:text-blue-400 hover:underline text-sm"
+          >
+            LinkedIn
+          </a>
+          | {' '}<a
+                  href="https://x.com/emmanulio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-400 hover:underline text-sm"
+          >
+            Tweeter(X)
+          </a>
+          | {' '}
+          <a
+            href="mailto:emmanuelniyonshuti13@gmail.com"
+            className="text-blue-600 dark:text-blue-400 hover:underline text-sm"
+          >
+            Email
+          </a>
+          </span>
           </p>
-          <Link 
+          <Link
             href="/about" 
             className="inline-block text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
           >
