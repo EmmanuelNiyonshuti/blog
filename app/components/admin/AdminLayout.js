@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { Settings, FileText, FolderOpen, Plus, LogOut } from 'lucide-react';
 
-import ThemeProvider from '../ui/theme-provider';
 
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
@@ -25,41 +24,24 @@ export default function AdminLayout({ children }) {
     setIsLoggingOut(true);
 
     try {
-      const [frontendRes, backendRes] = await Promise.allSettled([
-        await fetch('/api/logout', {
-          method: 'POST',
-          credentials: 'include'
-        }),
-        fetch('http://localhost:5000/api/auth/logout', {
-          method: 'POST',
-          credentials: 'include'
-        })
-      ]);
-      // Check if at least the frontend logout succeeded
-      const frontendSuccess = frontendRes.status === 'fulfilled' && frontendRes.value.ok;
-      const backendSuccess = backendRes.status === 'fulfilled' && backendRes.value.ok;
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      });
 
-      if (frontendSuccess) {
+      if (res.ok) {
         console.log('Logout successful');
-        router.push('/');
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 100);
+        window.location.href = '/';
       } else {
-        console.error('Frontend logout failed');
-        throw new Error('Critical logout failure');
-      }
-      if (!backendSuccess) {
-        console.warn('Backend logout failed, but frontend succeeded');
+        throw new Error('Logout failed');
       }
     } catch (error) {
       console.error('Logout error:', error);
       setIsLoggingOut(false);
       alert('Logout failed. Please try again.');
-      // stay on current path
-      return;
     }
   };
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -83,7 +65,7 @@ export default function AdminLayout({ children }) {
               </Link>
               <button
                 onClick={handleLogout}
-                className="flex items-center text-gray-600 hover:text-gray-900 text-sm font-medium"
+                className="flex items-center text-gray-600 hover:text-gray-900 text-sm font-medium cursor:pointer"
               >
                 <LogOut size={16} className="mr-1" />
                 Logout

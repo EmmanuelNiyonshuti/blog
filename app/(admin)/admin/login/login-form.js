@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { API_BASE_URL } from '@/lib/api';
+
 const LoginForm = () => {
   console.log("loggin form......");
   const [credentials, setCredentials] = useState({ email: '', password: '' });
@@ -25,10 +26,14 @@ const LoginForm = () => {
         body: JSON.stringify(credentials),
         credentials: 'include'
       });
-      
+      if (response.status === 429){
+          setTimeout(() => {
+            router.push('/');
+            router.refresh();
+          }, 1000);
+      }
       if (response.ok) {
-        const data = await response.json(); 
-        // Small delay to ensure cookie is set
+        const data = await response.json();
         setTimeout(() => {
           router.push('/admin');
           router.refresh();
