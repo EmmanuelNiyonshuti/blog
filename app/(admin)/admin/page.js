@@ -12,7 +12,6 @@ export default async function AdminDashboard() {
     fetchPosts(),
     fetchCategories(),
   ]);
-
   const stats = [
     { name: 'Total Posts', value: String(posts.length), icon: FileText, color: 'text-blue-600' },
     { name: 'Categories', value: String(categories.length), icon: FolderOpen, color: 'text-green-600' },
