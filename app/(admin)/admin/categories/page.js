@@ -1,7 +1,8 @@
 import AdminLayout from '../../../components/admin/AdminLayout';
 import Link from 'next/link';
 import Button from '../../../components/ui/Button';
-import { fetchCategories, deleteCategory } from '../../../../lib/api';
+import { fetchCategories } from '../../../../lib/api';
+import DeleteCategoryButton from '../../../components/admin/DeleteCategoryButton';
 
 export const metadata = {
   title: 'Manage Categories - Admin',
@@ -69,26 +70,3 @@ export default async function AdminCategoriesPage() {
     </AdminLayout>
   );
 }
-
-function DeleteCategoryButton({ id }) {
-  'use client';
-  const { useRouter } = require('next/navigation');
-  const router = useRouter();
-
-  const onDelete = async () => {
-    const confirmed = confirm('Delete this category?');
-    if (!confirmed) return;
-    try {
-      await deleteCategory(id);
-      router.refresh();
-    } catch (e) {
-      alert('Failed to delete category.');
-    }
-  };
-
-  return (
-    <button onClick={onDelete} className="text-red-600 hover:text-red-900">Delete</button>
-  );
-}
-
-

@@ -61,7 +61,7 @@ export default async function AdminDashboard() {
                 <div key={index} className="flex items-center justify-between py-3 border-b border-gray-200 last:border-b-0">
                   <div>
                     <span className="text-sm text-gray-600">{activity.action} </span>
-                    <span className="text-sm font-medium text-gray-900">"{activity.title}"</span>
+                    <span className="text-sm font-medium text-gray-900">{activity.title}</span>
                   </div>
                   <span className="text-xs text-gray-500">{activity.time}</span>
                 </div>

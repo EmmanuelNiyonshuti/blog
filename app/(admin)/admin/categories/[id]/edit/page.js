@@ -1,6 +1,6 @@
-import AdminLayout from '../../../../components/admin/AdminLayout';
-import CategoryForm from '../../../../components/admin/CategoryForm';
-import { fetchCategories } from '../../../../../lib/api';
+import AdminLayout from '@/app/components/admin/AdminLayout';
+import CategoryForm from '@/app/components/admin/CategoryForm';
+import { fetchCategories } from '@/lib/api';
 
 export const metadata = {
   title: 'Edit Category - Admin',

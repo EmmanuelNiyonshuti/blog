@@ -9,7 +9,7 @@ export default function Sidebar({ categories = [] }) {
         <div className="space-y-3">
           <p  className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed">Welcome to my blog</p>
           <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-          I'm a software developer with a focus on backend development, living in Rwanda.
+          I&aposm a software developer with a focus on backend development, living in Rwanda.
           <span className="block mt-2">
           <a
             href="https://github.com/EmmanuelNiyonshuti"
