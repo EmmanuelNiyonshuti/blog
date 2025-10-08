@@ -63,7 +63,6 @@ const LoginForm = () => {
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
           <input
             type="email"
-            placeholder="emmanuel@example.com"
             value={credentials.email}
             onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
             required
