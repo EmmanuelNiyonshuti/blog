@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 const API_BASE_URL = 
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ||
   process.env.API_URL?.replace(/\/$/, '') ||
-  'http://localhost:5000/api';
+  'https://blog-backend-2u9m.onrender.com/api';
 
 export async function middleware(request) {
   const path = request.nextUrl.pathname;

@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { API_BASE_URL } from '@/lib/api';
 
 const LoginForm = () => {
-  console.log("loggin form......");
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
