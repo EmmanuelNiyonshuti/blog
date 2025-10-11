@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-const API_BASE_URL = process.env.API_URL || 'https://blog-backend-2u9m.onrender.com/api';
+const API_BASE_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'https://blog-backend-2u9m.onrender.com/api';
 
 export async function POST(request) {
   try {
