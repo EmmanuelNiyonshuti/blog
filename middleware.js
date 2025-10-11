@@ -21,22 +21,22 @@ export async function middleware(request) {
     if (!token) {
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
-    try {
-      const response = await fetch(`${API_BASE_URL}/auth/verify`, {
-        method: 'POST',
-        headers: {
-          'Cookie': `token=${token}`,
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include'
-      });
-      if (!response.ok) {
-        return NextResponse.redirect(new URL('/admin/login', request.url));
-      }
-      return NextResponse.next();
-    } catch (error) {
-        return NextResponse.redirect(new URL('/admin/login', request.url));
-    }
+    return NextResponse.next();
+    // try {
+    //   const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Cookie': `token=${token}`,
+    //       'Content-Type': 'application/json',
+    //     },
+    //     credentials: 'include'
+    //   });
+    //   if (!response.ok) {
+    //     return NextResponse.redirect(new URL('/admin/login', request.url));
+    //   }
+    // } catch (error) {
+    //     return NextResponse.redirect(new URL('/admin/login', request.url));
+    // }
 }
 
 export const config = {
