@@ -24,9 +24,8 @@ export default function AdminLayout({ children }) {
     setIsLoggingOut(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+      const res = await fetch('/api/auth/logout', {
         method: 'POST',
-        credentials: 'include',
       });
 
       if (res.ok) {
