@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import Button from '../../../components/ui/Button';
 import PostActions from '../../../components/admin/PostActions';
-import API_BASE_URL from '../../../../lib/api'
+import { API_BASE_URL } from '../../../../lib/api'
 
 async function fetchAdminPosts() {
   // const isServer = typeof window === 'undefined';
