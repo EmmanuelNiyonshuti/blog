@@ -3,12 +3,13 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import Button from '../../../components/ui/Button';
 import PostActions from '../../../components/admin/PostActions';
+import API_BASE_URL from '../../../../lib/api'
 
 async function fetchAdminPosts() {
-  const isServer = typeof window === 'undefined';
-  const origin = process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
-  const url = isServer ? `${origin}/api/admin/posts` : '/api/admin/posts';
-  const res = await fetch(url, { cache: 'no-store' });
+  // const isServer = typeof window === 'undefined';
+  // const origin = process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+  // const url = isServer ? `${origin}/api/admin/posts` : '/api/admin/posts';
+  const res = await fetch(`${API_BASE_URL}/posts/admin/all`, { cache: 'no-store' });
   if (!res.ok) return [];
   const data = await res.json();
   return data.posts || data || [];
