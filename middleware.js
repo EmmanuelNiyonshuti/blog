@@ -11,7 +11,6 @@ export async function middleware(request) {
         return NextResponse.next();
     }
     const token = request.cookies.get('token')?.value;
-    console.log("token", token)
     if (!token) {
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
