@@ -24,7 +24,6 @@ export async function middleware(request) {
             },
             credentials: 'include'
         });
-        console.log(response);
         if (!response.ok) {
             return NextResponse.redirect(new URL('/admin/login', request.url));
         }
