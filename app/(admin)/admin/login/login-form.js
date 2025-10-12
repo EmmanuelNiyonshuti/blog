@@ -15,7 +15,7 @@ const LoginForm = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('https://blog-backend-2u9m.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
