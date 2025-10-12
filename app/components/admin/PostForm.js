@@ -26,7 +26,7 @@ export default function PostForm({ post = null, categories = [] }) {
       excerpt: post?.excerpt || '',
       categoryId: post?.categoryId || '',
       tags: post?.tags?.join(', ') || '',
-      status: post?.status || 'draft',
+      status: post?.status || 'DRAFT',
     }
   });
 
