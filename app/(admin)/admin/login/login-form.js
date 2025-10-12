@@ -23,7 +23,6 @@ const LoginForm = () => {
         body: JSON.stringify(credentials),
         credentials: 'include'
       });
-      console.log("response:", response)
       if (response.status === 429){
           setTimeout(() => {
             router.push('/');
