@@ -1,6 +1,7 @@
 import AdminLayout from '../../components/admin/AdminLayout';
 import { FileText, FolderOpen, MessageSquare, Eye } from 'lucide-react';
-import { fetchPosts, fetchCategories } from '../../../lib/api';
+import {fetchPosts, fetchCategories } from '../../../lib/api';
+import { cookies } from 'next/headers';
 
 export const metadata = {
   title: 'Admin Dashboard',
@@ -8,8 +9,10 @@ export const metadata = {
 };
 
 export default async function AdminDashboard() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
   const [posts, categories] = await Promise.all([
-    fetchPosts(),
+    fetchPosts(token),
     fetchCategories(),
   ]);
   const stats = [

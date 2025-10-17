@@ -1,9 +1,5 @@
 import { NextResponse } from 'next/server';
-
-const API_BASE_URL = 
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ||
-  process.env.API_URL?.replace(/\/$/, '') ||
-  'https://blog-backend-2u9m.onrender.com/api';
+import { API_BASE_URL } from './lib/api';
 
 export async function middleware(request) {
     const path = request.nextUrl.pathname;
@@ -11,9 +7,8 @@ export async function middleware(request) {
         return NextResponse.next();
     }
     const token = request.cookies.get('token')?.value;
-
     if (!token) {
-      return NextResponse.redirect(new URL('/admin/login', request.url));
+        return NextResponse.redirect(new URL('/admin/login', request.url));
     }
     try {
         const response = await fetch(`${API_BASE_URL}/auth/verify`, {
