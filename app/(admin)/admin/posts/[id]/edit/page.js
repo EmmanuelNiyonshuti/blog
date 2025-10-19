@@ -8,11 +8,11 @@ export const metadata = {
 };
 
 export default async function EditPostPage({ params }) {
+  const p = await params;
   const [post, categories] = await Promise.all([
-    fetchPostById(params.id),
+    fetchPostById(p.id),
     fetchCategories(),
   ]);
-
   return (
     <AdminLayout>
       <div className="max-w-4xl">
