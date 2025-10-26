@@ -6,12 +6,13 @@ import { fetchPostsByCategory, fetchCategories } from '../../../lib/api';
 // Generate metadata for SEO
 export async function generateMetadata({ params }) {
   try {
+    const slug = await params.slug;
     const [posts, categories] = await Promise.all([
-      fetchPostsByCategory(params.slug),
+      fetchPostsByCategory(slug),
       fetchCategories()
     ]);
     
-    const category = categories.find(cat => cat.slug === params.slug);
+    const category = categories.find(cat => cat.slug === slug);
     
     if (!category) {
       return {
@@ -32,12 +33,13 @@ export async function generateMetadata({ params }) {
 
 export default async function CategoryPage({ params }) {
   try {
+    const slug = await params.slug;
     const [posts, categories] = await Promise.all([
-      fetchPostsByCategory(params.slug),
+      fetchPostsByCategory(slug),
       fetchCategories()
     ]);
     
-    const category = categories.find(cat => cat.slug === params.slug);
+    const category = categories.find(cat => cat.slug === slug);
     
     if (!category) {
       notFound();

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import Button from '../../../components/ui/Button';
 import PostActions from '../../../components/admin/PostActions';
-import { fetchPosts } from '../../../../lib/api'
+import { fetchAdminPosts, fetchPosts } from '../../../../lib/api'
 import { cookies } from 'next/headers';
 
 export const metadata = {
@@ -14,7 +14,7 @@ export const metadata = {
 export default async function AdminPostsPage() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
-  const posts = await fetchPosts(token)
+  const posts = await fetchAdminPosts(token)
   const formatDate = (dateString) => {
     if (!dateString) return 'Not published';
     return new Date(dateString).toLocaleDateString('en-US', {

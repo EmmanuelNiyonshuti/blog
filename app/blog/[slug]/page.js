@@ -6,7 +6,8 @@ import { fetchPostBySlug } from '../../../lib/api';
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }) {
-  const decodedSlug = decodeURIComponent(params.slug);
+  const paramSlug = await params.slug;
+  const decodedSlug = decodeURIComponent(paramSlug);
   const post = await fetchPostBySlug(decodedSlug);
   
   if (!post) {
@@ -29,7 +30,8 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function BlogPostPage({ params }) {
-  const decodedSlug = decodeURIComponent(params.slug);
+  const paramSlug = await params.slug;
+  const decodedSlug = decodeURIComponent(paramSlug);
   const post = await fetchPostBySlug(decodedSlug);
   if (!post) {
     notFound();
@@ -46,7 +48,8 @@ export default async function BlogPostPage({ params }) {
             {post.comments && post.comments.length > 0 && (
               <CommentList comments={post.comments} />
             )}
-            <CommentForm postId={post.id} />
+            {/* use post slug for the comments */}
+            <CommentForm postSlug={post.slug} />
           </div>
         )}
         {/* For Medium posts, show a note about comments */}

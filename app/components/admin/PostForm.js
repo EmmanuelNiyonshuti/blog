@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+
 import RichTextEditor from './RichTextEditor';
 import Button from '../ui/Button';
 import LoadingSpinner from '../ui/LoadingSpinner';
@@ -12,7 +13,6 @@ export default function PostForm({ post = null, categories = [] }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [content, setContent] = useState(post?.content || '');
   const router = useRouter();
-  
   const { 
     register, 
     handleSubmit, 
@@ -26,9 +26,9 @@ export default function PostForm({ post = null, categories = [] }) {
       excerpt: post?.excerpt || '',
       categoryId: post?.categoryId || '',
       tags: post?.tags?.join(', ') || '',
-      status: post?.status || 'DRAFT',
+      status: post?.status.toUpperCase() || 'DRAFT', // check the field , its enum for num, case sensitive
     }
-  });
+  }); // useForm hook
 
   const title = watch('title');
 
@@ -54,9 +54,17 @@ export default function PostForm({ post = null, categories = [] }) {
         content,
         tags: data.tags ? data.tags.split(',').map(tag => tag.trim()) : [],
       };
-
+      console.log(postData);
       if (post) {
-        await updatePost(post.id, postData);
+        const res = await fetch(`/api/posts/${post.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(postData),
+          credentials: 'include'
+        })
+        console.log("response from updated post:", res);
       } else {
         await createPost(postData);
       }
@@ -64,13 +72,12 @@ export default function PostForm({ post = null, categories = [] }) {
         router.push('/admin/posts');
       }
     } catch (error) {
-      console.error('Error saving post:', error);
+      console.error('Error saving post:', error.toString());
       alert('Failed to save post. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       
@@ -168,18 +175,18 @@ export default function PostForm({ post = null, categories = [] }) {
         />
       </div>
 
-      {/* Status */}
+      {/* status */}
       <div>
         <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-          Status
+          status
         </label>
         <select
           id="status"
           {...register('status')}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
-          <option value="draft">Draft</option>
-          <option value="published">Published</option>
+          <option value="DRAFT">Draft</option>
+          <option value="PUBLISHED">Published</option>
         </select>
       </div>
 

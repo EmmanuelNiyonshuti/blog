@@ -2,31 +2,23 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import {AddComment } from '../../../lib/api'
 
-export default function CommentForm({ postId, onCommentAdded }) {
+export default function CommentForm({ postSlug, onCommentAdded }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      const response = await fetch(`/api/comments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...data,
-          postId,
-        }),
-      });
-
-      if (response.ok) {
-        const newComment = await response.json();
+      const res = await AddComment(data, postSlug);
+      console.log(res);
+      if (res.success) {
+        const newComment = res.comment;
         reset();
         onCommentAdded?.(newComment);
       } else {
-        throw new Error('Failed to submit comment');
+        throw new Error(res.message);
       }
     } catch (error) {
       console.error('Error submitting comment:', error);
