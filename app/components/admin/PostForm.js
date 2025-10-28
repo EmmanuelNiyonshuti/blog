@@ -54,7 +54,6 @@ export default function PostForm({ post = null, categories = [] }) {
         content,
         tags: data.tags ? data.tags.split(',').map(tag => tag.trim()) : [],
       };
-      console.log(postData);
       if (post) {
         const res = await fetch(`/api/posts/${post.id}`, {
           method: "PUT",
@@ -83,61 +82,61 @@ export default function PostForm({ post = null, categories = [] }) {
       
       {/* Title */}
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
           Title *
         </label>
         <input
           type="text"
           id="title"
           {...register('title', { required: 'Title is required' })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="Enter post title..."
         />
         {errors.title && (
-          <p className="text-red-600 text-sm mt-1">{errors.title.message}</p>
+          <p className="text-red-600 dark:text-red-400 text-sm mt-1">{errors.title.message}</p>
         )}
       </div>
 
       {/* Slug */}
       <div>
-        <label htmlFor="slug" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="slug" className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
           Slug *
         </label>
         <input
           type="text"
           id="slug"
           {...register('slug', { required: 'Slug is required' })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="post-url-slug"
         />
         {errors.slug && (
-          <p className="text-red-600 text-sm mt-1">{errors.slug.message}</p>
+          <p className="text-red-600 dark:text-red-400 text-sm mt-1">{errors.slug.message}</p>
         )}
       </div>
 
       {/* Excerpt */}
       <div>
-        <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
           Excerpt
         </label>
         <textarea
           id="excerpt"
           rows={3}
           {...register('excerpt')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="Brief description of the post..."
         />
       </div>
 
       {/* Category */}
       <div>
-        <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="categoryId" className="block text-sm font-medium text-gray-700 dark: text-gray-400 mb-1">
           Category
         </label>
         <select
           id="categoryId"
           {...register('categoryId')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="">Select a category</option>
           {categories.map((category) => (
@@ -150,17 +149,17 @@ export default function PostForm({ post = null, categories = [] }) {
 
       {/* Tags */}
       <div>
-        <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="tags" className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
           Tags
         </label>
         <input
           type="text"
           id="tags"
           {...register('tags')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="tag1, tag2, tag3"
         />
-        <p className="text-xs text-gray-600 mt-1">Separate tags with commas</p>
+        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">Separate tags with commas</p>
       </div>
 
       {/* Content */}
@@ -191,12 +190,13 @@ export default function PostForm({ post = null, categories = [] }) {
       </div>
 
       {/* Submit Buttons */}
-      <div className="flex justify-between items-center pt-6 border-t border-gray-200">
+      <div className="flex justify-between items-center pt-6 border-t border-gray-200 dark:border-gray-50">
         <Button
           type="button"
           variant="outline"
           onClick={() => router.back()}
           disabled={isSubmitting}
+          className="hover:cursor-pointer"
         >
           Cancel
         </Button>
@@ -205,7 +205,7 @@ export default function PostForm({ post = null, categories = [] }) {
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="flex items-center"
+            className="flex items-center hover:cursor-pointer"
           >
             {isSubmitting && <LoadingSpinner size="sm" className="mr-2" />}
             {post ? 'Update Post' : 'Create Post'}

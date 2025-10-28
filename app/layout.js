@@ -2,6 +2,7 @@ import './globals.css';
 import Navbar from './components/layout/NavBar';
 import Footer from './components/layout/Footer';
 import ThemeProvider from '@/app/components/ui/theme-provider';
+import 'highlight.js/styles/github-dark.css';
 
 
 export default function RootLayout({ children }) {

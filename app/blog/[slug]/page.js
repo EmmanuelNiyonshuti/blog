@@ -55,7 +55,7 @@ export default async function BlogPostPage({ params }) {
         {/* For Medium posts, show a note about comments */}
         {isExternal && (
           <div className="mt-16 p-6 bg-gray-50 dark:bg-gray-900 rounded-lg">
-            <h3 className="text-lg font-semibold text-gray-900  dark:text-gray-100 mb-2">Want to discuss this post?</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Want to discuss this post?</h3>
             <p className="text-gray-600 dark:text-gray-400">
               This post was originally published on{' '}
             <a

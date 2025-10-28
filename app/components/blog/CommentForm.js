@@ -29,13 +29,13 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
   };
 
   return (
-    <div className="bg-gray-50 rounded-lg p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Leave a comment</h3>
+    <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-6">
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-200 mb-4">Leave a comment</h3>
       
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Name Field */}
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
             Name *
           </label>
           <input
@@ -45,7 +45,7 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
               required: 'Name is required',
               maxLength: { value: 100, message: 'Name must be less than 100 characters' }
             })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="Your name"
           />
           {errors.name && (
@@ -55,7 +55,7 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
 
         {/* Email Field */}
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
             Email *
           </label>
           <input
@@ -68,18 +68,18 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
                 message: 'Invalid email address'
               }
             })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="your.email@example.com"
           />
           {errors.email && (
             <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
           )}
-          <p className="text-xs text-gray-600 mt-1">Your email will not be published</p>
+          <p className="text-xs text-gray-600 dark:text-gray-200 mt-1">Your email will not be published</p>
         </div>
 
         {/* Comment Field */}
         <div>
-          <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
             Comment *
           </label>
           <textarea
@@ -89,7 +89,7 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
               required: 'Comment is required',
               maxLength: { value: 1000, message: 'Comment must be less than 1000 characters' }
             })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
             placeholder="Share your thoughts..."
           />
           {errors.content && (
@@ -101,7 +101,7 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="px-6 py-2 bg-blue-600 text-white dark:text-gray-900 dark:text-gray-900 font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 cursor-pointer transition-colors"
         >
           {isSubmitting ? 'Submitting...' : 'Post Comment'}
         </button>

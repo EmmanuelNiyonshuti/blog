@@ -3,15 +3,27 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+import { common, createLowlight } from 'lowlight';
 import { 
   Bold, Italic, List, ListOrdered, Quote, 
-  Undo, Redo, Code, Heading2, Heading3 
+  Undo, Redo, Code, Heading2, Heading3, CodeSquare
 } from 'lucide-react';
+
+// Create a lowlight instance with common languages
+const lowlight = createLowlight(common);
 
 export default function RichTextEditor({ content, onChange, placeholder = 'Start writing...' }) {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        // Disable the default code block from StarterKit
+        codeBlock: false,
+      }),
+      CodeBlockLowlight.configure({
+        lowlight,
+        defaultLanguage: 'javascript',
+      }),
       Placeholder.configure({
         placeholder,
       }),
@@ -33,7 +45,7 @@ export default function RichTextEditor({ content, onChange, placeholder = 'Start
       onClick={onClick}
       title={title}
       className={`p-2 rounded hover:bg-gray-100 transition-colors ${
-        isActive ? 'bg-gray-200 text-blue-600' : 'text-gray-600'
+        isActive ? 'bg-gray-200 dark:bg-gray-800 text-blue-600 dark:text-blue-200 ' : 'text-gray-600'
       }`}
     >
       {children}
@@ -41,9 +53,9 @@ export default function RichTextEditor({ content, onChange, placeholder = 'Start
   );
 
   return (
-    <div className="border border-gray-300 rounded-lg overflow-hidden">
+    <div className="border border-gray-300 dark:border-gray-100 rounded-lg overflow-hidden">
       {/* Toolbar */}
-      <div className="bg-gray-50 border-b border-gray-300 p-2 flex flex-wrap gap-1">
+      <div className="bg-gray-50 dark:bg-gray-100 border-b border-gray-300 dark:border-gray-100 p-2 flex flex-wrap gap-1">
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
           isActive={editor.isActive('bold')}
@@ -66,6 +78,14 @@ export default function RichTextEditor({ content, onChange, placeholder = 'Start
           title="Inline Code"
         >
           <Code size={16} />
+        </ToolbarButton>
+        
+        <ToolbarButton
+          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+          isActive={editor.isActive('codeBlock')}
+          title="Code Block"
+        >
+          <CodeSquare size={16} />
         </ToolbarButton>
         
         <div className="w-px bg-gray-300 mx-1" />

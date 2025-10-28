@@ -31,8 +31,8 @@ export default async function HomePage() {
           </div>
           {posts.length > 3 && (
             <div className="flex justify-between items-center mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
-              <button disabled className="px-4 py-2 text-gray-400 cursor-not-allowed text-sm">← Newer posts</button>
-              <button disabled className="px-4 py-2 text-gray-400 cursor-not-allowed text-sm">Older posts →</button>
+              <button disabled className="px-4 py-2 text-gray-400 dark:text-gray-200 cursor-not-allowed text-sm">← Newer posts</button>
+              <button disabled className="px-4 py-2 text-gray-400 dark:text-gray-200 cursor-not-allowed text-sm">Older posts →</button>
             </div>
           )}
         </main>
