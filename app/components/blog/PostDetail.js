@@ -11,7 +11,7 @@ import { formatDate } from "@/lib/utils";
 export default function PostDetail({ post }) {
   const [copied, setCopied] = useState(false);
 
-  // Highlight code blocks after content loads
+  // reads and highlight code blocks after content loads
   useEffect(() => {
     document.querySelectorAll('pre code').forEach((block) => {
       hljs.highlightElement(block);
@@ -39,7 +39,7 @@ export default function PostDetail({ post }) {
     try {
       await navigator.clipboard.writeText(currentUrl);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), 500);
     } catch (err) {
       console.error('Failed to copy: ', err);
     }
@@ -50,7 +50,10 @@ export default function PostDetail({ post }) {
 
   return (
     <article className="max-w-4xl mx-auto px-4">
-      {/* Back link */}
+      {/* Back link, later, dynamic for previewing! */}
+      {
+
+      }
       <div className="mb-8">
         <Link 
           href="/"
@@ -155,7 +158,7 @@ export default function PostDetail({ post }) {
 
           <button
             onClick={copyToClipboard}
-            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors cursor-pointer"
             title={copied ? "Copied!" : "Copy link"}
           >
             {copied ? <Check size={18} /> : <Copy size={18} />}

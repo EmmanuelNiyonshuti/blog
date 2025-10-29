@@ -31,11 +31,8 @@ const LoginForm = () => {
       }
       if (response.ok) {
         const data = await response.json();
-        setTimeout(() => {
-          router.push('/admin');
-          router.refresh();
-        }, 100);
-        
+        router.push('/admin');
+        router.refresh();
       } else {
         const data = await response.json().catch(() => ({}));
         setError(data.error || data.message || 'Login failed');
@@ -82,7 +79,7 @@ const LoginForm = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 dark:text-gray-200 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? (
@@ -97,7 +94,7 @@ const LoginForm = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+          className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 cursor-pointer"
         >
           {loading ? 'Logging in...' : 'Login'}
         </button>

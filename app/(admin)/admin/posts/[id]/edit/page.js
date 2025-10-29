@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import AdminLayout from '@/app/components/admin/AdminLayout';
 import PostForm from '@/app/components/admin/PostForm';
 import { fetchPostById, fetchCategories } from '@/lib/api';
@@ -21,7 +23,17 @@ export default async function EditPostPage({ params }) {
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-200">Edit Post</h1>
           <p className="text-gray-600 dark:text-gray-200 mt-2">Update and republish your blog post</p>
         </div>
-
+        {/* left button for preview */}
+        <div className="mb-4">
+          <Link
+            href={`/admin/posts/${p.id}/preview`}
+            target="_blank"
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+          >
+            {/* <Eye size={16} /> */}
+            Preview Post
+          </Link>
+        </div>
         {/* Post Form */}
         <div className="bg-white dark:bg-gray-900 shadow rounded-lg p-6">
           <PostForm post={post} categories={categories} />

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export const metadata = {
   title: 'About Me',
   description:
@@ -19,11 +21,24 @@ export default function AboutPage() {
         {/* Main Content */}
         <div className="prose prose-lg dark:prose-invert max-w-none mb-12">
           {/* Introduction */}
-          <div className="rounded-lg p-8 mb-8 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+          {/* Profile Image - Circular */}
+
+          <div className="rounded-lg p-3 mb-8 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+          <div className="flex justify-center">
+            <div className="relative w-28 h-28 rounded-full overflow-hidden border-2 border-transparent shadow-lg">
+              <Image
+                src="https://res.cloudinary.com/dx8m9dy9d/image/upload/v1753975545/NIYONSHUTI_Emmanuel_pdaqpi.jpg"
+                alt="NIYONSHUTI Emmanuel"
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+          </div>
             <p className="leading-relaxed text-gray-700 dark:text-gray-300">
               Hi👋, I&apos;m NIYONSHUTI Emmanuel. I&apos;m a software developer with a strong focus on backend development.  
               I started this blog to document what I learn, the experiments I try, and the small wins and challenges I encounter in programming and technology.  
-              I share insights here in a way that&apos;s authentic to my own learning journey. I live in Rwanda.
+              I share insights here in a way that&apos;s authentic to my own learning journey.
             </p>
 
             <p className="leading-relaxed text-gray-700 dark:text-gray-300 mt-4">

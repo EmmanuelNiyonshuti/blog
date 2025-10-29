@@ -58,13 +58,13 @@ export default function AdminLayout({ children }) {
             <div className="flex items-center space-x-4">
               <Link 
                 href="/"
-                className="text-gray-600 dark:text-gray-200 hover:text-gray-900 text-sm font-medium"
+                className="text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-gray-50 text-sm font-medium"
               >
                 View Site
               </Link>
               <button
                 onClick={handleLogout}
-                className="flex items-center text-gray-600 dark:text-gray-200 hover:text-gray-900 text-sm font-medium cursor:pointer"
+                className="flex items-center text-gray-600 dark:text-gray-200 hover:text-gray-900 dark:hover:text-gray-50 text-sm font-medium cursor-pointer"
               >
                 <LogOut size={16} className="mr-1" />
                 Logout
