@@ -373,7 +373,7 @@ export default function RichTextEditor({ content, onChange, placeholder = 'Start
             {/* Width Input */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">
-                Width (optional - e.g., "400" for 400px or "50%" for half width)
+                Width (optional - e.g., &quot;400&quot; for 400px or &quot;50%&quot; for half width)
               </label>
               <input
                 type="text"
