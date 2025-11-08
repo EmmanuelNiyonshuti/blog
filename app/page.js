@@ -4,7 +4,7 @@ import { fetchAllPosts, fetchCategories } from "../lib/api";
 
 export const metadata = {
   title: 'Home',
-  description: 'Latest blog posts by NIYONSHUTI Emmanuel on backend development, programming, and technology.',
+  description: 'Latest blog posts by NIYONSHUTI Emmanuel on backend development, programming, and technology.'
 };
 
 export default async function HomePage() {

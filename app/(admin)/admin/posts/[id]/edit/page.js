@@ -1,8 +1,8 @@
 import Link from 'next/link';
-
 import AdminLayout from '@/app/components/admin/AdminLayout';
-import PostForm from '@/app/components/admin/PostForm';
-import { fetchPostById, fetchCategories } from '@/lib/api';
+import { fetchPostById, fetchCategories} from '@/lib/api';
+import PostFormEdit from '@/app/components/admin/PostFormEdit';
+
 
 export const metadata = {
   title: 'Edit Post - Admin',
@@ -35,9 +35,7 @@ export default async function EditPostPage({ params }) {
           </Link>
         </div>
         {/* Post Form */}
-        <div className="bg-white dark:bg-gray-900 shadow rounded-lg p-6">
-          <PostForm post={post} categories={categories} />
-        </div>
+        <PostFormEdit post={post} categories={categories} />
       </div>
     </AdminLayout>
   );

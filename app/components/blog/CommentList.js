@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 
-export default function CommentList({ comments = [] }) {
+export default function CommentList({ comments = [], isAdmin=false, onDelete }) {
   // Format date using date-fns
   const formatDate = (dateString) => {
     try {
@@ -41,14 +41,15 @@ export default function CommentList({ comments = [] }) {
               </div>
             </div>
             
-            {/* Admin actions placeholder, isAdmin will define it later! */}
-            {/* {isAdmin && (
-              <button className="text-red-600 hover:text-red-700 text-sm">
+            {/* Admin actions placeholder */}
+            {isAdmin && (
+              <button
+              onClick={() => onDelete(comment.id)} 
+              className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-600 text-sm cursor-pointer">
                 Delete
               </button>
-            )} */}
+            )}
           </div>
-          
           {/* Comment Content */}
           <div className="text-gray-800 dark:text-gray-200 leading-relaxed">
             <p>{comment.content}</p>
