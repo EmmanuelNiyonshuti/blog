@@ -12,7 +12,6 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
     setIsSubmitting(true);
     try {
       const res = await AddComment(data, postSlug);
-      console.log(res);
       if (res.success) {
         const newComment = res.comment;
         reset();

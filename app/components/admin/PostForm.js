@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 
-import RichTextEditor from './RichTextEditor';
+import MarkdownEditor from './MarkdownEditor';
 import Button from '../ui/Button';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { createPost, updatePost } from '../../../lib/api';
@@ -167,7 +167,7 @@ export default function PostForm({ post = null, categories = [] }) {
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Content *
         </label>
-        <RichTextEditor
+        <MarkdownEditor
           content={content}
           onChange={setContent}
           placeholder="Write your post content here..."

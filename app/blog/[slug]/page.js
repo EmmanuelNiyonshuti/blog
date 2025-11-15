@@ -6,10 +6,11 @@ import { fetchPostBySlug } from '../../../lib/api';
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }) {
-  const paramSlug = await params.slug;
-  const decodedSlug = decodeURIComponent(paramSlug);
+  const paramObj = await params;
+  const decodedSlug = decodeURIComponent(paramObj.slug);
   const post = await fetchPostBySlug(decodedSlug);
   
+  console.log(post.comments);
   if (!post) {
     return {
       title: 'Post Not Found',
@@ -30,8 +31,8 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function BlogPostPage({ params }) {
-  const paramSlug = await params.slug;
-  const decodedSlug = decodeURIComponent(paramSlug);
+  const paramObj = await params;
+  const decodedSlug = decodeURIComponent(paramObj.slug);
   const post = await fetchPostBySlug(decodedSlug);
   if (!post) {
     notFound();

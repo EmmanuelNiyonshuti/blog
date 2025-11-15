@@ -4,18 +4,27 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { Twitter, Linkedin, Facebook, Copy, Check } from 'lucide-react';
 import hljs from 'highlight.js';
+import { markdownToHtml } from '@/lib/markdownToHtml';
 
 import PostNotFound from './PostNotFound';
 import { formatDate } from "@/lib/utils";
 
 export default function PostDetail({ post }) {
   const [copied, setCopied] = useState(false);
+  const [htmlContent, setHtmlContent] = useState('');
 
-  // reads and highlight code blocks after content loads
+  // Convert markdown to HTML and highlight code
   useEffect(() => {
-    document.querySelectorAll('pre code').forEach((block) => {
-      hljs.highlightElement(block);
-    });
+    // Convert markdown to HTML
+    const html = markdownToHtml(post.content);
+    setHtmlContent(html);
+    
+    // Highlight code blocks after a brief delay
+    setTimeout(() => {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightElement(block);
+      });
+    }, 10);
   }, [post]);
 
   if (!post) {
@@ -39,7 +48,7 @@ export default function PostDetail({ post }) {
     try {
       await navigator.clipboard.writeText(currentUrl);
       setCopied(true);
-      setTimeout(() => setCopied(false), 500);
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy: ', err);
     }
@@ -50,10 +59,7 @@ export default function PostDetail({ post }) {
 
   return (
     <article className="max-w-4xl mx-auto px-4">
-      {/* Back link, later, dynamic for previewing! */}
-      {
-
-      }
+      {/* Back link */}
       <div className="mb-8">
         <Link 
           href="/"
@@ -110,7 +116,7 @@ export default function PostDetail({ post }) {
       {/* Post Content - Now with custom styling */}
       <div 
         className="prose-blog max-w-none mb-16"
-        dangerouslySetInnerHTML={{ __html: post.content }}
+        dangerouslySetInnerHTML={{ __html: htmlContent }}
       />
 
       {/* Divider before footer */}
@@ -158,7 +164,7 @@ export default function PostDetail({ post }) {
 
           <button
             onClick={copyToClipboard}
-            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors cursor-pointer"
+            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
             title={copied ? "Copied!" : "Copy link"}
           >
             {copied ? <Check size={18} /> : <Copy size={18} />}
