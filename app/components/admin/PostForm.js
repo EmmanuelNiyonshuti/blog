@@ -12,6 +12,7 @@ import { createPost, updatePost } from '../../../lib/api';
 export default function PostForm({ post = null, categories = [] }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [content, setContent] = useState(post?.content || '');
+  const [excerpt, setExcerpt] = useState(post?.excerpt || '');
   const router = useRouter();
   const { 
     register, 
@@ -119,12 +120,9 @@ export default function PostForm({ post = null, categories = [] }) {
         <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
           Excerpt
         </label>
-        <textarea
-          id="excerpt"
-          rows={3}
-          {...register('excerpt')}
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          placeholder="Brief description of the post..."
+        <MarkdownEditor
+          content={excerpt}
+          onChange={setExcerpt}
         />
       </div>
 
