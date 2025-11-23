@@ -105,7 +105,7 @@ export default function PostDetail({ post }) {
         {/* Excerpt - now properly rendered as HTML/markdown */}
         {post.excerpt && (
           <div 
-            className="prose-blog mb-6"
+            className="prose-blog"
             dangerouslySetInnerHTML={{ __html: htmlExcerpt }}
           />
         )}
@@ -125,17 +125,17 @@ export default function PostDetail({ post }) {
         )}
 
         {/* Divider */}
-        <div className="border-t border-gray-200 dark:border-gray-700 mt-8"></div>
+        <div className="mt-2"></div>
       </header>
 
       {/* Post Content - Your global.css prose-blog styles will handle all spacing */}
       <div 
-        className="prose-blog max-w-none mb-16"
+        className="prose-blog max-w-none"
         dangerouslySetInnerHTML={{ __html: htmlContent }}
       />
 
       {/* Divider before footer */}
-      <div className="border-t border-gray-200 dark:border-gray-700 mb-8"></div>
+      <div className="mt-2"></div>
 
       {/* Post Footer with Share */}
       <footer className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-12">

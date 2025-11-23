@@ -9,7 +9,7 @@
 
 .prose-blog {
   font-size: 1.125rem;
-  line-height: 1.75;
+  line-height: 2;
   color: #374151;
 }
 
@@ -19,16 +19,16 @@
 
 /* Paragraphs - breathing room */
 .prose-blog p {
-  margin-bottom: 1.75em;
-  line-height: 1.8;
+  margin-bottom: 0.5em;
+  line-height: 1.6;
 }
 
 /* Headings - clear hierarchy */
 .prose-blog h2 {
   font-size: 2rem;
   font-weight: 700;
-  margin-top: 3em;
-  margin-bottom: 1em;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
   color: #111827;
 }
 
@@ -39,8 +39,8 @@
 .prose-blog h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-top: 2.5em;
-  margin-bottom: 0.75em;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
   color: #1f2937;
 }
 
@@ -51,14 +51,14 @@
 /* Lists */
 .prose-blog ul,
 .prose-blog ol {
-  margin-top: 1.75em;
-  margin-bottom: 1.75em;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
   padding-left: 1.75em;
 }
 
 .prose-blog li {
-  margin-top: 0.75em;
-  margin-bottom: 0.75em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
   line-height: 1.8;
 }
 
@@ -69,7 +69,7 @@
   padding: 0.2rem 0.4rem;
   border-radius: 0.25rem;
   font-size: 0.9em;
-  font-weight: 500;
+  font-weight: 600;
   font-family: 'Courier New', monospace;
 }
 
@@ -80,8 +80,8 @@
 
 /* Code blocks - full syntax highlighting */
 .prose-blog pre {
-  margin-top: 2em;
-  margin-bottom: 2em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
   overflow-x: auto;
   border-radius: 0.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -127,7 +127,7 @@
   padding-left: 1.5em;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
-  margin: 2.5em 0;
+  margin: 1em 0;
   color: #4b5563;
   background: #f9fafb;
   border-radius: 0 0.25rem 0.25rem 0;
@@ -175,7 +175,7 @@
   max-width: 100%;
   height: auto;
   border-radius: 0.5rem;
-  margin: 2em auto;
+  margin: 1em auto;
   display: block;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
