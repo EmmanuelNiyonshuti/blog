@@ -1,6 +1,6 @@
 import PostCard from './components/blog/PostCard';
 import Sidebar from './components/layout/Sidebar';
-import { fetchAllPosts, fetchCategories } from "../lib/api";
+import { fetchAllPosts } from "../lib/api";
 
 export const metadata = {
   title: 'Home',
@@ -8,10 +8,27 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const [posts, categories] = await Promise.all([
-    fetchAllPosts(),
-    fetchCategories()
-  ]);
+  const posts = await fetchAllPosts();
+  // const [posts, categories] = await Promise.all([
+  //   fetchAllPosts(),
+  //   fetchCategories()
+  // ]);
+  const categoryMap = posts.reduce((acc, post) => {
+    const cat = post.category;
+    if (!cat) return acc;
+
+    if (!acc[cat.id]) {
+      acc[cat.id] = { 
+        ...cat, 
+        postCount: 1 
+      };
+    } else {
+      acc[cat.id].postCount++;
+    }
+    return acc;
+  }, {});
+  const categories = Object.values(categoryMap);
+
 
   return (
     <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-8">
