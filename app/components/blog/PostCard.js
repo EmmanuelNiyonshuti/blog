@@ -61,7 +61,7 @@ export default function PostCard({ post }) {
       
       {/* Post Content Preview */}
       <div className="text-gray-800 dark:text-gray-200 leading-relaxed mb-4 text-base">
-        <p>{post.excerpt || getContentPreview(post.content)}</p>
+        <p>{getContentPreview(post.excerpt) || getContentPreview(post.content)}</p>
       </div>
       
       {/* Actions */}
