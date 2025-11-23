@@ -12,7 +12,7 @@ export const API_BASE_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_U
 // get post by id
 export async function GET(request, { params }) {
     // The 'params' object contains the dynamic route parameters!
-    const { id } = params; // This is your post ID from the URL
+    const { id } = await params; // This is your post ID from the URL
     try {
         const cookieStore = await cookies();
         const token = cookieStore.get('token')?.value;
