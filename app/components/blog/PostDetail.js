@@ -12,12 +12,19 @@ import { formatDate } from "@/lib/utils";
 export default function PostDetail({ post }) {
   const [copied, setCopied] = useState(false);
   const [htmlContent, setHtmlContent] = useState('');
+  const [htmlExcerpt, setHtmlExcerpt] = useState('');
 
   // Convert markdown to HTML and highlight code
   useEffect(() => {
     // Convert markdown to HTML
     const html = markdownToHtml(post.content);
     setHtmlContent(html);
+    
+    // Convert excerpt markdown to HTML if it exists
+    if (post.excerpt) {
+      const excerptHtml = markdownToHtml(post.excerpt);
+      setHtmlExcerpt(excerptHtml);
+    }
     
     // Highlight code blocks after a brief delay
     setTimeout(() => {
@@ -95,6 +102,14 @@ export default function PostDetail({ post }) {
           )}
         </div>
 
+        {/* Excerpt - now properly rendered as HTML/markdown */}
+        {post.excerpt && (
+          <div 
+            className="prose-blog mb-6"
+            dangerouslySetInnerHTML={{ __html: htmlExcerpt }}
+          />
+        )}
+
         {/* Tags */}
         {post.tags && post.tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-6">
@@ -113,7 +128,7 @@ export default function PostDetail({ post }) {
         <div className="border-t border-gray-200 dark:border-gray-700 mt-8"></div>
       </header>
 
-      {/* Post Content - Now with custom styling */}
+      {/* Post Content - Your global.css prose-blog styles will handle all spacing */}
       <div 
         className="prose-blog max-w-none mb-16"
         dangerouslySetInnerHTML={{ __html: htmlContent }}
