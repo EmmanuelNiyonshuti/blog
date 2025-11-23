@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import MarkdownEditor from './MarkdownEditor';
 import Button from '../ui/Button';
 import LoadingSpinner from '../ui/LoadingSpinner';
-import { createPost, updatePost } from '../../../lib/api';
 
 export default function PostForm({ post = null, categories = [] }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,6 +52,7 @@ export default function PostForm({ post = null, categories = [] }) {
       const postData = {
         ...data,
         content,
+        excerpt,
         tags: data.tags ? data.tags.split(',').map(tag => tag.trim()) : [],
       };
       if (post) {
@@ -64,12 +64,25 @@ export default function PostForm({ post = null, categories = [] }) {
           body: JSON.stringify(postData),
           credentials: 'include'
         })
-        console.log("response from updated post:", res);
+        if (res.status === 200) {
+          router.push('/admin/posts');
+        } else {
+          throw new Error('Failed to update post');
+        }
       } else {
-        await createPost(postData);
-      }
-      {
-        router.push('/admin/posts');
+        const res = await fetch(`/api/posts`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(postData),
+          credentials: 'include'
+        })
+        if (res.status === 200) {
+          router.push('/admin/posts');
+        } else {
+          throw new Error('Failed to update post');
+        }
       }
     } catch (error) {
       console.error('Error saving post:', error.toString());
