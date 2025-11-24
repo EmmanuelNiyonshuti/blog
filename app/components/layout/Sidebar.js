@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Sidebar({ categories = [] }) {
+  const categoriesLen = categories.length;
   return (
     <aside className="space-y-6">
       {/* About Me Section with Profile Image */}

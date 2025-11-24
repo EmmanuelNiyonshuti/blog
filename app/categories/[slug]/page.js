@@ -38,9 +38,7 @@ export default async function CategoryPage({ params }) {
       fetchPostsByCategory(slug),
       fetchCategories()
     ]);
-    
     const category = categories.find(cat => cat.slug === slug);
-    
     if (!category) {
       notFound();
     }
@@ -57,7 +55,7 @@ export default async function CategoryPage({ params }) {
                 {category.name}
               </h1>
               <p className="text-lg text-gray-600">
-                {posts.length} post{posts.length !== 1 ? 's' : ''} in this category
+                {posts.length} post{posts.length !== 1 ? 's' : ''} here!
               </p>
             </div>
             
