@@ -34,14 +34,17 @@ export async function generateMetadata({ params }) {
 export default async function CategoryPage({ params }) {
   try {
     const slug = await params.slug;
+    // const posts = await fetchPostsByCategory(slug)
     const [posts, categories] = await Promise.all([
       fetchPostsByCategory(slug),
       fetchCategories()
     ]);
-    const category = categories.find(cat => cat.slug === slug);
-    if (!category) {
+    const PostCategory = categories.find(cat => cat.slug === slug);
+    if (!PostCategory) {
       notFound();
     }
+
+    console.log("categories:", categories)
 
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -52,7 +55,7 @@ export default async function CategoryPage({ params }) {
             {/* Category Header */}
             <div className="mb-8">
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                {category.name}
+                {PostCategory.name}
               </h1>
               <p className="text-lg text-gray-600">
                 {posts.length} post{posts.length !== 1 ? 's' : ''} here!
@@ -62,13 +65,13 @@ export default async function CategoryPage({ params }) {
             {/* Posts */}
             <PostList 
               posts={posts}
-              emptyMessage={`No posts found in the ${category.name} category yet.`}
+              emptyMessage={`No posts found in the ${PostCategory.name} category yet.`}
             />
           </main>
 
           {/* Sidebar - right side on desktop */}
           <aside className="lg:col-span-1 order-2">
-            <Sidebar categories={categories} />
+            <Sidebar />
           </aside>
         </div>
       </div>

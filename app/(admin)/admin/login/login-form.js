@@ -44,7 +44,7 @@ const LoginForm = () => {
     }
   };
   return (
-      <form onSubmit={handleSubmit} className="max-w-md w-full space-y-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 shadow-sm">
+      <form onSubmit={handleSubmit} className="max-w-md w-full space-y-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 mt-20 shadow-sm">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Login</h1>
           <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">new idea, thought in mind! Login👇</p>

@@ -68,7 +68,7 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
               }
             })}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="your.email@example.com"
+            placeholder="your-email@example.com"
           />
           {errors.email && (
             <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
@@ -93,7 +93,7 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
           />
           {errors.content && (
             <p className="text-red-600 text-sm mt-1">{errors.content.message}</p>
-          )}
+          )}      
         </div>
 
         {/* Submit Button */}

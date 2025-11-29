@@ -9,26 +9,6 @@ export const metadata = {
 
 export default async function HomePage() {
   const posts = await fetchAllPosts();
-  // const [posts, categories] = await Promise.all([
-  //   fetchAllPosts(),
-  //   fetchCategories()
-  // ]);
-  const categoryMap = posts.reduce((acc, post) => {
-    const cat = post.category;
-    if (!cat) return acc;
-
-    if (!acc[cat.id]) {
-      acc[cat.id] = { 
-        ...cat, 
-        postCount: 1 
-      };
-    } else {
-      acc[cat.id].postCount++;
-    }
-    return acc;
-  }, {});
-  const categories = Object.values(categoryMap);
-
 
   return (
     <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-8">
@@ -56,7 +36,7 @@ export default async function HomePage() {
 
         {/* Sidebar - right side on desktop */}
         <aside className="lg:col-span-1 order-2">
-          <Sidebar categories={categories} />
+          <Sidebar />
         </aside>
       </div>
     </div>
