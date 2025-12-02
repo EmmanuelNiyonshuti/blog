@@ -4,7 +4,7 @@ import CommentList from '../../components/blog/CommentList';
 import CommentForm from '../../components/blog/CommentForm';
 import { fetchPostBySlug } from '../../../lib/api';
 
-// Generate metadata for SEO
+
 export async function generateMetadata({ params }) {
   const paramObj = await params;
   const decodedSlug = decodeURIComponent(paramObj.slug);

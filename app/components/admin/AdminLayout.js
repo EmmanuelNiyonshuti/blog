@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { Settings, FileText, FolderOpen, Plus, LogOut } from 'lucide-react';
+import { Settings, FileText,MessageSquareText,  FolderOpen, Plus, LogOut } from 'lucide-react';
 
 
 export default function AdminLayout({ children }) {
@@ -15,6 +15,7 @@ export default function AdminLayout({ children }) {
   const navigation = [
     { name: 'Dashboard', href: '/admin', icon: Settings },
     { name: 'Posts', href: '/admin/posts', icon: FileText },
+    { name: 'Comments', href: '/admin/comments', icon: MessageSquareText },
     { name: 'New Post', href: '/admin/posts/new', icon: Plus },
     { name: 'Categories', href: '/admin/categories', icon: FolderOpen },
   ];

@@ -1,59 +1,56 @@
-import { format } from 'date-fns';
+import { formatDateTime } from '@/lib/utils';
+import CommentReplies from './CommentReplies';
 
-export default function CommentList({ comments = [], isAdmin=false, onDelete }) {
-  // Format date using date-fns
-  const formatDate = (dateString) => {
-    try {
-      const date = new Date(dateString);
-      return format(date, 'MMMM d, yyyy \'at\' h:mm a');
-    } catch (error) {
-      return 'Unknown date';
-    }
-  };
+export default function CommentList({ comments = [] }) {
 
-  if (comments.length === 0) {
+
+  // Filter to only show parent comments (not replies)
+  const parentComments = comments.filter(comment => !comment.parentId);
+
+  if (parentComments.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-600 dark:text-gray-200">No comments yet. Be the first to comment!</p>
+        <p className="text-gray-600 dark:text-gray-400">No comments yet. Be the first to comment!</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-200">
-        Comments ({comments.length})
+      <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+        Comments ({parentComments.length})
       </h3>
       
-      {comments.map((comment) => (
-        <div key={comment.id} className="bg-white dark:bg-gray-900 border border-gray-200 rounded-lg p-6">
-          {/* Comment Header */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                <span className="text-white dark:text-gray text-sm font-medium">
+      {parentComments.map((comment) => (
+        <div key={comment.id} className="space-y-4">
+          {/* Main Comment */}
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+            <div className="flex items-start space-x-3">
+              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <span className="text-white text-sm font-medium">
                   {comment.name.charAt(0).toUpperCase()}
                 </span>
               </div>
-              <div>
-                <h4 className="font-medium text-gray-900 dark:text-gray-200 ">{comment.name}</h4>
-                <p className="text-xs text-gray-600 dark:text-gray-200">{formatDate(comment.createdAt)}</p>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap mb-1">
+                  <h4 className="font-semibold text-blue-600 dark:text-blue-400">
+                    {comment.name}
+                  </h4>
+                  <span className="text-xs text-gray-500 dark:text-gray-500">
+                    {formatDateTime(comment.createdAt)}
+                  </span>
+                </div>
+                <p className="text-gray-800 dark:text-gray-200 leading-relaxed">
+                  {comment.content}
+                </p>
               </div>
             </div>
-            
-            {/* Admin actions placeholder */}
-            {isAdmin && (
-              <button
-              onClick={() => onDelete(comment.id)} 
-              className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-600 text-sm cursor-pointer">
-                Delete
-              </button>
-            )}
           </div>
-          {/* Comment Content */}
-          <div className="text-gray-800 dark:text-gray-200 leading-relaxed">
-            <p>{comment.content}</p>
-          </div>
+
+          {/* Replies - nested below the comment */}
+        <CommentReplies
+            comment={comment}
+        />
         </div>
       ))}
     </div>
