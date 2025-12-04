@@ -17,7 +17,7 @@ export default function Sidebar({ categories = [] }) {
         <div className="space-y-2">
           {/* Profile Image - Circular */}
           <div className="flex justify-center">
-            <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-transparent border-blue-500 shadow-lg">
+            <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-transparent border-sky-500 shadow-lg">
               <Image
                 src="https://res.cloudinary.com/dx8m9dy9d/image/upload/v1753975545/NIYONSHUTI_Emmanuel_pdaqpi.jpg"
                 alt="NIYONSHUTI Emmanuel"
@@ -44,7 +44,7 @@ export default function Sidebar({ categories = [] }) {
               href="https://github.com/EmmanuelNiyonshuti"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-sky-600 dark:text-sky-400 hover:underline"
             >
               GitHub
             </a>
@@ -53,7 +53,7 @@ export default function Sidebar({ categories = [] }) {
               href="https://www.linkedin.com/in/niyonshuti-emmanuel-82877b285/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-sky-600 dark:text-sky-400 hover:underline"
             >
               LinkedIn
             </a>
@@ -62,14 +62,14 @@ export default function Sidebar({ categories = [] }) {
               href="https://x.com/emmanulio"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-sky-600 dark:text-sky-400 hover:underline"
             >
               X
             </a>
             {' · '}
             <a
               href="mailto:emmanuelniyonshuti13@gmail.com"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-sky-600 dark:text-sky-400 hover:underline"
             >
               Email
             </a>
@@ -79,8 +79,8 @@ export default function Sidebar({ categories = [] }) {
           <div className="text-center">
             <Link
               href="/about" 
-              className="inline-block text-blue-600 hover:text-blue-700 dark:text-blue-400 
-                       dark:hover:text-blue-300 text-sm font-medium transition-colors"
+              className="inline-block text-sky-600 hover:text-sky-700 dark:text-sky-400 
+                       dark:hover:text-sky-300 text-sm font-medium transition-colors"
             >
               Read more →
             </Link>

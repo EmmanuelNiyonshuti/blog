@@ -70,7 +70,7 @@ export default function PostDetail({ post }) {
       <div className="mb-8">
         <Link 
           href="/"
-          className="text-blue-600 dark:text-blue-400 hover:text-blue-700 text-sm font-medium transition-colors"
+          className="text-sky-600 dark:text-sky-400 hover:text-sky-700 text-sm font-medium transition-colors"
         >
           ← Back To blogs
         </Link>
@@ -85,7 +85,7 @@ export default function PostDetail({ post }) {
         {/* Meta Information */}
         <div className="text-sm text-gray-600 dark:text-gray-400 mb-6 italic">
           <span>Posted by </span>
-          <span className="font-medium">NIYONSHUTI Emmanuel</span>
+          <span className="font-medium bg-red-200 text-white">NIYONSHUTI Emmanuel</span>
           <span> on </span>
           <span className="font-medium">{formatDate(post.publishedAt || post.createdAt)}</span>
           
@@ -94,7 +94,7 @@ export default function PostDetail({ post }) {
               <span> in </span>
               <Link 
                 href={`/categories/${post.category?.slug || 'general'}`}
-                className="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-colors"
+                className="font-medium text-red-200 dark:text-red-100 hover:text-red-100  transition-colors"
               >
                 {categoryName}
               </Link>

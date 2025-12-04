@@ -57,7 +57,7 @@ export default function AboutPage() {
             You can also find me on{' '}
             <a
               href="mailto:emmanuelniyonshuti13@gmail.com"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-sky-600 dark:text-sky-400 hover:underline"
             >
               Email
             </a>
@@ -66,7 +66,7 @@ export default function AboutPage() {
               href="https://github.com/EmmanuelNiyonshuti"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-sky-600 dark:text-sky-400 hover:underline"
             >
               GitHub
             </a>
@@ -75,7 +75,7 @@ export default function AboutPage() {
               href="https://www.linkedin.com/in/niyonshuti-emmanuel-82877b285/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-sky-600 dark:text-sky-400 hover:underline"
             >
               LinkedIn
             </a>{' '}
@@ -84,7 +84,7 @@ export default function AboutPage() {
               href="https://x.com/emmanulio"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-sky-600 dark:text-sky-400 hover:underline"
             >
               X
             </a>

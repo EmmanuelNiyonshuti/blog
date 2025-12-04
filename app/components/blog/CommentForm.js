@@ -100,7 +100,7 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-6 py-2 bg-blue-600 text-white dark:text-gray-900 dark:text-gray-900 font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 cursor-pointer transition-colors"
+          className="px-6 py-2 bg-sky-600 text-white dark:text-gray-900 dark:text-gray-900 font-medium rounded-md hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 cursor-pointer transition-colors"
         >
           {isSubmitting ? 'Submitting...' : 'Post Comment'}
         </button>

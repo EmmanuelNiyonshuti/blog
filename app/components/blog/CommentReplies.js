@@ -11,15 +11,15 @@ const CommentReplies = ({ comment = {}, canDelete=false, isDeleting=null, handle
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex items-start space-x-3 flex-1">
-                      <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-8 bg-sky-600 rounded-full flex items-center justify-center flex-shrink-0">
                         <span className="text-white text-xs font-medium">NE</span>
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h4 className="font-semibold text-green-700 dark:text-green-400">
+                          <h4 className="font-semibold text-sky-950 dark:text-sky-600">
                             NIYONSHUTI Emmanuel
                           </h4>
-                          <span className="px-2 py-0.5 bg-blue-600 text-white text-xs rounded-full font-medium">
+                          <span className="px-2 py-0.5 bg-sky-600 text-white text-xs rounded-full font-medium">
                             Author
                           </span>
                           {/* <span className="text-xs text-gray-500 dark:text-gray-500">

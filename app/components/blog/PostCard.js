@@ -68,7 +68,7 @@ export default function PostCard({ post }) {
       <div className="flex justify-between items-center">
         <Link 
           href={`/blog/${getPostSlug(post)}`}
-          className="text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-colors font-medium"
+          className="text-sky-600 dark:text-sky-400 hover:text-sky-700 transition-colors font-medium"
         >
           Continue reading this post...
         </Link>

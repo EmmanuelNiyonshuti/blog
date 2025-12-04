@@ -26,14 +26,14 @@ export default function CommentList({ comments = [] }) {
           {/* Main Comment */}
           <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
             <div className="flex items-start space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 bg-sky-600 rounded-full flex items-center justify-center flex-shrink-0">
                 <span className="text-white text-sm font-medium">
                   {comment.name.charAt(0).toUpperCase()}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap mb-1">
-                  <h4 className="font-semibold text-blue-600 dark:text-blue-400">
+                  <h4 className="font-semibold text-sky-600 dark:text-blue-400">
                     {comment.name}
                   </h4>
                   <span className="text-xs text-gray-500 dark:text-gray-500">
