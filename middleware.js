@@ -1,5 +1,7 @@
+// middleware.js
 import { NextResponse } from 'next/server';
-import { API_BASE_URL } from './lib/api';
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 export async function middleware(request) {
     const path = request.nextUrl.pathname;
@@ -7,27 +9,28 @@ export async function middleware(request) {
         return NextResponse.next();
     }
     const token = request.cookies.get('token')?.value;
+    
     if (!token) {
         return NextResponse.redirect(new URL('/admin/login', request.url));
     }
+    
     try {
-        const response = await fetch(`${API_BASE_URL}/auth/verify`, {
-            method: 'POST',
+        const response = await fetch(`${BASE_URL}/api/auth/verify`, {
             headers: {
-                'Cookie': `token=${token}`,
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include'
+                'Authorization': `Bearer ${token}`,
+                'Cookie': `token=${token}`
+            }
         });
+        
         if (!response.ok) {
             return NextResponse.redirect(new URL('/admin/login', request.url));
         }
+        return NextResponse.next();
     } catch (error) {
+        console.error('Middleware auth error:', error);
         return NextResponse.redirect(new URL('/admin/login', request.url));
     }
-    return NextResponse.next();
 }
-
 export const config = {
-  matcher: ['/admin/:path*'],
+    matcher: ['/admin/:path*'],
 };

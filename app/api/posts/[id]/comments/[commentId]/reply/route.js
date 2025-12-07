@@ -1,38 +1,101 @@
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
+import { authenticate } from '@/lib/auth/middleware';
 
-export const API_BASE_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'https://blog-backend-2u9m.onrender.com/api';
-
-// POST - Create new post
-export async function POST(request, {params}) {
-
-    const {id, commentId} = await params;
-    if (!id || !commentId){
-        return NextResponse.json({error: 'Invalid request, missing ids'}, {status: 400})
+// POST - Reply to a comment (admin only)
+export async function POST(request, { params }) {
+  try {
+    const authResult = await authenticate(request);
+    if (!authResult.success) {
+      return NextResponse.json(
+        { success: false, message: authResult.message },
+        { status: 401 }
+      );
     }
-    try {
-        const cookieStore = await cookies();
-        const token = cookieStore.get('token')?.value;
-        
-        if (!token) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-        const data = await request.json();
-        const response = await fetch(`${API_BASE_URL}/posts/${id}/comments/${commentId}/reply`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(data)
-        });
-        const resObj = await response.json();
-        if (!response.ok || !resObj.success) {
-            return NextResponse.json(resObj.message || 'failed to reply', { status: response.status });
-        }
-        return NextResponse.json(resObj.reply);
-    } catch (error) {
-        console.error('Error replying to this comment:', error);
-        return NextResponse.json({ error: 'Failed to reply to this comment' }, { status: 500 });
+
+    const { content } = await request.json();
+
+    if (!content || typeof content !== 'string' || content.trim().length === 0) {
+      return NextResponse.json(
+        { success: false, message: 'Reply content is required' },
+        { status: 400 }
+      );
     }
+
+    if (content.length > 1000) {
+      return NextResponse.json(
+        { success: false, message: 'Reply must be less than 1000 characters' },
+        { status: 400 }
+      );
+    }
+
+    const parentComment = await prisma.comment.findUnique({
+      where: { id: parseInt(params.commentId) },
+      include: {
+        post: {
+          select: { 
+            id: true,
+            authorId: true,
+            status: true
+          }
+        }
+      }
+    });
+
+    if (!parentComment) {
+      return NextResponse.json(
+        { success: false, message: 'Comment not found' },
+        { status: 404 }
+      );
+    }
+
+    if (parentComment.post.authorId !== authResult.user.id) {
+      return NextResponse.json(
+        { success: false, message: 'Only the post author can reply to comments' },
+        { status: 403 }
+      );
+    }
+
+    // Prevent replying to replies (only 1 level deep)
+    if (parentComment.parentId !== null) {
+      return NextResponse.json(
+        { success: false, message: 'Cannot reply to a reply' },
+        { status: 400 }
+      );
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: authResult.user.id },
+      select: { email: true }
+    });
+
+    // Create the reply
+    const reply = await prisma.comment.create({
+      data: {
+        name: 'NIYONSHUTI Emmanuel',
+        email: user.email,
+        content: content.trim(),
+        postId: parentComment.postId,
+        parentId: parseInt(params.commentId),
+      },
+      select: {
+        id: true,
+        name: true,
+        content: true,
+        createdAt: true,
+        parentId: true
+      }
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Reply posted successfully',
+      reply
+    }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, message: `Failed to post reply: ${error.message}` },
+      { status: 500 }
+    );
+  }
 }

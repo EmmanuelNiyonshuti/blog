@@ -1,5 +1,5 @@
-
 import Link from 'next/link';
+import Image from 'next/image';
 import { formatDate } from '@/lib/utils';
 
 export default function PostCard({ post }) {
@@ -14,7 +14,7 @@ export default function PostCard({ post }) {
   const commentCount = post.comments?.length || 0;
   const isExternal = post.isExternal || post.source === 'medium';
 
-    const getPostSlug = (post) => {
+  const getPostSlug = (post) => {
     if (isExternal) {
       return encodeURIComponent(post.slug);
     }
@@ -22,12 +22,25 @@ export default function PostCard({ post }) {
   };
 
   return (
-    <article className="mb-12 pb-8 border-b border-gray-200 last:border-b-0">
+    <article className="mb-12 pb-8 border-b border-gray-200 dark:border-gray-800 last:border-b-0">
+      {/* Cover Image - NEW */}
+      {post.coverImage && (
+        <div className="relative w-full h-64 mb-4 overflow-hidden rounded bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
+          <Image
+            src={post.coverImage}
+            alt={post.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        </div>
+      )}
+
       {/* Post Title */}
       <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 leading-tight">
         <Link 
           href={`/blog/${getPostSlug(post)}`}
-          className="hover:text-gray-700 transition-colors"
+          className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
         >
           {post.title}
         </Link>
@@ -68,7 +81,7 @@ export default function PostCard({ post }) {
       <div className="flex justify-between items-center">
         <Link 
           href={`/blog/${getPostSlug(post)}`}
-          className="text-sky-600 dark:text-sky-400 hover:text-sky-700 transition-colors font-medium"
+          className="text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 transition-colors font-medium"
         >
           Continue reading this post...
         </Link>
@@ -76,7 +89,7 @@ export default function PostCard({ post }) {
         {!isExternal && commentCount > 0 && (
           <Link 
             href={`/blog/${getPostSlug(post)}#comments`}
-            className="text-gray-600 dark:text-gray-400 hover:text-gray-800 transition-colors text-sm"
+            className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors text-sm"
           >
             [{commentCount} comment{commentCount !== 1 ? 's' : ''}]
           </Link>

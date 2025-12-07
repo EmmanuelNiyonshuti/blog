@@ -34,21 +34,23 @@ export default function AboutPage() {
                 priority
               />
             </div>
-          </div>
-            <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-              Hi👋, I&apos;m NIYONSHUTI Emmanuel. I&apos;m a software developer with a strong focus on backend development.  
-              I started this blog to document what I learn, the experiments I try, and the small wins and challenges I encounter in programming and technology.  
-              I share insights here in a way that&apos;s authentic to my own learning journey.
-            </p>
+            </div>
+              <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+                Hi👋, My name is NIYONSHUTI Emmanuel, a software developer from Rwanda. 
+                I built this site to write down things I learn as I work on projects. 
+                Most of it will be backend-related—that&apos;s what I spend most of my time on currently.
+              </p>
 
-            <p className="leading-relaxed text-gray-700 dark:text-gray-300 mt-4">
-              Thank you for visiting! I hope you find something useful or interesting. Please leave a comment if you do!
-            </p>
+              <p className="leading-relaxed text-gray-700 dark:text-gray-300 mt-4">
+                It&apos;s mainly for me to come back to when I need to remember something, 
+                but if you find any of it helpful while browsing around, that&apos;s great. 
+                Feel free to leave a comment.
+              </p>
 
-            <p className="mt-8 text-gray-700 dark:text-gray-300 font-medium">
-              — Emmanuel
-            </p>
-          </div>
+              <p className="mt-8 text-gray-700 dark:text-gray-300 font-medium">
+                — Emmanuel
+              </p>
+            </div>
         </div>
 
         {/* Contact Section */}

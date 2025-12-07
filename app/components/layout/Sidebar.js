@@ -35,7 +35,7 @@ export default function Sidebar({ categories = [] }) {
           
           {/* Bio */}
           <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-            I&apos;m a software developer with a focus on backend development, living in Rwanda.
+              software developer. I keep notes here on things I learn.
           </p>
 
           {/* Social Links */}
