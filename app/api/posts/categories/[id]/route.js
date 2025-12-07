@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { authenticate } from '@/lib/auth/middleware';
-import { generateSlug, generateUniqueSlug } from '@/lib/helpers';
+import { generateSlug, generateUniqueSlug } from '@/lib/utils';
 
 // PUT - Update category (admin only)
 export async function PUT(request, { params }) {
