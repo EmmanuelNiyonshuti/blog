@@ -57,18 +57,17 @@ export async function GET(request, { params }) {
       hasNext: page < Math.ceil(total / limit),
       hasPrev: page > 1
     };
-
     return NextResponse.json({
       success: true,
       data: { 
         category,
-        posts, 
+        posts,
         pagination 
       }
     });
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: 'Failed to fetch category posts' },
+      { success: false, message: 'Failed to fetch category posts', details: error },
       { status: 500 }
     );
   }

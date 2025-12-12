@@ -34,7 +34,6 @@ export async function generateMetadata({ params }) {
 export default async function CategoryPage({ params }) {
   try {
     const slug = await params.slug;
-    // const posts = await fetchPostsByCategory(slug)
     const [posts, categories] = await Promise.all([
       fetchPostsByCategory(slug),
       fetchCategories()
@@ -43,8 +42,6 @@ export default async function CategoryPage({ params }) {
     if (!PostCategory) {
       notFound();
     }
-
-    console.log("categories:", categories)
 
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
