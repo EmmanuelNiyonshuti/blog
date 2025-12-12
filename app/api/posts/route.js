@@ -52,7 +52,10 @@ export async function GET(request) {
 
     return NextResponse.json({
       success: true,
-      data: { posts, pagination }
+      data: { posts, pagination },
+      headers: {
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
+      },
     });
   } catch (error) {
     return NextResponse.json(
