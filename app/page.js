@@ -1,57 +1,46 @@
 // app/page.js
 import PostCard from './components/blog/PostCard';
 import Sidebar from './components/layout/Sidebar';
+import Pagination from './components/ui/Pagination';
 import { fetchAllPosts } from "@/lib/api";
 
 export const metadata = {
-  title: 'NIYONSHUTI Emmanuel | Backend Engineer',
-  description: 'Thoughts on backend engineering, distributed systems, and building scalable software.'
+  title: 'NIYONSHUTI Emmanuel | Software Engineer',
+  description: 'Notes on backend engineering, databases, and building systems.'
 };
 
-export default async function HomePage() {
-  const posts = await fetchAllPosts();
+export default async function HomePage({ searchParams }) {
+  const page = parseInt(searchParams?.page || '1');
+  const limit = 10;
+  
+  const { posts, pagination } = await fetchAllPosts(page, limit);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        {/* Main Content */}
         <main className="lg:col-span-2">
-
-          {/* Posts Grid */}
           {posts.length > 0 ? (
-            <div className="space-y-12">
-              {posts.map((post) => (
-                <PostCard key={post.id} post={post} />
-              ))}
-            </div>
+            <>
+              <div className="space-y-12">
+                {posts.map((post) => (
+                  <PostCard key={post.id} post={post} />
+                ))}
+              </div>
+              <Pagination 
+                currentPage={pagination.currentPage || 1}
+                totalPages={pagination.totalPages || 1}
+                hasNext={pagination.hasNext || false}
+                hasPrev={pagination.hasPrev || false}
+              />
+            </>
           ) : (
             <div className="text-center py-16 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
               <p className="text-gray-600 dark:text-gray-400 text-lg">
-                No posts yet. Building something...
+                No posts yet.
               </p>
             </div>
           )}
-
-          {/* Pagination (future) */}
-          {posts.length > 10 && (
-            <div className="flex justify-between items-center mt-16 pt-8 border-t border-gray-800">
-              <button 
-                disabled 
-                className="px-6 py-2 text-gray-500 dark:text-gray-600 cursor-not-allowed font-mono text-sm"
-              >
-                ← newer
-              </button>
-              <button 
-                disabled 
-                className="px-6 py-2 text-gray-500 dark:text-gray-600 cursor-not-allowed font-mono text-sm"
-              >
-                older →
-              </button>
-            </div>
-          )}
         </main>
-
-        {/* Sidebar */}
         <aside className="lg:col-span-1">
           <div className="sticky top-8">
             <Sidebar />

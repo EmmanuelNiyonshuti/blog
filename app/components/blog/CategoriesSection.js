@@ -2,7 +2,7 @@ import Link from "next/link";
 import { fetchAllPosts } from "@/lib/api";
 
 const CategoriesSection = async () => {
-  const posts = await fetchAllPosts();
+  const { posts, pagination} = await fetchAllPosts();
   const categoryMap = posts.reduce((acc, post) => {
     const cat = post.category;
     if (!cat) return acc;
