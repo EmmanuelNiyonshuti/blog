@@ -27,7 +27,7 @@ export default function AboutPage() {
           <div className="flex justify-center">
             <div className="relative w-28 h-28 rounded-full overflow-hidden border-2 border-transparent shadow-lg">
               <Image
-                src="https://res.cloudinary.com/dx8m9dy9d/image/upload/v1753975545/NIYONSHUTI_Emmanuel_pdaqpi.jpg"
+                src="https://res.cloudinary.com/dx8m9dy9d/image/upload/v1765717992/unnamed_zzj6hi.jpg"
                 alt="NIYONSHUTI Emmanuel"
                 fill
                 className="object-cover"
@@ -36,15 +36,16 @@ export default function AboutPage() {
             </div>
             </div>
               <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-                Hi👋, My name is NIYONSHUTI Emmanuel, a software developer from Rwanda. 
-                I built this site to write down things I learn as I work on projects. 
-                Most of it will be backend-related—that&apos;s what I spend most of my time on currently.
+                Hi 👋, I&apos;m Emmanuel Niyonshuti, a software engineer with a background in crop production.
+                I made the transition to software engineering while pursuing my BSc with Honours in Crop Production, 
+                completing a 12-month ALX Software Engineering program alongside my studies. 
+                These days, my focus is primarily on backend engineering.
               </p>
-
               <p className="leading-relaxed text-gray-700 dark:text-gray-300 mt-4">
-                It&apos;s mainly for me to come back to when I need to remember something, 
-                but if you find any of it helpful while browsing around, that&apos;s great. 
-                Feel free to leave a comment.
+                I built this blog as a space to document software engineering concepts and share insights 
+                from my journey in the field. Most of the content here is backend-related, which is where I spend 
+                most of my time currently.
+                If you find something helpful, feel free to leave a comment. Thanks!
               </p>
 
               <p className="mt-8 text-gray-700 dark:text-gray-300 font-medium">
