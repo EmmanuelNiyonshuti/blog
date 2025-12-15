@@ -6,7 +6,30 @@ import { fetchAllPosts } from "@/lib/api";
 
 export const metadata = {
   title: 'NIYONSHUTI Emmanuel | Software Engineer',
-  description: 'Notes on backend engineering, databases, and building systems.'
+  description: 'Notes on software engineering.',
+  
+  openGraph: {
+    title: 'NIYONSHUTI Emmanuel | Software Engineer',
+    description: 'Notes on software engineering.',
+    url: process.env.NEXT_PUBLIC_BASE_URL || 'https://blog.niyonshutiemmanuel.com',
+    siteName: 'NIYONSHUTI Emmanuel',
+    images: [
+      {
+        url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://blog.niyonshutiemmanuel.com'}/default-preview.png`,
+        width: 1200, 
+        height: 630, 
+        alt: 'NIYONSHUTI Emmanuel Blog Preview',
+      },
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'NIYONSHUTI Emmanuel | Software Engineer',
+    description: 'Notes on software engineering.',
+    images: [`${process.env.NEXT_PUBLIC_BASE_URL || 'https://blog.niyonshutiemmanuel.com'}/default-preview.png`],
+    creator: '@emmanuelio',
+  },
 };
 
 export default async function HomePage({ searchParams }) {

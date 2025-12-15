@@ -9,23 +9,46 @@ export async function generateMetadata({ params }) {
   const paramObj = await params;
   const decodedSlug = decodeURIComponent(paramObj.slug);
   const post = await fetchPostBySlug(decodedSlug);
-  
-  console.log(post.comments);
+
   if (!post) {
     return {
       title: 'Post Not Found',
     };
   }
+  const relativeImageUrl = '/default-preview.png';
+
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://blog.niyonshutiemmanuel.com';
+  const absoluteImageUrl = `${BASE_URL}${relativeImageUrl}`;
+
+  const postUrl = `${BASE_URL}/blog/${decodedSlug}`;
+  const postDescription = post.excerpt || `${post.content.substring(0, 160)}...`;
 
   return {
     title: post.title,
-    description: post.excerpt || `${post.content.substring(0, 160)}...`,
+    description: postDescription,
     openGraph: {
       title: post.title,
-      description: post.excerpt || `${post.content.substring(0, 160)}...`,
+      description: postDescription,
+      url: postUrl,
+      siteName: 'NIYONSHUTI Emmanuel | Software Engineer',
       type: 'article',
       publishedTime: post.publishedAt || post.createdAt,
       authors: ['NIYONSHUTI Emmanuel'],
+      images: [
+        {
+          url: absoluteImageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: postDescription,
+      images: [absoluteImageUrl],
+      creator: '@emmanuelio',
     },
   };
 }
@@ -41,7 +64,6 @@ export default async function BlogPostPage({ params }) {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="max-w-4xl mx-auto">
-        {/* Post Content */}
         <PostDetail post={post} />
 
         {!isExternal && (
