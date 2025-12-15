@@ -4,6 +4,20 @@ import Footer from './components/layout/Footer';
 import ThemeProvider from '@/app/components/ui/theme-provider';
 import 'highlight.js/styles/github-dark.css';
 
+
+
+
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://blog.niyonshutiemmanuel.com';
+
+export const metadata = {
+  metadataBase: new URL(BASE_URL),
+  title: {
+    default: 'NIYONSHUTI Emmanuel | Software Engineer',
+    template: '%s | NIYONSHUTI Emmanuel',
+  },
+  description: 'Notes on software engineering.',
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>

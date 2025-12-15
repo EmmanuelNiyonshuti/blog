@@ -18,7 +18,6 @@ export async function generateMetadata({ params }) {
   const relativeImageUrl = '/default-preview.png';
 
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://blog.niyonshutiemmanuel.com';
-  const absoluteImageUrl = `${BASE_URL}${relativeImageUrl}`;
 
   const postUrl = `${BASE_URL}/blog/${decodedSlug}`;
   const postDescription = post.excerpt || `${post.content.substring(0, 160)}...`;
@@ -36,7 +35,7 @@ export async function generateMetadata({ params }) {
       authors: ['NIYONSHUTI Emmanuel'],
       images: [
         {
-          url: absoluteImageUrl,
+          url: relativeImageUrl,
           width: 1200,
           height: 630,
           alt: post.title,
@@ -47,7 +46,7 @@ export async function generateMetadata({ params }) {
       card: 'summary_large_image',
       title: post.title,
       description: postDescription,
-      images: [absoluteImageUrl],
+      images: [relativeImageUrl],
       creator: '@emmanuelio',
     },
   };
