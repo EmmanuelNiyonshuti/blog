@@ -15,12 +15,12 @@ export async function generateMetadata({ params }) {
       title: 'Post Not Found',
     };
   }
-  const relativeImageUrl = '/default-preview.png';
+  const relativeImageUrl = 'https://res.cloudinary.com/dx8m9dy9d/image/upload/v1765820670/default-preview_vi9608.png';
 
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://blog.niyonshutiemmanuel.com';
 
   const postUrl = `${BASE_URL}/blog/${decodedSlug}`;
-  const postDescription = post.excerpt || `${post.content.substring(0, 160)}...`;
+  const postDescription = `${post.excerpt.substring(0, 160)}...` || `${post.content.substring(0, 160)}...`;
 
   return {
     title: post.title,
