@@ -1,8 +1,8 @@
 // app/page.js
 import PostCard from './components/blog/PostCard';
-import Sidebar from './components/layout/Sidebar';
 import Pagination from './components/ui/Pagination';
 import { fetchAllPosts } from "@/lib/api";
+import CategoriesSection from './components/blog/CategoriesSection';
 
 export const metadata = {
   title: 'NIYONSHUTI Emmanuel | Software Engineer',
@@ -33,15 +33,26 @@ export const metadata = {
 };
 
 export default async function HomePage({ searchParams }) {
-  const page = parseInt(searchParams?.page || '1');
+  const params = await searchParams;
+  const page = parseInt(params?.page || '1');
   const limit = 10;
   
   const { posts, pagination } = await fetchAllPosts(page, limit);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        <main className="lg:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        {/* Categories Sidebar - Left on Desktop, Top on Mobile */}
+        <aside className="lg:col-span-1 order-2 lg:order-1">
+          <div className="lg:sticky lg:top-8">
+            <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 shadow-sm">
+              <CategoriesSection />
+            </div>
+          </div>
+        </aside>
+
+        {/* Main Content - Right on Desktop */}
+        <main className="lg:col-span-3 order-1 lg:order-2">
           {posts.length > 0 ? (
             <>
               <div className="space-y-12">
@@ -64,11 +75,6 @@ export default async function HomePage({ searchParams }) {
             </div>
           )}
         </main>
-        <aside className="lg:col-span-1">
-          <div className="sticky top-8">
-            <Sidebar />
-          </div>
-        </aside>
       </div>
     </div>
   );

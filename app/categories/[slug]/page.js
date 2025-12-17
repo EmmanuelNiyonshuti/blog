@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation';
 import PostList from '../../components/blog/PostList';
 import Sidebar from '../../components/layout/Sidebar';
+import CategoriesSection from '@/app/components/blog/CategoriesSection';
 import { fetchPostsByCategory, fetchCategories } from '../../../lib/api';
 
-// Generate metadata for SEO
 export async function generateMetadata({ params }) {
   try {
     const slug = await params.slug;
@@ -54,9 +54,6 @@ export default async function CategoryPage({ params }) {
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
                 {PostCategory.name}
               </h1>
-              <p className="text-lg text-gray-600">
-                {posts.length} post{posts.length !== 1 ? 's' : ''} here!
-              </p>
             </div>
             
             {/* Posts */}
@@ -66,10 +63,13 @@ export default async function CategoryPage({ params }) {
             />
           </main>
 
-          {/* Sidebar - right side on desktop */}
-          <aside className="lg:col-span-1 order-2">
-            <Sidebar />
-          </aside>
+        <aside className="lg:col-span-1 order-2 lg:order-1">
+          <div className="lg:sticky lg:top-8">
+            <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 shadow-sm">
+              <CategoriesSection />
+            </div>
+          </div>
+        </aside>
         </div>
       </div>
     );
