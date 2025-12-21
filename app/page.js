@@ -5,12 +5,12 @@ import { fetchAllPosts } from "@/lib/api";
 import CategoriesSection from './components/blog/CategoriesSection';
 
 export const metadata = {
-  title: 'NIYONSHUTI Emmanuel | Software Engineer',
-  description: 'Notes on software engineering.',
+  title: 'NIYONSHUTI Emmanuel | Software developer',
+  description: 'Notes on software development.',
   
   openGraph: {
-    title: 'NIYONSHUTI Emmanuel | Software Engineer',
-    description: 'Notes on software engineering.',
+    title: 'NIYONSHUTI Emmanuel | Software developer',
+    description: 'Notes on software development.',
     url: process.env.NEXT_PUBLIC_BASE_URL || 'https://blog.niyonshutiemmanuel.com',
     siteName: 'NIYONSHUTI Emmanuel',
     images: [
@@ -25,8 +25,8 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'NIYONSHUTI Emmanuel | Software Engineer',
-    description: 'Notes on software engineering.',
+    title: 'NIYONSHUTI Emmanuel | Software developer',
+    description: 'Notes on software development.',
     images: ['https://res.cloudinary.com/dx8m9dy9d/image/upload/v1766339600/blog-preview_h6mkod.jpg'],
     creator: '@emmanuelio',
   },

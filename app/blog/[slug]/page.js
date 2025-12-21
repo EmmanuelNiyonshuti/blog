@@ -29,7 +29,7 @@ export async function generateMetadata({ params }) {
       title: post.title,
       description: postDescription,
       url: postUrl,
-      siteName: 'NIYONSHUTI Emmanuel | Software Engineer',
+      siteName: 'NIYONSHUTI Emmanuel | Software developer',
       type: 'article',
       publishedTime: post.publishedAt || post.createdAt,
       authors: ['NIYONSHUTI Emmanuel'],
