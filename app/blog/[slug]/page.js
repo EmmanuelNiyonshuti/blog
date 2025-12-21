@@ -15,7 +15,7 @@ export async function generateMetadata({ params }) {
       title: 'Post Not Found',
     };
   }
-  const relativeImageUrl = 'https://res.cloudinary.com/dx8m9dy9d/image/upload/v1765822012/preview-blog_qs9axk.png';
+  const relativeImageUrl = 'https://res.cloudinary.com/dx8m9dy9d/image/upload/v1766339600/blog-preview_h6mkod.jpg';
 
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://blog.niyonshutiemmanuel.com';
 
