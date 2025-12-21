@@ -15,7 +15,7 @@ export const metadata = {
     siteName: 'NIYONSHUTI Emmanuel',
     images: [
       {
-        url: 'https://res.cloudinary.com/dx8m9dy9d/image/upload/v1765822012/preview-blog_qs9axk.avif',
+        url: 'https://res.cloudinary.com/dx8m9dy9d/image/upload/v1765822012/preview-blog_qs9axk.png',
         width: 1200, 
         height: 630, 
         alt: 'NIYONSHUTI Emmanuel Blog Preview',
@@ -27,7 +27,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: 'NIYONSHUTI Emmanuel | Software Engineer',
     description: 'Notes on software engineering.',
-    images: ['https://res.cloudinary.com/dx8m9dy9d/image/upload/v1765822012/preview-blog_qs9axk.avif'],
+    images: ['https://res.cloudinary.com/dx8m9dy9d/image/upload/v1765822012/preview-blog_qs9axk.png'],
     creator: '@emmanuelio',
   },
 };

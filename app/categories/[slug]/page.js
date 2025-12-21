@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation';
 import PostList from '../../components/blog/PostList';
-import Sidebar from '../../components/layout/Sidebar';
 import CategoriesSection from '@/app/components/blog/CategoriesSection';
 import { fetchPostsByCategory, fetchCategories } from '../../../lib/api';
 
