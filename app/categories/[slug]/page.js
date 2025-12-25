@@ -5,13 +5,13 @@ import { fetchPostsByCategory, fetchCategories } from '../../../lib/api';
 
 export async function generateMetadata({ params }) {
   try {
-    const slug = await params.slug;
+    const params = await params;
     const [posts, categories] = await Promise.all([
-      fetchPostsByCategory(slug),
+      fetchPostsByCategory(params.slug),
       fetchCategories()
     ]);
-    
-    const category = categories.find(cat => cat.slug === slug);
+
+    const category = categories.find(cat => cat.slug === params.slug);
     
     if (!category) {
       return {
@@ -32,12 +32,12 @@ export async function generateMetadata({ params }) {
 
 export default async function CategoryPage({ params }) {
   try {
-    const slug = await params.slug;
+    const parms = await params;
     const [posts, categories] = await Promise.all([
-      fetchPostsByCategory(slug),
+      fetchPostsByCategory(parms.slug),
       fetchCategories()
     ]);
-    const PostCategory = categories.find(cat => cat.slug === slug);
+    const PostCategory = categories.find(cat => cat.slug === parms.slug);
     if (!PostCategory) {
       notFound();
     }
@@ -45,6 +45,13 @@ export default async function CategoryPage({ params }) {
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          <aside className="lg:col-span-1 order-2 lg:order-1">
+            <div className="lg:sticky lg:top-8">
+              <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 shadow-sm">
+                <CategoriesSection />
+              </div>
+            </div>
+          </aside>
           {/* Main Content - 75% width on desktop */}
           <main className="lg:col-span-3 order-1">
             
@@ -61,14 +68,6 @@ export default async function CategoryPage({ params }) {
               emptyMessage={`No posts found in the ${PostCategory.name} category yet.`}
             />
           </main>
-
-        <aside className="lg:col-span-1 order-2 lg:order-1">
-          <div className="lg:sticky lg:top-8">
-            <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 shadow-sm">
-              <CategoriesSection />
-            </div>
-          </div>
-        </aside>
         </div>
       </div>
     );

@@ -78,7 +78,7 @@ export default function Navbar() {
           <div className="md:hidden">
             <button 
               onClick={toggleMenu}
-              className="text-gray-900 dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-300 p-2" 
+              className="text-gray-900 dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-300 p-2 cursor-pointer transition-colors" 
               title="Menu"
               aria-label="Toggle menu"
             >
