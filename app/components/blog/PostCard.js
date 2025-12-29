@@ -49,14 +49,14 @@ export default function PostCard({ post }) {
       {/* Meta Information */}
       <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
         <span className="italic">Posted by </span>
-        <span className="font-medium">NIYONSHUTI Emmanuel</span>
+        <span className="font-medium text-sky-400 dark:text-sky-200">NIYONSHUTI Emmanuel</span>
         <span className="italic"> on </span>
-        <span>{formatDate(post.publishedAt || post.createdAt)}</span>
+        <span className="font-medium text-sky-400 dark:text-sky-200">{formatDate(post.publishedAt || post.createdAt)}</span>
         {/* Category for backend posts */}
         {!isExternal && post.category && (
           <>
             <span className="italic"> under </span>
-            <span className="font-medium">{post.category.name}</span>
+            <span className="font-medium text-sky-400 dark:text-sky-200">{post.category.name}</span>
           </>
         )}
         
@@ -74,7 +74,7 @@ export default function PostCard({ post }) {
       
       {/* Post Content Preview */}
       <div className="text-gray-800 dark:text-gray-200 leading-relaxed mb-4 text-base">
-        <p>{getContentPreview(post.excerpt) || getContentPreview(post.content)}</p>
+        <p>{getContentPreview(post.excerpt) || ''}</p>
       </div>
       
       {/* Actions */}
@@ -83,7 +83,7 @@ export default function PostCard({ post }) {
           href={`/blog/${getPostSlug(post)}`}
           className="text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 transition-colors font-medium"
         >
-          Continue reading this post...
+          Go to blog &rarr;
         </Link>
         
         {!isExternal && commentCount > 0 && (

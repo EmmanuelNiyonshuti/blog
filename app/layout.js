@@ -15,7 +15,14 @@ export const metadata = {
     default: 'NIYONSHUTI Emmanuel | Software Engineer',
     template: '%s | NIYONSHUTI Emmanuel',
   },
-  description: 'Notes on software engineering.',
+  alternates: {
+    types: {
+      'application/rss+xml': [
+        { url: '/rss.xml', title: 'NIYONSHUTI Emmanuel RSS Feed' }
+      ],
+    },
+  },
+  description: 'Notes on software development.',
 };
 
 export default function RootLayout({ children }) {

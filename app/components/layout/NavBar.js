@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Github, Linkedin, Twitter, X } from 'lucide-react';
 import ThemeToggle from '@/app/components/ui/theme-toggle';
+import RSSLink from '../RssLink';
+import { LinkedInIcon, GitHubIcon, XIcon } from '../ui/Icons';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,26 +54,27 @@ export default function Navbar() {
               className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
               title="GitHub"
             >
-              <Github size={20} />
+              <GitHubIcon className="w-5 h-5 hover:text-gray-900 dark:hover:text-white" />
             </a>
             <a 
               href="https://www.linkedin.com/in/niyonshuti-emmanuel-82877b285/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="text-gray-600 dark:text-gray-300 transition-colors"
               title="LinkedIn"
             >
-              <Linkedin size={20} />
+              <LinkedInIcon className="w-5 h-5 hover:text-blue-700 dark:hover:text-blue" />
             </a>
             <a 
               href="https://x.com/emmanulio" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="text-gray-600 dark:text-gray-300 transition-colors"
               title="Twitter/X"
             >
-              <Twitter size={20} />
+              <XIcon className="w-5 h-5 hover:text-blue-700 dark:hover:text-blue" />
             </a>
+            <RSSLink />
           </div>
           
           {/* Mobile Hamburger Button */}
@@ -124,30 +127,28 @@ export default function Navbar() {
                   rel="noopener noreferrer"
                   className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
                   title="GitHub"
-                  onClick={closeMenu}
                 >
-                  <Github size={20} />
+                  <GitHubIcon className="w-5 h-5 hover:text-gray-900 dark:hover:text-white" />
                 </a>
                 <a 
                   href="https://www.linkedin.com/in/niyonshuti-emmanuel-82877b285/" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  className="text-gray-600 dark:text-gray-300 transition-colors"
                   title="LinkedIn"
-                  onClick={closeMenu}
                 >
-                  <Linkedin size={20} />
+                  <LinkedInIcon className="w-5 h-5 hover:text-blue-700 dark:hover:text-blue" />
                 </a>
                 <a 
                   href="https://x.com/emmanulio" 
-                  target="_blank" 
+                  target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  className="text-gray-600 dark:text-gray-300 transition-colors"
                   title="Twitter/X"
-                  onClick={closeMenu}
                 >
-                  <Twitter size={20} />
+                  <XIcon className="w-5 h-5 hover:text-blue-700 dark:hover:text-blue" />
                 </a>
+                <RSSLink />
                 <ThemeToggle />
               </div>
             </div>
