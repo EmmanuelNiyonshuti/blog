@@ -40,12 +40,8 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
           <input
             type="text"
             id="name"
-            {...register('name', { 
-              required: 'Name is required',
-              maxLength: { value: 100, message: 'Name must be less than 100 characters' }
-            })}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Your name"
+            className="w-full px-2 py-2 border border-gray-300 dark:border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="emmanuel"
           />
           {errors.name && (
             <p className="text-red-600 text-sm mt-1">{errors.name.message}</p>
@@ -61,7 +57,7 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
             type="email"
             id="email"
             {...register('email', { 
-              required: 'Email is required',
+              required: 'enter your email',
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: 'Invalid email address'
@@ -73,7 +69,6 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
           {errors.email && (
             <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
           )}
-          <p className="text-xs text-gray-600 dark:text-gray-200 mt-1">Your email will not be published</p>
         </div>
 
         {/* Comment Field */}
@@ -85,7 +80,7 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
             id="content"
             rows={4}
             {...register('content', { 
-              required: 'Comment is required',
+              required: "can't leave it blank",
               maxLength: { value: 1000, message: 'Comment must be less than 1000 characters' }
             })}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
@@ -102,7 +97,7 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
           disabled={isSubmitting}
           className="px-6 py-2 bg-sky-600 text-white dark:text-gray-900 dark:text-gray-900 font-medium rounded-md hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 cursor-pointer transition-colors"
         >
-          {isSubmitting ? 'Submitting...' : 'Post Comment'}
+          {isSubmitting ? '...' : 'comment'}
         </button>
       </form>
     </div>

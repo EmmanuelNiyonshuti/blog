@@ -66,16 +66,6 @@ export default function PostDetail({ post }) {
 
   return (
     <article className="max-w-4xl mx-auto px-4">
-      {/* Back link */}
-      <div className="mb-8">
-        <Link 
-          href="/"
-          className="text-sky-600 dark:text-sky-400 hover:text-sky-700 text-sm font-medium transition-colors"
-        >
-          ← Back To blogs
-        </Link>
-      </div>
-
       {/* Post Header */}
       <header className="mb-12">
         <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6 leading-tight">
@@ -85,16 +75,16 @@ export default function PostDetail({ post }) {
         {/* Meta Information */}
         <div className="text-sm text-gray-600 dark:text-gray-400 mb-6 italic">
           <span>Posted by </span>
-          <span className="font-medium bg-red-200 text-white">NIYONSHUTI Emmanuel</span>
+          <span className="font-medium text-sky-400 dark:text-sky-200">NIYONSHUTI Emmanuel</span>
           <span> on </span>
-          <span className="font-medium">{formatDate(post.publishedAt || post.createdAt)}</span>
+          <span className="font-medium text-sky-400 dark:text-sky-200">{formatDate(post.publishedAt || post.createdAt)}</span>
           
           {!isExternal && (
             <>
               <span> in </span>
               <Link 
                 href={`/categories/${post.category?.slug || 'general'}`}
-                className="font-medium text-red-200 dark:text-red-100 hover:text-red-100  transition-colors"
+                className="font-medium text-sky-400 dark:text-sky-200 transition-colors"
               >
                 {categoryName}
               </Link>
@@ -128,64 +118,12 @@ export default function PostDetail({ post }) {
         <div className="mt-2"></div>
       </header>
 
-      {/* Post Content - Your global.css prose-blog styles will handle all spacing */}
+      {/* Post Content */}
       <div 
         className="prose-blog max-w-none"
         dangerouslySetInnerHTML={{ __html: htmlContent }}
       />
-
-      {/* Divider before footer */}
       <div className="mt-2"></div>
-
-      {/* Post Footer with Share */}
-      <footer className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-12">
-        <div className="text-sm text-gray-600 dark:text-gray-400">
-          <span>Published on {formatDate(post.publishedAt || post.createdAt)}</span>
-        </div>
-        
-        {/* Simple Share Links */}
-        <div className="flex items-center space-x-4">
-          <span className="text-sm text-gray-600 dark:text-gray-400">Share:</span>
-          
-          <a
-            href={shareUrls.twitter}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-600 dark:text-gray-400 hover:text-blue-400 transition-colors"
-            title="Share on Twitter"
-          >
-            <Twitter size={18} />
-          </a>
-
-          <a
-            href={shareUrls.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors"
-            title="Share on LinkedIn"
-          >
-            <Linkedin size={18} />
-          </a>
-
-          <a
-            href={shareUrls.facebook}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors"
-            title="Share on Facebook"
-          >
-            <Facebook size={18} />
-          </a>
-
-          <button
-            onClick={copyToClipboard}
-            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
-            title={copied ? "Copied!" : "Copy link"}
-          >
-            {copied ? <Check size={18} /> : <Copy size={18} />}
-          </button>
-        </div>
-      </footer>
     </article>
   );
 }
