@@ -41,25 +41,24 @@ export async function GET(request) {
         where: { status: 'PUBLISHED' }
       })
     ]);
-
-    const pagination = {
+    const totalPages = Math.ceil(total / limit);
+    const meta = {
       currentPage: page,
-      totalPages: Math.ceil(total / limit),
+      totalPages: totalPages,
       totalPosts: total,
-      hasNext: page < Math.ceil(total / limit),
-      hasPrev: page > 1
-    };
-
+      next: page < totalPages ? `?page=${page + 1}&limit=${limit}` : null,
+      previous: page > 1 ? `?page=${page - 1}&limit=${limit}` : null,
+    }
     return NextResponse.json({
       success: true,
-      data: { posts, pagination },
+      data: { posts, meta },
       headers: {
         'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
       },
     });
   } catch (error) {
     return NextResponse.json(
-      { success: false, message: `Failed to fetch posts, ${error}` },
+      { success: false, message: `Failed to fetch posts, ${error.message}` },
       { status: 500 }
     );
   }

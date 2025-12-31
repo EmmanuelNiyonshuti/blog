@@ -23,6 +23,7 @@ export default function PostForm({ post = null, categories = [] }) {
     defaultValues: {
       title: post?.title || '',
       slug: post?.slug || '',
+      coverImage: post?.coverImage || '',
       excerpt: post?.excerpt || '',
       categoryId: post?.categoryId || '',
       tags: post?.tags?.join(', ') || '',
@@ -127,7 +128,21 @@ export default function PostForm({ post = null, categories = [] }) {
           <p className="text-red-600 dark:text-red-400 text-sm mt-1">{errors.slug.message}</p>
         )}
       </div>
-
+      <div>
+        <label htmlFor="coverImage" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+          Cover Image *
+        </label>
+        <input
+          type="text"
+          id="coverImage"
+          {...register('coverImage')}
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          placeholder="Enter cover image URL..."
+        />
+        {errors.coverImage && (
+          <p className="text-red-600 dark:text-red-400 text-sm mt-1">{errors.coverImage.message}</p>
+        )}
+      </div>
       {/* Excerpt */}
       <div>
         <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
@@ -157,6 +172,7 @@ export default function PostForm({ post = null, categories = [] }) {
           ))}
         </select>
       </div>
+      
 
       {/* Tags */}
       <div>

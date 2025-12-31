@@ -3,97 +3,87 @@ import Image from 'next/image';
 import { formatDate } from '@/lib/utils';
 
 export default function PostCard({ post }) {
-  const getContentPreview = (htmlContent, maxWords = 60) => {
-    const textContent = htmlContent.replace(/<[^>]*>/g, '');
+  const getContentPreview = (htmlContent, maxWords = 30, noImageMax = 60) => {
+    const textContent = htmlContent?.replace(/<[^>]*>/g, '') || '';
     const words = textContent.split(' ');
     
-    if (words.length <= maxWords) return textContent;
-    return words.slice(0, maxWords).join(' ') + '...';
+    // If no image, we allow more words to fill the space
+    const limit = post.coverImage ? maxWords : noImageMax;
+    
+    if (words.length <= limit) return textContent;
+    return words.slice(0, limit).join(' ') + '...';
   };
 
   const commentCount = post.comments?.length || 0;
   const isExternal = post.isExternal || post.source === 'medium';
-
-  const getPostSlug = (post) => {
-    if (isExternal) {
-      return encodeURIComponent(post.slug);
-    }
-    return post.slug;
-  };
+  const getPostSlug = (post) => isExternal ? encodeURIComponent(post.slug) : post.slug;
 
   return (
-    <article className="mb-12 pb-8 border-b border-gray-200 dark:border-gray-800 last:border-b-0">
-      {/* Cover Image - NEW */}
-      {post.coverImage && (
-        <div className="relative w-full h-64 mb-4 overflow-hidden rounded bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
-          <Image
-            src={post.coverImage}
-            alt={post.title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-        </div>
-      )}
+    <article className="group mb-10 pb-10 border-b border-gray-100 dark:border-gray-800 last:border-b-0">
+      <div className={`flex flex-col gap-6 md:items-start ${post.coverImage ? 'md:flex-row' : 'flex-col'}`}>
+        
+        {/* Only Render Image Side if coverImage exists */}
+        {post.coverImage && (
+          <div className="relative w-full md:w-1/3 aspect-video md:aspect-square lg:aspect-[4/3] overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 flex-shrink-0">
+            <Link href={`/blog/${getPostSlug(post)}`}>
+              <Image
+                src={post.coverImage}
+                alt={post.title}
+                fill
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                sizes="(max-width: 768px) 100vw, 30vw"
+              />
+            </Link>
+          </div>
+        )}
 
-      {/* Post Title */}
-      <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3 leading-tight">
-        <Link 
-          href={`/blog/${getPostSlug(post)}`}
-          className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-        >
-          {post.title}
-        </Link>
-      </h2>
-      
-      {/* Meta Information */}
-      <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-        <span className="italic">Posted by </span>
-        <span className="font-medium text-sky-400 dark:text-sky-200">NIYONSHUTI Emmanuel</span>
-        <span className="italic"> on </span>
-        <span className="font-medium text-sky-400 dark:text-sky-200">{formatDate(post.publishedAt || post.createdAt)}</span>
-        {/* Category for backend posts */}
-        {!isExternal && post.category && (
-          <>
-            <span className="italic"> under </span>
-            <span className="font-medium text-sky-400 dark:text-sky-200">{post.category.name}</span>
-          </>
-        )}
-        
-        {/* Tags */}
-        {post.tags && post.tags.length > 0 && (
-          <>
-            <span className="italic"> • </span>
-            <span className="font-medium">
-              {post.tags.slice(0, 2).join(', ')}
-              {post.tags.length > 2 && ` +${post.tags.length - 2} more`}
-            </span>
-          </>
-        )}
-      </div>
-      
-      {/* Post Content Preview */}
-      <div className="text-gray-800 dark:text-gray-200 leading-relaxed mb-4 text-base">
-        <p>{getContentPreview(post.excerpt) || ''}</p>
-      </div>
-      
-      {/* Actions */}
-      <div className="flex justify-between items-center">
-        <Link 
-          href={`/blog/${getPostSlug(post)}`}
-          className="text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 transition-colors font-medium"
-        >
-          Go to blog &rarr;
-        </Link>
-        
-        {!isExternal && commentCount > 0 && (
-          <Link 
-            href={`/blog/${getPostSlug(post)}#comments`}
-            className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors text-sm"
-          >
-            [{commentCount} comment{commentCount !== 1 ? 's' : ''}]
-          </Link>
-        )}
+        {/* Content Side: Automatically fills space if image is missing */}
+        <div className="flex flex-col flex-1 w-full">
+          <div className="flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-sky-600 dark:text-sky-400 mb-2">
+            {post.category && <span>{post.category.name}</span>}
+            <span className="text-gray-300 dark:text-gray-700">•</span>
+            <span className="text-gray-500">{formatDate(post.publishedAt || post.createdAt)}</span>
+          </div>
+
+          <h2 className={`${post.coverImage ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl'} font-bold text-gray-900 dark:text-gray-100 mb-3 leading-snug`}>
+            <Link 
+              href={`/blog/${getPostSlug(post)}`}
+              className="hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
+            >
+              {post.title}
+            </Link>
+          </h2>
+          
+          <div className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4 text-sm md:text-base">
+            {/* If no image, we allow more lines of text to look better */}
+            <p className={post.coverImage ? 'line-clamp-2 md:line-clamp-3' : 'line-clamp-4'}>
+              {getContentPreview(post.excerpt || post.content)}
+            </p>
+          </div>
+          
+          <div className="mt-auto pt-4 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <div className="text-xs text-gray-500 mb-3">
+                Posted By <span className="text-gray-900 dark:text-gray-100 font-semibold tracking-tight">NIYONSHUTI Emmanuel</span>
+              </div>
+              {post.tags && post.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {post.tags.map((tag, index) => (
+                    <span key={index} className="px-2 py-1 text-[10px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-md border border-gray-200 dark:border-gray-700 transition-colors hover:bg-sky-50 dark:hover:bg-sky-900/30 hover:text-sky-600">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {commentCount > 0 && (
+              <span className="text-xs text-gray-500 flex items-center gap-1">
+                💬 {commentCount} comments
+              </span>
+            )}
+          </div>
+        </div>
       </div>
     </article>
   );

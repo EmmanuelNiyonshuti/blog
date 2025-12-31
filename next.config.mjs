@@ -6,6 +6,10 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'res.cloudinary.com',
                 // pathname: "/dx8m9dy9d/image/upload/*",
+            },
+            {
+                protocol: 'https',
+                hostname: 'cdn-images-1.medium.com',
             }
         ]
     }

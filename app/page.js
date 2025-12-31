@@ -36,9 +36,8 @@ export default async function HomePage({ searchParams }) {
   const params = await searchParams;
   const page = parseInt(params?.page || '1');
   const limit = 10;
-  
-  const { posts, pagination } = await fetchAllPosts(page, limit);
 
+  const { posts, pagination } = await fetchAllPosts(page, limit);
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -56,8 +55,8 @@ export default async function HomePage({ searchParams }) {
           {posts.length > 0 ? (
             <>
               <div className="space-y-12">
-                {posts.map((post) => (
-                  <PostCard key={post.id} post={post} />
+                {posts.map((post, index) => (
+                  <PostCard key={index} post={post} />
                 ))}
               </div>
               <Pagination 
