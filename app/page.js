@@ -38,6 +38,7 @@ export default async function HomePage({ searchParams }) {
   const limit = 10;
 
   const { posts, pagination } = await fetchAllPosts(page, limit);
+  const filteredPosts = posts.filter(post => post.category?.name !== "Personal");
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -52,10 +53,10 @@ export default async function HomePage({ searchParams }) {
 
         {/* Main Content - Right on Desktop */}
         <main className="lg:col-span-3 order-1 lg:order-2">
-          {posts.length > 0 ? (
+          {filteredPosts.length > 0 ? (
             <>
               <div className="space-y-12">
-                {posts.map((post, index) => (
+                {filteredPosts.map((post, index) => (
                   <PostCard key={index} post={post} />
                 ))}
               </div>

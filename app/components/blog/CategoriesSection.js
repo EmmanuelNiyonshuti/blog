@@ -12,8 +12,8 @@ const CategoriesSection = async () => {
         <ul className="space-y-3">
           {categories.map((category, index) => (
             <li key={category.id || category.slug || index}>
-              <Link 
-                href={`/categories/${category.slug}`}
+              <Link
+                href={category.name == "Personal" ? `/categories/personal` : `/categories/${category.slug}`}
                 className="flex justify-between items-center py-3 px-4 text-gray-700 
                          dark:text-gray-300 hover:text-sky-600 dark:hover:text-sky-400 
                          hover:bg-gray-50 dark:hover:bg-gray-800 
