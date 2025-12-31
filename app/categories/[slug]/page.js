@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
-import PostList from '../../components/blog/PostList';
 import CategoriesSection from '@/app/components/blog/CategoriesSection';
 import { fetchPostsByCategory, fetchCategories } from '../../../lib/api';
+import PostCard from '@/app/components/blog/PostCard';
 
 export async function generateMetadata({ params }) {
   try {
@@ -10,7 +10,6 @@ export async function generateMetadata({ params }) {
       fetchPostsByCategory(params.slug),
       fetchCategories()
     ]);
-
     const category = categories.find(cat => cat.slug === params.slug);
     
     if (!category) {
@@ -41,7 +40,6 @@ export default async function CategoryPage({ params }) {
     if (!PostCategory) {
       notFound();
     }
-
     return (
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -53,21 +51,27 @@ export default async function CategoryPage({ params }) {
             </div>
           </aside>
           {/* Main Content - 75% width on desktop */}
-          <main className="lg:col-span-3 order-1">
-            
-            {/* Category Header */}
-            <div className="mb-8">
-              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                {PostCategory.name}
-              </h1>
-            </div>
-            
-            {/* Posts */}
-            <PostList 
+          <main className="lg:col-span-3 order-1 lg:order-2">
+            {posts.length > 0 ? (
+              <>
+                <div className="space-y-12">
+                  {posts.map((post, index) => (
+                    <PostCard key={index} post={post} />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="text-center py-16 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
+                <p className="text-gray-600 dark:text-gray-400 text-lg">
+                  No posts yet.
+                </p>
+              </div>
+            )}
+          </main>
+            {/* <PostList 
               posts={posts}
               emptyMessage={`No posts found in the ${PostCategory.name} category yet.`}
-            />
-          </main>
+            /> */}
         </div>
       </div>
     );
