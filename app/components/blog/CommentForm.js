@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import {AddComment } from '../../../lib/api'
+import { AddComment } from '../../../lib/api'
+import { useRouter } from 'next/navigation';
 
 export default function CommentForm({ postSlug, onCommentAdded }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const router = useRouter();
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
@@ -15,6 +17,7 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
       if (res.success) {
         const newComment = res.comment;
         reset();
+        router.refresh();
         onCommentAdded?.(newComment);
       } else {
         throw new Error(res.message);
@@ -40,6 +43,13 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
           <input
             type="text"
             id="name"
+            {...register('name', { 
+              required: 'missing name',
+              pattern: {
+                value: /^[A-Za-z0-9_\s]+$/,
+                message: 'Invalid name'
+              }
+            })}
             className="w-full px-2 py-2 border border-gray-300 dark:border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="emmanuel"
           />
@@ -57,7 +67,7 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
             type="email"
             id="email"
             {...register('email', { 
-              required: 'enter your email',
+              // required: 'enter your email',
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: 'Invalid email address'
@@ -80,8 +90,8 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
             id="content"
             rows={4}
             {...register('content', { 
-              required: "can't leave it blank",
-              maxLength: { value: 1000, message: 'Comment must be less than 1000 characters' }
+              required: "can't leave this empty!",
+              maxLength: { value: 1000, message: 'Comment is too long, must be less than 1000 characters' }
             })}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
             placeholder="Share your thoughts..."
@@ -95,7 +105,7 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-6 py-2 bg-sky-600 text-white dark:text-gray-900 dark:text-gray-900 font-medium rounded-md hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 cursor-pointer transition-colors"
+          className="px-6 py-2 bg-sky-600 text-white dark:text-gray-900 font-medium rounded-md hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 cursor-pointer transition-colors"
         >
           {isSubmitting ? '...' : 'comment'}
         </button>

@@ -72,8 +72,8 @@ export default async function AdminPostsPage() {
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200">
-              {posts.map((post) => (
-                <tr key={post.id} className="hover:bg-gray-900">
+              {posts.map((post, index) => (
+                <tr key={post.id || index} className="hover:bg-gray-900">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900 dark:text-gray-200">

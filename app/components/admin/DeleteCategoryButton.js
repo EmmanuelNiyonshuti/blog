@@ -19,7 +19,7 @@ function DeleteCategoryButton({ id }) {
   };
 
   return (
-    <button onClick={onDelete} className="text-red-600 hover:text-red-900">Delete</button>
+    <button onClick={onDelete} className="bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-md cursor-pointer">Delete</button>
   );
 }
 

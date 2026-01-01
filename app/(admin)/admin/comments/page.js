@@ -12,8 +12,7 @@ export default async function AdminCommentsPage() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
   const posts = await fetchAdminPosts(token);
-  
-  // Filter posts that have comments
+
   const postsWithComments = posts.filter(
     post => post.comments && post.comments.length > 0
   );
@@ -23,10 +22,10 @@ export default async function AdminCommentsPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-200">
-            Comments
+            All posts Comments
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            Manage and reply to comments
+            reviewing and replying to comments on my posts
           </p>
         </div>
 

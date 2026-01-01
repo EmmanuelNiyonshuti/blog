@@ -1,15 +1,15 @@
-// app/api/comments/create/[slug]/route.js
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-// POST - Create new comment
 export async function POST(request, { params }) {
   try {
+    const requestParams = await params;
     const { name, email, content } = await request.json();
-
-    // Check if post exists and is published
+    console.log("name:", name);
+    console.log("email:", email);
+    console.log("content:", content);
     const post = await prisma.post.findUnique({
-      where: { slug: params.slug },
+      where: { slug: requestParams.slug },
       select: { id: true, status: true }
     });
 

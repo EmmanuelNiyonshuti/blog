@@ -14,7 +14,7 @@ export default function NewCategoryPage() {
           <h1 className="text-3xl font-bold text-gray-900">Create Category</h1>
           <p className="text-gray-600 mt-2">Add a new category</p>
         </div>
-        <div className="bg-white shadow rounded-lg p-6">
+        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
           <CategoryForm />
         </div>
       </div>

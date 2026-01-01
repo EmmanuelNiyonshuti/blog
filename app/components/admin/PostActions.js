@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Edit, Trash2, Eye } from 'lucide-react';
 import { deletePost } from '../../../lib/api';
 
 export default function PostActions({ post }) {
@@ -15,37 +14,36 @@ export default function PostActions({ post }) {
       await deletePost(post.id);
       router.refresh();
     } catch (e) {
-      alert('Failed to delete post.');
+      throw new Error(`Failed to delete post: ${e.message}`);
     }
   };
 
   return (
-    <div className="flex justify-end space-x-2">
-      {post.status === 'published' && (
+    <div className="flex justify-end items-center gap-5">
+      {post.status.toLowerCase() === 'published' && (
         <Link
           href={`/blog/${post.slug}`}
-          className="text-blue-600 hover:text-blue-900"
+          className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded transition-colors"
           title="View Post"
         >
-          <Eye size={16} />
+          View
         </Link>
       )}
       <Link
         href={`/admin/posts/${post.id}/edit`}
-        className="text-indigo-600 hover:text-indigo-900"
+        className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded transition-colors"
         title="Edit Post"
       >
-        <Edit size={16} />
+        Edit
       </Link>
       <button
-        className="text-red-600 hover:text-red-900"
+        type="button"
+        className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded transition-colors cursor-pointer"
         title="Delete Post"
         onClick={handleDelete}
       >
-        <Trash2 size={16} />
+        Delete
       </button>
     </div>
   );
 }
-
-

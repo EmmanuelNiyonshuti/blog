@@ -3,7 +3,7 @@ import prisma from '@/lib/prisma';
 import { authenticate } from '@/lib/auth/middleware';
 import { generateSlug, generateUniqueSlug } from '@/lib/utils';
 
-export async function GET(request) {
+export async function GET() {
   try {
     const categories = await prisma.category.findMany({
       orderBy: { name: 'asc' },
@@ -30,7 +30,6 @@ export async function GET(request) {
   }
 }
 
-// POST - Create new category (admin only)
 export async function POST(request) {
   try {
     const authResult = await authenticate(request);
@@ -63,7 +62,6 @@ export async function POST(request) {
       data: { category }
     }, { status: 201 });
   } catch (error) {
-    console.log("error:", error);
     if (error.code === 'P2002') {
       return NextResponse.json(
         { success: false, message: 'Category with this name or slug already exists' },

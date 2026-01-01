@@ -18,7 +18,7 @@ export default async function EditCategoryPage({ params }) {
           <h1 className="text-3xl font-bold text-gray-900">Edit Category</h1>
           <p className="text-gray-600 mt-2">Update category details</p>
         </div>
-        <div className="bg-white shadow rounded-lg p-6">
+        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
           <CategoryForm category={category} />
         </div>
       </div>

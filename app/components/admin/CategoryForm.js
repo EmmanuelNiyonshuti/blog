@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import Button from '../ui/Button';
 import { createCategory, updateCategory } from '../../../lib/api';
+import { generateSlug } from '@/lib/utils';
 
 export default function CategoryForm({ category = null }) {
   const router = useRouter();
@@ -28,12 +29,7 @@ export default function CategoryForm({ category = null }) {
 
   useEffect(() => {
     if (name && !category) {
-      const slug = name
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .trim('-');
+      const slug = generateSlug(name);
       setValue('slug', slug);
     }
   }, [name, setValue, category]);
@@ -46,10 +42,10 @@ export default function CategoryForm({ category = null }) {
       } else {
         await createCategory(data);
       }
-      router.push('/admin/categories');
       router.refresh();
+      router.push('/admin/categories');
     } catch (e){
-      alert('Failed to save category.');
+      throw new Error(`Failed to submit category form, ${e.message}`);
     } finally {
       setIsSubmitting(false);
     }

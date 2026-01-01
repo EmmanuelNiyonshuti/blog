@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { format } from 'date-fns';
 import { Trash2, Reply, X } from 'lucide-react';
 import CommentReplies from '../blog/CommentReplies';
 import { formatDateTime } from '@/lib/utils';
@@ -13,10 +12,9 @@ export default function AdminCommentSection({ comments = [], postId }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(null);
 
-
   const handleReply = async (commentId) => {
     if (!replyContent.trim()) return;
-    
+
     setIsSubmitting(true);
     try {
       const response = await fetch(`/api/posts/${postId}/comments/${commentId}/reply`, {
@@ -37,7 +35,6 @@ export default function AdminCommentSection({ comments = [], postId }) {
       
       const data = await response.json();
       
-      // Update the specific comment with the new reply
       setLocalComments(prevComments => 
         prevComments.map(comment => 
           comment.id === commentId 
@@ -59,8 +56,17 @@ export default function AdminCommentSection({ comments = [], postId }) {
     }
   };
 
-  const handleDelete = async (commentId) => {
-    if (!confirm('Are you sure you want to delete this comment? All replies will also be deleted.')) return;
+  const handleDelete = async (e, commentId) => {
+    // Prevent event bubbling
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Prevent multiple clicks
+    if (isDeleting) return;
+    
+    if (!confirm('Are you sure you want to delete this comment? All replies will also be deleted.')) {
+      return;
+    }
     
     setIsDeleting(commentId);
     try {
@@ -85,8 +91,17 @@ export default function AdminCommentSection({ comments = [], postId }) {
     }
   };
 
-  const handleDeleteReply = async (commentId, replyId) => {
-    if (!confirm('Are you sure you want to delete this reply?')) return;
+  const handleDeleteReply = async (e, commentId, replyId) => {
+    // Prevent event bubbling
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Prevent multiple clicks
+    if (isDeleting) return;
+    
+    if (!confirm('Are you sure you want to delete this reply?')) {
+      return;
+    }
     
     setIsDeleting(replyId);
     try {
@@ -128,13 +143,13 @@ export default function AdminCommentSection({ comments = [], postId }) {
               <div className="flex items-start space-x-3 flex-1">
                 <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-sm font-medium">
-                    {comment.name.charAt(0).toUpperCase()}
+                    {comment.name?.charAt(0).toUpperCase() || 'A'}
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <h4 className="font-semibold text-blue-600 dark:text-blue-400">
-                      {comment.name}
+                      {comment.name || 'Anonymous'}
                     </h4>
                     <span className="text-xs text-gray-500 dark:text-gray-500">
                       {formatDateTime(comment.createdAt)}
@@ -148,6 +163,7 @@ export default function AdminCommentSection({ comments = [], postId }) {
               
               <div className="flex items-center gap-2 ml-2">
                 <button
+                  type="button"
                   onClick={() => {
                     setReplyingTo(replyingTo === comment.id ? null : comment.id);
                     setReplyContent('');
@@ -158,8 +174,9 @@ export default function AdminCommentSection({ comments = [], postId }) {
                   {replyingTo === comment.id ? 'Cancel' : 'Reply'}
                 </button>
                 <button
-                  onClick={() => handleDelete(comment.id)}
-                  disabled={isDeleting === comment.id}
+                  type="button"
+                  onClick={(e) => handleDelete(e, comment.id)}
+                  disabled={isDeleting !== null}
                   className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 disabled:opacity-50 cursor-pointer"
                 >
                   <Trash2 size={16} />
@@ -183,6 +200,7 @@ export default function AdminCommentSection({ comments = [], postId }) {
                 </div>
                 <div className="mt-2 flex gap-2">
                   <button
+                    type="button"
                     onClick={() => handleReply(comment.id)}
                     disabled={isSubmitting || !replyContent.trim()}
                     className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 cursor-pointer text-sm font-medium"
@@ -190,6 +208,7 @@ export default function AdminCommentSection({ comments = [], postId }) {
                     {isSubmitting ? 'Posting...' : 'Post Reply'}
                   </button>
                   <button
+                    type="button"
                     onClick={() => {
                       setReplyingTo(null);
                       setReplyContent('');
@@ -203,13 +222,13 @@ export default function AdminCommentSection({ comments = [], postId }) {
             )}
           </div>
 
-        {/* replies goes here */}
-        <CommentReplies
+          {/* replies goes here */}
+          <CommentReplies
             comment={comment}
             canDelete={true}
             isDeleting={isDeleting}
-            handleDeleteReply={handleDeleteReply}
-        />
+            handleDeleteReply={(replyId) => handleDeleteReply(event, comment.id, replyId)}
+          />
         </div>
       ))}
     </div>

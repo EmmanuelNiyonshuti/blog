@@ -13,7 +13,6 @@ export default async function AdminCategoriesPage() {
   const categories = await fetchCategories();
 
   const formatCount = (num) => `${num ?? 0}`;
-
   return (
     <AdminLayout>
       <div className="space-y-6">
@@ -24,12 +23,12 @@ export default async function AdminCategoriesPage() {
             <p className="text-gray-600 dark:text-gray-200 mt-2">Organize your posts</p>
           </div>
           <Link href="/admin/categories/new">
-            <Button className="flex items-center">New Category</Button>
+            <Button className="flex items-center cursor-pointer">New Category</Button>
           </Link>
         </div>
 
         {/* Categories Table */}
-        <div className="bg-white shadow rounded-lg overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50 dark:bg-gray-900">
               <tr>
@@ -41,14 +40,13 @@ export default async function AdminCategoriesPage() {
             </thead>
             <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200">
               {categories.map((cat) => (
-                <tr key={cat.id} className="hover:bg-gray-50">
+                <tr key={cat.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">{cat.name}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-200">/{cat.slug}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">{formatCount(cat.postCount)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">{formatCount(cat._count.posts)}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex justify-end space-x-2">
-                      <Link href={`/admin/categories/${cat.id}/edit`} className="text-indigo-600 hover:text-indigo-900">Edit</Link>
-                      {/* Delete is implemented in a client component for confirm + refresh */}
+                    <div className="flex justify-end space-x-10 cursor-pointer">
+                      <Link href={`/admin/categories/${cat.id}/edit`} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md cursor-pointer">Edit</Link>
                       <DeleteCategoryButton id={cat.id} />
                     </div>
                   </td>
@@ -61,7 +59,7 @@ export default async function AdminCategoriesPage() {
             <div className="text-center py-12">
               <p className="text-gray-500 dark:text-gray-200">No categories found.</p>
               <Link href="/admin/categories/new" className="text-blue-600 hover:text-blue-700 mt-2 inline-block">
-                Create your first category
+                Add new category
               </Link>
             </div>
           )}

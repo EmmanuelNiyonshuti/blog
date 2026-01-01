@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { authenticate } from '@/lib/auth/middleware';
 
-// DELETE - Delete comment or reply (admin only)
 export async function DELETE(request, { params }) {
   try {
     const authResult = await authenticate(request);
@@ -12,9 +11,9 @@ export async function DELETE(request, { params }) {
         { status: 401 }
       );
     }
-
+    const requestParams = await params;
     const post = await prisma.post.findUnique({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(requestParams.id) },
       select: { authorId: true }
     });
     
@@ -34,7 +33,7 @@ export async function DELETE(request, { params }) {
     }
 
     const comment = await prisma.comment.findUnique({
-      where: { id: parseInt(params.commentId) }
+      where: { id: parseInt(requestParams.commentId) }
     });
     
     if (!comment) {
@@ -46,7 +45,7 @@ export async function DELETE(request, { params }) {
 
     // Delete will cascade to replies automatically
     await prisma.comment.delete({
-      where: { id: parseInt(params.commentId) }
+      where: { id: parseInt(requestParams.commentId) }
     });
 
     return NextResponse.json({
