@@ -6,6 +6,7 @@ import { generateSlug, generateUniqueSlug } from '@/lib/utils';
 // PUT - Update category (admin only)
 export async function PUT(request, { params }) {
   try {
+    const requestParams = await params;
     const authResult = await authenticate(request);
     if (!authResult.success) {
       return NextResponse.json(
@@ -18,7 +19,7 @@ export async function PUT(request, { params }) {
 
     // Check if category exists
     const existingCategory = await prisma.category.findUnique({
-      where: { id: parseInt(params.id) }
+      where: { id: parseInt(requestParams.id) }
     });
 
     if (!existingCategory) {
@@ -44,7 +45,7 @@ export async function PUT(request, { params }) {
     }
 
     const updatedCategory = await prisma.category.update({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(requestParams.id) },
       data: {
         ...(name && { name }),
         ...(slug && { slug })
@@ -80,9 +81,9 @@ export async function DELETE(request, { params }) {
         { status: 401 }
       );
     }
-
+    const requestParams = await params;
     const category = await prisma.category.findUnique({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(requestParams.id) },
       include: {
         _count: {
           select: { posts: true }
@@ -106,7 +107,7 @@ export async function DELETE(request, { params }) {
     }
 
     await prisma.category.delete({
-      where: { id: parseInt(params.id) }
+      where: { id: parseInt(requestParams.id) }
     });
 
     return NextResponse.json({
