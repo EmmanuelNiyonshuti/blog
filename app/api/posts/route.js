@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { authenticate } from '@/lib/auth/middleware';
 import { generateSlug, generateUniqueSlug, extractExcerpt, parseTags } from '@/lib/utils';
+import * as Sentry from "@sentry/nextjs";
 
 export async function GET(request) {
   try {
@@ -57,6 +58,7 @@ export async function GET(request) {
       },
     });
   } catch (error) {
+    Sentry.captureException(error);
     return NextResponse.json(
       { success: false, message: `Failed to fetch posts, ${error.message}` },
       { status: 500 }
@@ -135,7 +137,7 @@ export async function POST(request) {
       data: { post }
     }, { status: 201 });
   } catch (error) {
-    console.log("error:", error);
+    Sentry.captureException(error);
     if (error.code === 'P2002') {
       return NextResponse.json(
         { success: false, message: 'Post with this slug already exists' },

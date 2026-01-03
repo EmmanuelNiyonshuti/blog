@@ -2,15 +2,13 @@ import { notFound } from 'next/navigation';
 import CategoriesSection from '@/app/components/blog/CategoriesSection';
 import { fetchPostsByCategory, fetchCategories } from '../../../lib/api';
 import PostCard from '@/app/components/blog/PostCard';
+import * as Sentry from "@sentry/nextjs";
 
 export async function generateMetadata({ params }) {
   try {
-    const params = await params;
-    const [posts, categories] = await Promise.all([
-      fetchPostsByCategory(params.slug),
-      fetchCategories()
-    ]);
-    const category = categories.find(cat => cat.slug === params.slug);
+    const resolvedParams = await params;
+    const categories = await fetchCategories();
+    const category = categories.find(cat => cat.slug === resolvedParams.slug);
     
     if (!category) {
       return {
@@ -31,52 +29,59 @@ export async function generateMetadata({ params }) {
 
 export default async function CategoryPage({ params }) {
   try {
-    const parms = await params;
+    const resolvedParams = await params;
+
     const [posts, categories] = await Promise.all([
-      fetchPostsByCategory(parms.slug),
+      fetchPostsByCategory(resolvedParams.slug),
       fetchCategories()
     ]);
-    const PostCategory = categories.find(cat => cat.slug === parms.slug);
-    if (!PostCategory) {
+    
+    const currentCategory = categories.find(cat => cat.slug === resolvedParams.slug);
+    Sentry.logger.info(`Fetching category page for slug: ${resolvedParams.slug}`);    
+    if (!currentCategory) {
+      Sentry.logger.warn(`Category not found for slug: ${resolvedParams.slug}`);
       notFound();
     }
+
     return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <aside className="lg:col-span-1 order-2 lg:order-1">
             <div className="lg:sticky lg:top-8">
               <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 shadow-sm">
-                <CategoriesSection />
+                <CategoriesSection categories={categories} />
               </div>
             </div>
           </aside>
-          {/* Main Content - 75% width on desktop */}
           <main className="lg:col-span-3 order-1 lg:order-2">
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                {currentCategory.name}
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-2">
+                {posts.length} {posts.length === 1 ? 'post' : 'posts'} in this category
+              </p>
+            </div>
+
             {posts.length > 0 ? (
-              <>
-                <div className="space-y-12">
-                  {posts.map((post, index) => (
-                    <PostCard key={index} post={post} />
-                  ))}
-                </div>
-              </>
+              <div className="space-y-12">
+                {posts.map((post, index) => (
+                  <PostCard key={post.id || index} post={post} />
+                ))}
+              </div>
             ) : (
               <div className="text-center py-16 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
                 <p className="text-gray-600 dark:text-gray-400 text-lg">
-                  No posts yet.
+                  No posts in the {currentCategory.name} category yet.
                 </p>
               </div>
             )}
           </main>
-            {/* <PostList 
-              posts={posts}
-              emptyMessage={`No posts found in the ${PostCategory.name} category yet.`}
-            /> */}
         </div>
       </div>
     );
   } catch (error) {
-    console.error('Error loading category page:', error);
+    Sentry.captureException(error);
     notFound();
   }
 }

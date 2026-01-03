@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { AddComment } from '../../../lib/api'
 import { useRouter } from 'next/navigation';
+import * as Sentry from "@sentry/nextjs";
 
 export default function CommentForm({ postSlug, onCommentAdded }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -12,6 +13,7 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
+    Sentry.logger.info(`Submitting comment ${JSON.stringify(data)} for post: ${postSlug}`);
     try {
       const res = await AddComment(data, postSlug);
       if (res.success) {
@@ -19,12 +21,14 @@ export default function CommentForm({ postSlug, onCommentAdded }) {
         reset();
         router.refresh();
         onCommentAdded?.(newComment);
+        Sentry.captureMessage(`Successfully submitted comment for post: ${postSlug}`);
       } else {
+        Sentry.captureMessage(`Failed to submit comment: ${res.message}`);
         throw new Error(res.message);
       }
     } catch (error) {
-      console.error('Error submitting comment:', error);
-      alert('Failed to submit comment. Please try again.');
+      Sentry.captureException(error);
+      throw error;
     } finally {
       setIsSubmitting(false);
     }

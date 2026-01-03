@@ -3,6 +3,7 @@ import PostDetail from '../../components/blog/PostDetail';
 import CommentList from '../../components/blog/CommentList';
 import CommentForm from '../../components/blog/CommentForm';
 import { fetchPostBySlug } from '../../../lib/api';
+import * as Sentry from "@sentry/nextjs";
 
 
 export async function generateMetadata({ params }) {
@@ -54,7 +55,9 @@ export default async function BlogPostPage({ params }) {
   const paramObj = await params;
   const decodedSlug = decodeURIComponent(paramObj.slug);
   const post = await fetchPostBySlug(decodedSlug);
+  Sentry.logger.info(`Fetching post for slug: ${decodedSlug}`);
   if (!post) {
+    Sentry.logger.warn(`Post not found for slug: ${decodedSlug}`);
     notFound();
   }
   const isExternal = post.isExternal || post.source === 'medium';
@@ -68,11 +71,9 @@ export default async function BlogPostPage({ params }) {
             {post.comments && post.comments.length > 0 && (
               <CommentList comments={post.comments} />
             )}
-            {/* use post slug for the comments */}
             <CommentForm postSlug={post.slug} />
           </div>
         )}
-        {/* For Medium posts, show a note about comments */}
         {isExternal && (
           <div className="mt-16 p-6 bg-gray-50 dark:bg-gray-900 rounded-lg">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Want to comment on this post?</h3>

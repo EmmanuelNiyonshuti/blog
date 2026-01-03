@@ -3,8 +3,6 @@ import CommentReplies from './CommentReplies';
 
 export default function CommentList({ comments = [] }) {
 
-
-  // Filter to only show parent comments (not replies)
   const parentComments = comments.filter(comment => !comment.parentId);
 
   if (parentComments.length === 0) {

@@ -1,7 +1,7 @@
 // app/page.js
 import PostCard from './components/blog/PostCard';
 import Pagination from './components/ui/Pagination';
-import { fetchAllPosts } from "@/lib/api";
+import { fetchAllPosts, fetchCategories } from "@/lib/api";
 import CategoriesSection from './components/blog/CategoriesSection';
 
 export const metadata = {
@@ -36,28 +36,31 @@ export default async function HomePage({ searchParams }) {
   const params = await searchParams;
   const page = parseInt(params?.page || '1');
   const limit = 10;
-
-  const { posts, pagination } = await fetchAllPosts(page, limit);
+  const [{ posts, pagination }, categories] = await Promise.all([
+    fetchAllPosts(page, limit),
+    fetchCategories()
+  ]);
+  
   const filteredPosts = posts.filter(post => post.category?.name !== "Personal");
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Categories Sidebar - Left on Desktop, Top on Mobile */}
         <aside className="lg:col-span-1 order-2 lg:order-1">
           <div className="lg:sticky lg:top-8">
             <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 shadow-sm">
-              <CategoriesSection />
+              <CategoriesSection categories={categories} />
             </div>
           </div>
         </aside>
 
-        {/* Main Content - Right on Desktop */}
+        {/* Main Content */}
         <main className="lg:col-span-3 order-1 lg:order-2">
           {filteredPosts.length > 0 ? (
             <>
               <div className="space-y-12">
                 {filteredPosts.map((post, index) => (
-                  <PostCard key={index} post={post} />
+                  <PostCard key={post.id || index} post={post} />
                 ))}
               </div>
               <Pagination 
