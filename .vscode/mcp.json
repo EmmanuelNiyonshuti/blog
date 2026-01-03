@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "Sentry": {
+      "url": "https://mcp.sentry.dev/mcp/emmanuel-b3/my-blog",
+      "type": "http"
+    }
+  }
+}

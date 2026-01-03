@@ -46,3 +46,5 @@ learn
 .cursor
 /lib/generated/prisma
 .gitignore
+# Sentry Config File
+.env.sentry-build-plugin
