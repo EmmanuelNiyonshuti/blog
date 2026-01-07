@@ -3,7 +3,7 @@ import Image from "next/image";
 export const metadata = {
   title: 'About Me',
   description:
-    'Learn more about NIYONSHUTI Emmanuel, a backend developer passionate about technology and programming.',
+    'Learn more about Emmanuel Niyonshuti, a backend developer passionate about technology and programming.',
 };
 
 export default function AboutPage() {
@@ -20,38 +20,43 @@ export default function AboutPage() {
 
         {/* Main Content */}
         <div className="prose prose-lg dark:prose-invert max-w-none mb-12">
-          {/* Introduction */}
-          {/* Profile Image - Circular */}
+          <div className="rounded-lg p-6 mb-8 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+            {/* Profile Image */}
+            <div className="flex justify-center mb-6">
+              <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 dark:border-gray-700 shadow-lg">
+                <Image
+                  src="https://res.cloudinary.com/dx8m9dy9d/image/upload/v1765717992/unnamed_zzj6hi.jpg"
+                  alt="Emmanuel Niyonshuti"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            </div>
 
-          <div className="rounded-lg p-3 mb-8 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
-          <div className="flex justify-center">
-            <div className="relative w-28 h-28 rounded-full overflow-hidden border-2 border-transparent shadow-lg">
-              <Image
-                src="https://res.cloudinary.com/dx8m9dy9d/image/upload/v1765717992/unnamed_zzj6hi.jpg"
-                alt="NIYONSHUTI Emmanuel"
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-            </div>
+            {/* Bio Content */}
+            <div className="space-y-4">
               <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-                Hi 👋, I&apos;m Emmanuel Niyonshuti, a software engineer with a background in crop production.
-                I made the transition to software engineering while pursuing my BSc with Honours in Crop Production, 
-                completing a 12-month ALX Software Engineering program alongside my studies. 
-                These days, my focus is primarily on backend engineering.
+                Hi 👋, I&apos;m Emmanuel Niyonshuti, a software developer based in Rwanda.
+                I got into software development while studying a BSc with Honours in Crop Production.
+                Alongside different learning materials and resources, I completed a 12-month online Software Engineering program and that degree. 
               </p>
-              <p className="leading-relaxed text-gray-700 dark:text-gray-300 mt-4">
-                I built this blog as a space to document software engineering concepts and share insights 
-                from my journey in the field. Most of the content here is backend-related, which is where I spend 
-                most of my time currently.
-                If you find something helpful, feel free to leave a comment. Thanks!
+              <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+                After university, I worked at two startups before deciding to step back and focus on 
+                upskilling and exploring freelance opportunities. These days, I&apos;m deepening my skills 
+                and working on personal projects.
               </p>
-
-              <p className="mt-8 text-gray-700 dark:text-gray-300 font-medium">
+              <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+                I learn and have learned a lot from other developers' blogs and their work on the internet, so I decided to build my own space to document concepts I encounter in software development. 
+                If something here helps you, that&apos;s awesome.
+                Thanks!
+              </p>
+              
+              <p className="mt-6 text-gray-700 dark:text-gray-300 font-medium">
                 — Emmanuel
               </p>
             </div>
+          </div>
         </div>
 
         {/* Contact Section */}
@@ -60,7 +65,7 @@ export default function AboutPage() {
             You can also find me on{' '}
             <a
               href="mailto:emmanuelniyonshuti13@gmail.com"
-              className="text-sky-600 dark:text-sky-400 hover:underline"
+              className="text-sky-600 dark:text-sky-400 hover:underline font-medium"
             >
               Email
             </a>
@@ -69,7 +74,7 @@ export default function AboutPage() {
               href="https://github.com/EmmanuelNiyonshuti"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sky-600 dark:text-sky-400 hover:underline"
+              className="text-sky-600 dark:text-sky-400 hover:underline font-medium"
             >
               GitHub
             </a>
@@ -78,16 +83,16 @@ export default function AboutPage() {
               href="https://www.linkedin.com/in/niyonshuti-emmanuel-82877b285/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sky-600 dark:text-sky-400 hover:underline"
+              className="text-sky-600 dark:text-sky-400 hover:underline font-medium"
             >
               LinkedIn
-            </a>{' '}
-            and{' '}
+            </a>
+            , and{' '}
             <a
               href="https://x.com/emmanulio"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sky-600 dark:text-sky-400 hover:underline"
+              className="text-sky-600 dark:text-sky-400 hover:underline font-medium"
             >
               X
             </a>
