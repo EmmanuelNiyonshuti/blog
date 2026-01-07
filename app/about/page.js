@@ -47,7 +47,7 @@ export default function AboutPage() {
                 and working on personal projects.
               </p>
               <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-                I learn and have learned a lot from other developers' blogs and their work on the internet, so I decided to build my own space to document concepts I encounter in software development. 
+                I learn and have learned a lot from other developers&lsquo; blogs and their work on the internet, so I decided to build my own space to document concepts I encounter in software development. 
                 If something here helps you, that&apos;s awesome.
                 Thanks!
               </p>
