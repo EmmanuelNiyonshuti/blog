@@ -1,4 +1,3 @@
-import AdminLayout from '../../../components/admin/AdminLayout';
 import { fetchAdminPosts } from '../../../../lib/api';
 import { cookies } from 'next/headers';
 import AdminCommentSection from '../../../components/admin/AdminCommentSection';
@@ -18,7 +17,6 @@ export default async function AdminCommentsPage() {
   );
 
   return (
-    <AdminLayout>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-200">
@@ -57,6 +55,5 @@ export default async function AdminCommentsPage() {
           </div>
         )}
       </div>
-    </AdminLayout>
   );
 }

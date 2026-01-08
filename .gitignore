@@ -48,3 +48,4 @@ learn
 .gitignore
 # Sentry Config File
 .env.sentry-build-plugin
+dev.db

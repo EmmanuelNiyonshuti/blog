@@ -1,4 +1,3 @@
-import AdminLayout from '../../../components/admin/AdminLayout';
 import Link from 'next/link';
 import Button from '../../../components/ui/Button';
 import { fetchCategories } from '../../../../lib/api';
@@ -14,7 +13,6 @@ export default async function AdminCategoriesPage() {
 
   const formatCount = (num) => `${num ?? 0}`;
   return (
-    <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
@@ -65,6 +63,5 @@ export default async function AdminCategoriesPage() {
           )}
         </div>
       </div>
-    </AdminLayout>
   );
 }

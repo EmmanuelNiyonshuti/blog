@@ -1,4 +1,3 @@
-import AdminLayout from '../../../../components/admin/AdminLayout';
 import PostForm from '../../../../components/admin/PostForm';
 import { fetchCategories } from '../../../../../lib/api';
 
@@ -10,7 +9,6 @@ export const metadata = {
 export default async function NewPostPage() {
   const categories = await fetchCategories();
   return (
-    <AdminLayout>
       <div className="max-w-4xl">
         {/* Header */}
         <div className="mb-8">
@@ -23,6 +21,5 @@ export default async function NewPostPage() {
           <PostForm categories={categories} />
         </div>
       </div>
-    </AdminLayout>
   );
 }

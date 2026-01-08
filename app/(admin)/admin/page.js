@@ -1,4 +1,4 @@
-import AdminLayout from '../../components/admin/AdminLayout';
+
 import { FileText, FolderOpen, MessageSquare, Eye } from 'lucide-react';
 import {fetchAdminPosts, fetchCategories } from '../../../lib/api';
 import { cookies } from 'next/headers';
@@ -23,7 +23,6 @@ export default async function AdminDashboard() {
   ];
 
   return (
-    <AdminLayout>
       <div className="space-y-8">
         {/* Header */}
         <div>
@@ -108,6 +107,5 @@ export default async function AdminDashboard() {
           </div>
         </div>
       </div>
-    </AdminLayout>
   );
 }

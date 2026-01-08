@@ -1,4 +1,3 @@
-import AdminLayout from '../../../components/admin/AdminLayout';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import Button from '../../../components/ui/Button';
@@ -33,7 +32,6 @@ export default async function AdminPostsPage() {
   };
 
   return (
-    <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
@@ -113,6 +111,5 @@ export default async function AdminPostsPage() {
           )}
         </div>
       </div>
-    </AdminLayout>
   );
 }

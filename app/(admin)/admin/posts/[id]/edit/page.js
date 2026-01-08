@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import AdminLayout from '@/app/components/admin/AdminLayout';
 import { fetchPostById, fetchCategories} from '@/lib/api';
 import PostFormEdit from '@/app/components/admin/PostFormEdit';
 
@@ -16,7 +15,6 @@ export default async function EditPostPage({ params }) {
     fetchCategories(),
   ]);
   return (
-    <AdminLayout>
       <div className="max-w-4xl">
         {/* Header */}
         <div className="mb-8">
@@ -37,7 +35,6 @@ export default async function EditPostPage({ params }) {
         {/* Post Form */}
         <PostFormEdit post={post} categories={categories} />
       </div>
-    </AdminLayout>
   );
 }
 

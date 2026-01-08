@@ -1,4 +1,3 @@
-import AdminLayout from '@/app/components/admin/AdminLayout';
 import CategoryForm from '@/app/components/admin/CategoryForm';
 import { fetchCategories } from '@/lib/api';
 
@@ -12,7 +11,6 @@ export default async function EditCategoryPage({ params }) {
   const category = categories.find((c) => String(c.id) === String(params.id));
 
   return (
-    <AdminLayout>
       <div className="max-w-2xl">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Edit Category</h1>
@@ -22,7 +20,6 @@ export default async function EditCategoryPage({ params }) {
           <CategoryForm category={category} />
         </div>
       </div>
-    </AdminLayout>
   );
 }
 
