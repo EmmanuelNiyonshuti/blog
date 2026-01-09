@@ -109,7 +109,7 @@ export default function AdminRootLayout({ children }) {
 
         {/* Main Content Area */}
         <main className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-6 md:p-10">
-          <div className="max-w-5xl mx-auto">
+          <div className="w-full">
             {children}
           </div>
         </main>
