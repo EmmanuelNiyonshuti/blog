@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Plus } from 'lucide-react';
 import Button from '../../../components/ui/Button';
 import PostActions from '../../../components/admin/PostActions';
-import { fetchAdminPosts, fetchPosts } from '../../../../lib/api'
+import { fetchAdminPosts} from '../../../../lib/api'
 import { cookies } from 'next/headers';
 
 export const metadata = {
