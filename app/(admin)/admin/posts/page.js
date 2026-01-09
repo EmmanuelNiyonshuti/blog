@@ -47,8 +47,8 @@ export default async function AdminPostsPage() {
           </Link>
         </div>
 
-        {/* Posts Table */}
-        <div className="bg-white dark:bg-gray-900 shadow rounded-lg overflow-hidden">
+        {/* Posts Table container */}
+        <div className="bg-white dark:bg-gray-900 shadow rounded-lg  overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50 dark:bg-gray-900">
               <tr>
@@ -71,7 +71,7 @@ export default async function AdminPostsPage() {
             </thead>
             <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200">
               {posts.map((post, index) => (
-                <tr key={post.id || index} className="hover:bg-gray-900">
+                <tr key={post.id || index} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900 dark:text-gray-200">
