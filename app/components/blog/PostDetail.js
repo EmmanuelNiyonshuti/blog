@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { Twitter, Linkedin, Facebook, Copy, Check } from 'lucide-react';
 import hljs from 'highlight.js';
 import { markdownToHtml } from '@/lib/markdownToHtml';
 
@@ -11,6 +10,7 @@ import { formatDate } from "@/lib/utils";
 
 export default function PostDetail({ post }) {
   const [copied, setCopied] = useState(false);
+  const [copiedBlocks, setCopiedBlocks] = useState({}); // Track which block was copied
   const [htmlContent, setHtmlContent] = useState('');
   const [htmlExcerpt, setHtmlExcerpt] = useState('');
 
@@ -26,10 +26,57 @@ export default function PostDetail({ post }) {
       setHtmlExcerpt(excerptHtml);
     }
     
-    // Highlight code blocks after a brief delay
+    // Highlight code blocks and add copy buttons
     setTimeout(() => {
-      document.querySelectorAll('pre code').forEach((block) => {
+      const codeBlocks = document.querySelectorAll('pre code');
+      
+      codeBlocks.forEach((block, index) => {
+        // Highlight the code
         hljs.highlightElement(block);
+        
+        // Get the parent <pre> element
+        const pre = block.parentElement;
+        
+        // Skip if button already exists
+        if (pre.querySelector('.copy-button')) return;
+        
+        // Wrap pre in a container if not already wrapped
+        if (!pre.parentElement.classList.contains('code-block-wrapper')) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'code-block-wrapper relative';
+          pre.parentNode.insertBefore(wrapper, pre);
+          wrapper.appendChild(pre);
+        }
+        
+        // Create copy button
+        const button = document.createElement('button');
+        button.className = 'copy-button absolute top-2 right-2 px-3 py-1 text-xs font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 rounded transition-colors duration-200';
+        button.setAttribute('data-index', index);
+        button.innerHTML = 'Copy';
+        
+        // Add click handler
+        button.addEventListener('click', async () => {
+          const code = block.textContent;
+          try {
+            await navigator.clipboard.writeText(code);
+            button.innerHTML = 'Copied!';
+            button.classList.add('text-green-400');
+            
+            setTimeout(() => {
+              button.innerHTML = 'Copy';
+              button.classList.remove('text-green-400');
+            }, 2000);
+          } catch (err) {
+            console.error('Failed to copy code: ', err);
+            button.innerHTML = 'Failed';
+            setTimeout(() => {
+              button.innerHTML = 'Copy';
+            }, 2000);
+          }
+        });
+        
+        // Add button to the wrapper
+        pre.parentElement.appendChild(button);
       });
     }, 10);
   }, [post]);

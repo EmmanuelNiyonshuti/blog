@@ -3,6 +3,7 @@
 /* Dark mode toggle */
 @custom-variant dark (&:where(.dark, .dark *));
 
+
 /* ==========================================
    BLOG POST DISPLAY (The rendered content)
    ========================================== */
@@ -17,13 +18,13 @@
   color: #d1d5db;
 }
 
-/* Paragraphs - breathing room */
+/* Paragraphs */
 .prose-blog p {
   margin-bottom: 0.5em;
   line-height: 1.6;
 }
 
-/* Headings - clear hierarchy */
+/* Headings */
 .prose-blog h2 {
   font-size: 2rem;
   font-weight: 700;
@@ -62,10 +63,10 @@
   line-height: 1.8;
 }
 
-/* Inline code - small snippets */
+/* Inline code */
 .prose-blog code:not(pre code) {
   background: #f3f4f6;
-  color: #e11d48;
+  color: #98c379;
   padding: 0.2rem 0.4rem;
   border-radius: 0.25rem;
   font-size: 0.9em;
@@ -75,52 +76,65 @@
 
 .dark .prose-blog code:not(pre code) {
   background: #374151;
-  color: #fca5a5;
+  color: #98c379;
 }
 
-/* Code blocks - full syntax highlighting */
-.prose-blog pre {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
+/* Code block wrapper - for copy button positioning */
+.code-block-wrapper {
+  position: relative;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+/* Code blocks */
+.code-block-wrapper pre {
+  margin: 0;
   overflow-x: auto;
   border-radius: 0.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* Light mode code blocks */
-.prose-blog pre code {
+.code-block-wrapper pre code {
   display: block;
-  padding: 1.5em;
+  padding: 3rem 1.5rem 1.5rem 1.5rem; /* Extra top padding for copy button */
   background: #f8f9fa !important;
   color: #24292e !important;
   border: 1px solid #e1e4e8;
   font-size: 0.875rem;
   line-height: 1.7;
   border-radius: 0.5rem;
+  overflow-x: auto;
 }
 
-/* Dark mode code blocks - FIXED! */
-.dark .prose-blog pre code {
+.dark .code-block-wrapper pre code {
   background: #1e1e1e !important;
   color: #d4d4d4 !important;
   border-color: #333 !important;
 }
 
-/* Syntax highlighting colors - DARK MODE */
+/* Copy button */
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 10;
+}
+
+/* Syntax highlighting - DARK MODE */
 .dark .prose-blog .hljs-keyword { color: #c678dd; }
 .dark .prose-blog .hljs-string { color: #98c379; }
 .dark .prose-blog .hljs-function { color: #61afef; }
 .dark .prose-blog .hljs-number { color: #d19a66; }
 .dark .prose-blog .hljs-comment { color: #5c6370; font-style: italic; }
 
-/* Syntax highlighting colors - LIGHT MODE */
+/* Syntax highlighting - LIGHT MODE */
 :not(.dark) .prose-blog .hljs-keyword { color: #d73a49; }
 :not(.dark) .prose-blog .hljs-string { color: #032f62; }
 :not(.dark) .prose-blog .hljs-function { color: #6f42c1; }
 :not(.dark) .prose-blog .hljs-number { color: #005cc5; }
 :not(.dark) .prose-blog .hljs-comment { color: #6a737d; font-style: italic; }
 
-/* Blockquotes - elegant emphasis */
+/* Blockquotes */
 .prose-blog blockquote {
   font-style: italic;
   border-left: 4px solid #3b82f6;
@@ -170,7 +184,7 @@
   color: #f9fafb;
 }
 
-/* Images - responsive */
+/* Images */
 .prose-blog img {
   max-width: 100%;
   height: auto;
@@ -181,10 +195,9 @@
 }
 
 /* ==========================================
-   MARKDOWN EDITOR (Where you write)
+   MARKDOWN EDITOR (Where I write)
    ========================================== */
 
-/* Main editor */
 .markdown-editor-wrapper .CodeMirror {
   background: white;
   color: #1f2937;
@@ -203,7 +216,6 @@
   border-color: #374151;
 }
 
-/* Focus state - subtle blue glow */
 .markdown-editor-wrapper .CodeMirror-focused {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
@@ -215,7 +227,6 @@
   box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
 }
 
-/* Cursor - visible */
 .markdown-editor-wrapper .CodeMirror-cursor {
   border-left: 2px solid #3b82f6;
 }
@@ -224,7 +235,6 @@
   border-left: 2px solid #60a5fa;
 }
 
-/* Selected text */
 .markdown-editor-wrapper .CodeMirror-selected {
   background: rgba(59, 130, 246, 0.2);
 }
@@ -233,9 +243,7 @@
   background: rgba(96, 165, 250, 0.2);
 }
 
-/* Markdown syntax colors IN THE EDITOR */
-
-/* Headers - blue */
+/* Markdown syntax colors */
 .markdown-editor-wrapper .cm-header {
   color: #1e40af;
   font-weight: 600;
@@ -245,7 +253,6 @@
   color: #60a5fa;
 }
 
-/* Bold - red */
 .markdown-editor-wrapper .cm-strong {
   color: #b91c1c;
   font-weight: 700;
@@ -255,7 +262,6 @@
   color: #fca5a5;
 }
 
-/* Italic - purple */
 .markdown-editor-wrapper .cm-em {
   color: #7c3aed;
   font-style: italic;
@@ -265,7 +271,6 @@
   color: #c4b5fd;
 }
 
-/* Inline code - green background */
 .markdown-editor-wrapper .cm-comment {
   color: #059669;
   background: #f0fdf4;
@@ -278,7 +283,6 @@
   background: #064e3b;
 }
 
-/* Code blocks - gray background (THIS FIXES VISIBILITY!) */
 .markdown-editor-wrapper .cm-variable-2,
 .markdown-editor-wrapper .cm-variable-3 {
   color: #1f2937;
@@ -292,7 +296,6 @@
   background: #374151;
 }
 
-/* Links */
 .markdown-editor-wrapper .cm-link {
   color: #2563eb;
   text-decoration: underline;
@@ -302,7 +305,6 @@
   color: #60a5fa;
 }
 
-/* Quotes */
 .markdown-editor-wrapper .cm-quote {
   color: #6b7280;
   font-style: italic;
@@ -329,12 +331,11 @@
   border-color: #374151;
 }
 
-/* Toolbar buttons - FIXED! */
 .markdown-editor-wrapper .editor-toolbar button {
   color: #4b5563 !important;
   border: none !important;
   background: transparent !important;
-  opacity: 1 !important; /* Force visible */
+  opacity: 1 !important;
 }
 
 .dark .markdown-editor-wrapper .editor-toolbar button {
@@ -349,7 +350,6 @@
   background: #374151 !important;
 }
 
-/* Active button */
 .markdown-editor-wrapper .editor-toolbar button.active {
   background: #dbeafe !important;
   color: #1e40af !important;
