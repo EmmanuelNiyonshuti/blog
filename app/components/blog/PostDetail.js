@@ -50,7 +50,7 @@ export default function PostDetail({ post }) {
         
         // Create copy button
         const button = document.createElement('button');
-        button.className = 'copy-button absolute top-2 right-2 px-3 py-1 text-xs font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 rounded transition-colors duration-200';
+        button.className = 'copy-button absolute top-2 right-2 px-3 py-1 text-xs font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded transition-colors duration-200';
         button.setAttribute('data-index', index);
         button.innerHTML = 'Copy';
         
@@ -97,16 +97,6 @@ export default function PostDetail({ post }) {
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`,
   };
 
-  // Copy link to clipboard
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(currentUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy: ', err);
-    }
-  };
 
   const categoryName = post.category?.name || post.tags?.[0] || 'General';
   const isExternal = post.isExternal || post.source === 'medium';

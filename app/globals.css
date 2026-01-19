@@ -66,7 +66,7 @@
 /* Inline code */
 .prose-blog code:not(pre code) {
   background: #f3f4f6;
-  color: #98c379;
+  color: #24292e;
   padding: 0.2rem 0.4rem;
   border-radius: 0.25rem;
   font-size: 0.9em;
@@ -75,8 +75,8 @@
 }
 
 .dark .prose-blog code:not(pre code) {
-  background: #374151;
-  color: #98c379;
+  background: #3a3a3a !important;
+  color: #d4d4d4 !important;
 }
 
 /* Code block wrapper - for copy button positioning */
