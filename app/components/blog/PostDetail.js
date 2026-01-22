@@ -9,8 +9,6 @@ import PostNotFound from './PostNotFound';
 import { formatDate } from "@/lib/utils";
 
 export default function PostDetail({ post }) {
-  const [copied, setCopied] = useState(false);
-  const [copiedBlocks, setCopiedBlocks] = useState({}); // Track which block was copied
   const [htmlContent, setHtmlContent] = useState('');
   const [htmlExcerpt, setHtmlExcerpt] = useState('');
 
@@ -39,39 +37,59 @@ export default function PostDetail({ post }) {
         
         // Skip if button already exists
         if (pre.querySelector('.copy-button')) return;
-        
-        // Wrap pre in a container if not already wrapped
+
         if (!pre.parentElement.classList.contains('code-block-wrapper')) {
           const wrapper = document.createElement('div');
           wrapper.className = 'code-block-wrapper relative';
           pre.parentNode.insertBefore(wrapper, pre);
           wrapper.appendChild(pre);
         }
+        const copyIcon = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        `;
+        
+        const checkIcon = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        `;
         
         // Create copy button
         const button = document.createElement('button');
-        button.className = 'copy-button absolute top-2 right-2 px-3 py-1 text-xs font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 hover:cursor-pointer rounded transition-colors duration-200';
+        button.className = 'copy-button absolute top-2 right-2 p-2 text-gray-300 bg-gray-700 hover:bg-gray-600 rounded transition-colors duration-200 cursor-pointer';
         button.setAttribute('data-index', index);
-        button.innerHTML = 'Copy';
+        button.setAttribute('aria-label', 'Copy code to clipboard');
+        button.innerHTML = copyIcon;
         
         // Add click handler
         button.addEventListener('click', async () => {
           const code = block.textContent;
           try {
             await navigator.clipboard.writeText(code);
-            button.innerHTML = 'Copied!';
+            button.innerHTML = checkIcon;
             button.classList.add('text-green-400');
             
             setTimeout(() => {
-              button.innerHTML = 'Copy';
+              button.innerHTML = copyIcon;
               button.classList.remove('text-green-400');
             }, 2000);
           } catch (err) {
             console.error('Failed to copy code: ', err);
-            button.innerHTML = 'Failed';
+            button.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+            `;
+            button.classList.add('text-red-400');
             setTimeout(() => {
-              button.innerHTML = 'Copy';
-            }, 2000);
+              button.innerHTML = copyIcon;
+              button.classList.remove('text-red-400');
+            }, 1000);
           }
         });
         
@@ -96,7 +114,6 @@ export default function PostDetail({ post }) {
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`,
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`,
   };
-
 
   const categoryName = post.category?.name || post.tags?.[0] || 'General';
   const isExternal = post.isExternal || post.source === 'medium';
