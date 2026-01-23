@@ -9,10 +9,10 @@ const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
   ssr: false,
 });
 
-export default function MarkdownEditor({ content, onChange, placeholder = 'Start writing...' }) {
+export default function MarkdownEditor({ content, onChange, placeholder = '...' }) {
   
   const editorOptions = useMemo(() => ({
-    // Use built-in toolbar - it just works!
+    // Use built-in toolbar
     toolbar: [
       'bold',
       'italic',
