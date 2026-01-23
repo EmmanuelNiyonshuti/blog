@@ -38,12 +38,36 @@ export default function CategoryForm({ category = null }) {
     setIsSubmitting(true);
     try {
       if (category) {
-        await updateCategory(category.id, data);
+        const res = await fetch(`/api/posts/categories/${category.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify(data),
+        });
+        if (res.status === 200) {
+          router.refresh()
+          router.push('/admin/categories');
+        } else {
+          throw new Error('Failed to update post');
+        }
       } else {
-        await createCategory(data);
+        const res = await fetch('/api/categories', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(data),
+            });
+        if (res.status === 200) {
+          router.refresh()
+          router.push('/admin/categories');
+        } else {
+          throw new Error('Failed to update post');
+        }
       }
-      router.refresh();
-      router.push('/admin/categories');
     } catch (e){
       throw new Error(`Failed to submit category form, ${e.message}`);
     } finally {
