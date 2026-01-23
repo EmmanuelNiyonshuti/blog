@@ -30,7 +30,6 @@ const LoginForm = () => {
           }, 1000);
       }
       if (response.ok) {
-        const data = await response.json();
         router.push('/admin');
         router.refresh();
       } else {
