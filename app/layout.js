@@ -12,7 +12,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://blog.niyonshutiemm
 export const metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'NIYONSHUTI Emmanuel | Software Engineer',
+    default: 'NIYONSHUTI Emmanuel | software developer',
     template: '%s | NIYONSHUTI Emmanuel',
   },
   alternates: {
@@ -22,7 +22,6 @@ export const metadata = {
       ],
     },
   },
-  description: 'Notes on software development.',
 };
 
 export default function RootLayout({ children }) {
