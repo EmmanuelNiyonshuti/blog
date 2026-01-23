@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { authenticate } from '@/lib/auth/middleware';
 import { generateSlug, generateUniqueSlug } from '@/lib/utils';
-
+import * as Sentry from "@sentry/nextjs";
 export async function GET() {
   try {
     const categories = await prisma.category.findMany({
@@ -62,6 +62,7 @@ export async function POST(request) {
       data: { category }
     }, { status: 201 });
   } catch (error) {
+    Sentry.captureException(error);
     if (error.code === 'P2002') {
       return NextResponse.json(
         { success: false, message: 'Category with this name or slug already exists' },
