@@ -27,9 +27,9 @@ export default function PostForm({ post = null, categories = [] }) {
       excerpt: post?.excerpt || '',
       categoryId: post?.categoryId || '',
       tags: post?.tags?.join(', ') || '',
-      status: post?.status.toUpperCase() || 'DRAFT', // check the field , its enum for num, case sensitive
+      status: post?.status.toUpperCase() || 'DRAFT', //  its enum in db
     }
-  }); // useForm hook
+  });
 
   const title = watch('title');
 
@@ -66,6 +66,7 @@ export default function PostForm({ post = null, categories = [] }) {
           credentials: 'include'
         })
         if (res.status === 200) {
+          router.refresh()
           router.push('/admin/posts');
         } else {
           throw new Error('Failed to update post');
@@ -80,6 +81,7 @@ export default function PostForm({ post = null, categories = [] }) {
           credentials: 'include'
         })
         if (res.status === 200) {
+          router.refresh()
           router.push('/admin/posts');
         } else {
           throw new Error('Failed to update post');
@@ -197,7 +199,7 @@ export default function PostForm({ post = null, categories = [] }) {
         <MarkdownEditor
           content={content}
           onChange={setContent}
-          placeholder="Write your post content here..."
+          placeholder="Writting my post content in this area..."
         />
       </div>
 
