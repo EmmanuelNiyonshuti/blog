@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import Button from '../ui/Button';
-import { createCategory, updateCategory } from '../../../lib/api';
 import { generateSlug } from '@/lib/utils';
 
 export default function CategoryForm({ category = null }) {

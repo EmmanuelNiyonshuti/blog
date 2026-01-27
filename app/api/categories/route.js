@@ -3,6 +3,8 @@ import prisma from '@/lib/prisma';
 import { authenticate } from '@/lib/auth/middleware';
 import { generateSlug, generateUniqueSlug } from '@/lib/utils';
 import * as Sentry from "@sentry/nextjs";
+
+
 export async function GET() {
   try {
     const categories = await prisma.category.findMany({
