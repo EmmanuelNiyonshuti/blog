@@ -11,7 +11,14 @@ export default function PostActions({ post }) {
     const confirmed = confirm('Are you sure you want to delete this post?');
     if (!confirmed) return;
     try {
-      await deletePost(post.id);
+      const res = await fetch(`/api/posts/${post.id}`, {
+        method: 'DELETE',
+        credentials: 'include'
+    });
+      if (!res.ok) {
+        alert('Failed to delete post.');
+        return;
+      }
       router.refresh();
     } catch (e) {
       throw new Error(`Failed to delete post: ${e.message}`);
