@@ -80,7 +80,7 @@ export default function PostForm({ post = null, categories = [] }) {
           body: JSON.stringify(postData),
           credentials: 'include'
         })
-        if (res.status === 200) {
+        if (res.status === 201) {
           router.refresh()
           router.push('/admin/posts');
         } else {
@@ -211,7 +211,7 @@ export default function PostForm({ post = null, categories = [] }) {
         <select
           id="status"
           {...register('status')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full bg-white dark:bg-gray-800 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="DRAFT">Draft</option>
           <option value="PUBLISHED">Published</option>
