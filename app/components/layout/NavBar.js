@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Github, Linkedin, Twitter, X } from 'lucide-react';
 import ThemeToggle from '@/app/components/ui/theme-toggle';
 import RSSLink from '../RssLink';
-import { LinkedInIcon, GitHubIcon, XIcon } from '../ui/Icons';
+import { X } from 'lucide-react';
+import { LinkedInIcon, GitHubIcon, XIcon, MastodonIcon } from '../ui/Icons';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -73,6 +73,15 @@ export default function Navbar() {
               title="Twitter/X"
             >
               <XIcon className="w-5 h-5 hover:text-blue-700 dark:hover:text-blue" />
+            </a>
+            <a 
+              href="https://mastodon.social/@emmanuelniyonshuti"
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-gray-600 dark:text-gray-300 transition-colors"
+              title="Mastodon"
+            >
+              <MastodonIcon className="w-5 h-5 hover:text-blue-600 dark:hover:text-blue" />
             </a>
             <RSSLink />
           </div>
@@ -147,6 +156,15 @@ export default function Navbar() {
                   title="Twitter/X"
                 >
                   <XIcon className="w-5 h-5 hover:text-blue-700 dark:hover:text-blue" />
+                </a>
+                <a 
+                  href="https://mastodon.social/@emmanuelniyonshuti"
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-600 dark:text-gray-300 transition-colors"
+                  title="Mastodon"
+                >
+                  <MastodonIcon className="w-5 h-5 hover:text-blue-700 dark:hover:text-blue" />
                 </a>
                 <RSSLink />
                 <ThemeToggle />
