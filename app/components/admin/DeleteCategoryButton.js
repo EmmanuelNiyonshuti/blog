@@ -2,8 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 
-import { deleteCategory } from '../../../lib/api';
-
 function DeleteCategoryButton({ id }) {
   const router = useRouter();
 
@@ -11,7 +9,14 @@ function DeleteCategoryButton({ id }) {
     const confirmed = confirm('Delete this category?');
     if (!confirmed) return;
     try {
-      await deleteCategory(id);
+      const res = await fetch(`/api/categories/${id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+      if (!res.ok) {
+        alert('Failed to delete category.');
+        return;
+      }
       router.refresh();
     } catch (e) {
       alert('Failed to delete category.');

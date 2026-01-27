@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { deletePost } from '../../../lib/api';
 
 export default function PostActions({ post }) {
   const router = useRouter();
