@@ -81,7 +81,7 @@ export default async function HomePage({ searchParams }) {
             After hydration, pagination happens client-side with NO refetching!
           */}
           <BlogPostsProvider 
-            initialPosts={allPosts} 
+            initialPosts={posts} 
             initialPagination={pagination}
           >
             <BlogContent />
