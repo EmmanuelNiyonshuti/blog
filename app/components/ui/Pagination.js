@@ -1,108 +1,143 @@
+// app/components/ui/Pagination.jsx
 'use client';
 
-import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function Pagination({ currentPage, totalPages, hasNext, hasPrev }) {
-  if (totalPages <= 1) return null;
+/**
+ * Updated Pagination component
+ * Supports BOTH server-side (fallback) and client-side navigation
+ */
+export default function Pagination({ 
+  currentPage, 
+  totalPages, 
+  hasNext, 
+  hasPrev,
+  onPageChange // ← NEW: Optional client-side handler
+}) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  // Generate page numbers to show
-  const getPageNumbers = () => {
-    const pages = [];
-    const maxVisible = 5; // Show max 5 page numbers
-    
-    let start = Math.max(1, currentPage - 2);
-    let end = Math.min(totalPages, start + maxVisible - 1);
-    
-    // Adjust start if we're near the end
-    if (end - start < maxVisible - 1) {
-      start = Math.max(1, end - maxVisible + 1);
+  const handlePageChange = (newPage) => {
+    if (onPageChange) {
+      // Client-side navigation (no refetch!)
+      onPageChange(newPage);
+    } else {
+      // Fallback: Server-side navigation
+      const params = new URLSearchParams(searchParams);
+      params.set('page', newPage.toString());
+      router.push(`/?${params.toString()}`);
     }
-    
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-    
-    return pages;
   };
 
-  const pageNumbers = getPageNumbers();
+  // Don't render if only one page
+  if (totalPages <= 1) return null;
 
   return (
-    <div className="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
-      <div className="flex justify-center items-center gap-2">
-        {/* Previous */}
-        {hasPrev ? (
-          <Link
-            href={`/?page=${currentPage - 1}`}
-            className="px-4 py-2 text-sky-600 dark:text-sky-400 hover:bg-gray-100 dark:hover:bg-gray-900 rounded transition-colors"
-          >
-            ←
-          </Link>
-        ) : (
-          <span className="px-4 py-2 text-gray-400 dark:text-gray-600 cursor-not-allowed">
-            ←
-          </span>
-        )}
+    <nav className="flex items-center justify-center gap-2 mt-12" aria-label="Pagination">
+      {/* Previous Button */}
+      <button
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={!hasPrev}
+        className={`
+          px-4 py-2 rounded-lg border font-medium transition-all
+          ${hasPrev 
+            ? 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700' 
+            : 'bg-gray-100 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'
+          }
+        `}
+        aria-label="Previous page"
+      >
+        ← Previous
+      </button>
 
-        {/* First page if not visible */}
-        {pageNumbers[0] > 1 && (
-          <>
-            <Link
-              href="/?page=1"
-              className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900 rounded transition-colors"
+      {/* Page Numbers */}
+      <div className="flex items-center gap-2">
+        {getPageNumbers(currentPage, totalPages).map((pageNum, idx) => {
+          if (pageNum === '...') {
+            return (
+              <span 
+                key={`ellipsis-${idx}`} 
+                className="px-3 py-2 text-gray-500 dark:text-gray-400"
+              >
+                ...
+              </span>
+            );
+          }
+
+          return (
+            <button
+              key={pageNum}
+              onClick={() => handlePageChange(pageNum)}
+              className={`
+                px-4 py-2 rounded-lg border font-medium transition-all
+                ${pageNum === currentPage
+                  ? 'bg-blue-600 border-blue-600 text-white'
+                  : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                }
+              `}
+              aria-label={`Page ${pageNum}`}
+              aria-current={pageNum === currentPage ? 'page' : undefined}
             >
-              1
-            </Link>
-            {pageNumbers[0] > 2 && (
-              <span className="px-2 text-gray-400">...</span>
-            )}
-          </>
-        )}
-
-        {/* Page Numbers */}
-        {pageNumbers.map((pageNum) => (
-          <Link
-            key={pageNum}
-            href={`/?page=${pageNum}`}
-            className={`px-4 py-2 rounded transition-colors ${
-              pageNum === currentPage
-                ? 'bg-sky-600 text-white'
-                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900'
-            }`}
-          >
-            {pageNum}
-          </Link>
-        ))}
-
-        {/* Last page if not visible */}
-        {pageNumbers[pageNumbers.length - 1] < totalPages && (
-          <>
-            {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
-              <span className="px-2 text-gray-400">...</span>
-            )}
-            <Link
-              href={`/?page=${totalPages}`}
-              className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900 rounded transition-colors"
-            >
-              {totalPages}
-            </Link>
-          </>
-        )}
-
-        {/* Next */}
-        {hasNext ? (
-          <Link
-            href={`/?page=${currentPage + 1}`}
-            className="px-4 py-2 text-sky-600 dark:text-sky-400 hover:bg-gray-100 dark:hover:bg-gray-900 rounded transition-colors"
-          >
-            →
-          </Link>
-        ) : (
-          <span className="px-4 py-2 text-gray-400 dark:text-gray-600 cursor-not-allowed">
-            →
-          </span>
-        )}
+              {pageNum}
+            </button>
+          );
+        })}
       </div>
-    </div>
+
+      {/* Next Button */}
+      <button
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={!hasNext}
+        className={`
+          px-4 py-2 rounded-lg border font-medium transition-all
+          ${hasNext 
+            ? 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700' 
+            : 'bg-gray-100 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed'
+          }
+        `}
+        aria-label="Next page"
+      >
+        Next →
+      </button>
+    </nav>
   );
+}
+
+/**
+ * Helper to calculate which page numbers to show
+ * Shows: [1] ... [current-1] [current] [current+1] ... [total]
+ */
+function getPageNumbers(currentPage, totalPages) {
+  const pages = [];
+  const showEllipsis = totalPages > 7;
+
+  if (!showEllipsis) {
+    // Show all pages if 7 or fewer
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+  } else {
+    // Always show first page
+    pages.push(1);
+
+    if (currentPage > 3) {
+      pages.push('...');
+    }
+
+    // Show pages around current
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+      pages.push(i);
+    }
+
+    if (currentPage < totalPages - 2) {
+      pages.push('...');
+    }
+
+    // Always show last page
+    if (totalPages > 1) {
+      pages.push(totalPages);
+    }
+  }
+
+  return pages;
 }

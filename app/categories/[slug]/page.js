@@ -54,15 +54,6 @@ export default async function CategoryPage({ params }) {
             </div>
           </aside>
           <main className="lg:col-span-3 order-1 lg:order-2">
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                {currentCategory.name}
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400 mt-2">
-                {posts.length} {posts.length === 1 ? 'post' : 'posts'} in this category
-              </p>
-            </div>
-
             {posts.length > 0 ? (
               <div className="space-y-12">
                 {posts.map((post, index) => (

@@ -1,8 +1,8 @@
-// app/page.js
-import PostCard from './components/blog/PostCard';
-import Pagination from './components/ui/Pagination';
-import { fetchAllPosts, fetchCategories } from "@/lib/api";
+// app/page.jsx - UPDATED WITH PERFORMANCE OPTIMIZATIONS
 import CategoriesSection from './components/blog/CategoriesSection';
+import BlogContent from './components/blog/BlogContent';
+import { BlogPostsProvider } from './components/providers/BlogPostsProvider';
+import { fetchAllPosts, fetchCategories } from "@/lib/api";
 
 export const metadata = {
   title: 'NIYONSHUTI Emmanuel | Software developer',
@@ -17,7 +17,7 @@ export const metadata = {
       {
         url: 'https://res.cloudinary.com/dx8m9dy9d/image/upload/v1766339600/blog-preview_h6mkod.jpg',
         width: 1200, 
-        height: 630, 
+        height: 630,
         alt: 'NIYONSHUTI Emmanuel Blog Preview',
       },
     ],
@@ -32,20 +32,37 @@ export const metadata = {
   },
 };
 
+/**
+ * Enable ISR (Incremental Static Regeneration)
+ * Page will be statically generated and revalidated every 5 minutes
+ */
+export const revalidate = 300; // 5 minutes in production
+
+/**
+ * Home Page - Optimized with ISR and client-side pagination
+ * 
+ * PERFORMANCE IMPROVEMENTS:
+ * - Server fetches ALL posts once (with cache)
+ * - Client stores posts in React state
+ * - Pagination happens client-side (instant!)
+ * - No refetching when navigating between pages
+ * - ISR keeps data fresh in background
+ */
 export default async function HomePage({ searchParams }) {
   const params = await searchParams;
   const page = parseInt(params?.page || '1');
   const limit = 10;
-  const [{ posts, pagination }, categories] = await Promise.all([
+
+  // Fetch ALL data once on server (cached!)
+  const [{ posts, allPosts, pagination }, categories] = await Promise.all([
     fetchAllPosts(page, limit),
     fetchCategories()
   ]);
-  
-  const filteredPosts = posts.filter(post => post.category?.name !== "Personal");
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        {/* Sidebar - Categories */}
         <aside className="lg:col-span-1 order-2 lg:order-1">
           <div className="lg:sticky lg:top-8">
             <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 shadow-sm">
@@ -54,29 +71,21 @@ export default async function HomePage({ searchParams }) {
           </div>
         </aside>
 
-        {/* Main Content */}
+        {/* Main Content - Wrapped in Provider for client-side pagination */}
         <main className="lg:col-span-3 order-1 lg:order-2">
-          {filteredPosts.length > 0 ? (
-            <>
-              <div className="space-y-12">
-                {filteredPosts.map((post, index) => (
-                  <PostCard key={post.id || index} post={post} />
-                ))}
-              </div>
-              <Pagination 
-                currentPage={pagination.currentPage || 1}
-                totalPages={pagination.totalPages || 1}
-                hasNext={pagination.hasNext || false}
-                hasPrev={pagination.hasPrev || false}
-              />
-            </>
-          ) : (
-            <div className="text-center py-16 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
-              <p className="text-gray-600 dark:text-gray-400 text-lg">
-                No posts yet.
-              </p>
-            </div>
-          )}
+          {/* 
+            BlogPostsProvider: Stores ALL posts in client state
+            - initialPosts: All posts for instant client-side pagination
+            - initialPagination: Server-calculated pagination info
+            
+            After hydration, pagination happens client-side with NO refetching!
+          */}
+          <BlogPostsProvider 
+            initialPosts={allPosts} 
+            initialPagination={pagination}
+          >
+            <BlogContent />
+          </BlogPostsProvider>
         </main>
       </div>
     </div>
