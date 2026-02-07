@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import Button from '../../../components/ui/Button';
-import { fetchCategories } from '../../../../lib/api';
-import DeleteCategoryButton from '../../../components/admin/DeleteCategoryButton';
+import Button from '@/app/components/ui/Button';
+import { fetchCategories } from '@/lib/api';
+import DeleteCategoryButton from '@/app/components/admin/DeleteCategoryButton';
 
 export const metadata = {
   title: 'Manage Categories - Admin',

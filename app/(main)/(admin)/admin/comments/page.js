@@ -1,6 +1,6 @@
-import { fetchAdminPosts } from '../../../../lib/api';
+import { fetchAdminPosts } from '@/lib/api';
 import { cookies } from 'next/headers';
-import AdminCommentSection from '../../../components/admin/AdminCommentSection';
+import AdminCommentSection from '@/app/components/admin/AdminCommentSection';
 
 export const metadata = {
   title: 'Manage Comments - Admin',

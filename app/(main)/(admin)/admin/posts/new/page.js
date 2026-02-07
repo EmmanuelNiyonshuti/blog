@@ -1,5 +1,5 @@
-import PostForm from '../../../../components/admin/PostForm';
-import { fetchCategories } from '../../../../../lib/api';
+import PostForm from '@/app/components/admin/PostForm';
+import { fetchCategories } from '@/lib/api';
 
 export const metadata = {
   title: 'New Post - Admin',

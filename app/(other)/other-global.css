@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Ancient/Raw Palette */
+  --color-paper-light: #f8f7f3;
+  --color-paper-dark: #1a1a1a;
+  --color-ink: #111827;
+}
+
+/* ==========================================
+   CONTENT DISPLAY (Tech & Thoughts)
+   ========================================== */
+
+/* The main content wrapper */
+.prose-content {
+  @apply text-lg leading-relaxed text-zinc-700 dark:text-zinc-300;
+}
+
+.prose-content h2, .prose-content h3 {
+  @apply font-bold text-zinc-900 dark:text-zinc-100 mt-8 mb-4 tracking-tight;
+}
+
+.prose-content h2 { @apply text-3xl; }
+.prose-content h3 { @apply text-xl; }
+
+.prose-content p { @apply mb-6; }
+
+.prose-content a {
+  @apply text-blue-600 dark:text-blue-400 underline decoration-1 underline-offset-4 hover:text-blue-800 transition-colors;
+}
+
+/* Ancient Thought Blockquotes */
+.prose-content blockquote {
+  @apply italic border-l-2 border-zinc-900 dark:border-zinc-100 pl-6 py-2 my-8 text-zinc-600 dark:text-zinc-400;
+}
+
+/* ==========================================
+   CODE & SYNTAX (Highlight.js)
+   ========================================== */
+
+/* Inline code */
+code:not(pre code) {
+  @apply bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-200 px-1.5 py-0.5 rounded text-[0.9em] font-mono;
+}
+
+/* Code Blocks */
+.code-block-wrapper {
+  @apply relative my-8 shadow-sm rounded-lg overflow-hidden border border-zinc-200 dark:border-zinc-800;
+}
+
+pre code {
+  @apply block p-6 bg-zinc-50 dark:bg-[#0d1117] text-sm leading-7 overflow-x-auto font-mono;
+}
+
+/* Modern Syntax Highlighting Shorthand */
+.hljs-keyword, .hljs-selector-tag { @apply text-purple-600 dark:text-[#c678dd]; }
+.hljs-string, .hljs-doctag { @apply text-green-700 dark:text-[#98c379]; }
+.hljs-title, .hljs-section, .hljs-selector-id { @apply text-blue-600 dark:text-[#61afef]; }
+.hljs-comment { @apply text-zinc-400 italic; }
+
+/* ==========================================
+   MARKDOWN EDITOR (Simple)
+   ========================================== */
+
+.markdown-editor-wrapper .CodeMirror {
+  @apply bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 font-mono text-sm leading-6 min-h-[400px];
+}
+
+.markdown-editor-wrapper .editor-toolbar {
+  @apply bg-zinc-50 dark:bg-zinc-800 border-x border-t border-zinc-200 dark:border-zinc-800 rounded-t-lg opacity-80;
+}
+
+/* Ancient Space Utility */
+.ancient-mode {
+  @apply bg-paper-light text-ink font-serif selection:bg-zinc-200;
+  background-image: radial-gradient(#00000010 1px, transparent 0);
+  background-size: 40px 40px;
+}

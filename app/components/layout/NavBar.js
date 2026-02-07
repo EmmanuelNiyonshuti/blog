@@ -20,8 +20,8 @@ export default function Navbar() {
           {/* Logo/Name - Always Visible */}
           <div className="flex items-center space-x-3 flex-shrink-0">
             <Link 
-              href="/" 
-              className="text-xl font-semibold text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+              href="/thoughts" 
+              className="text-sm font-semibold text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
               onClick={closeMenu}
             >
               NIYONSHUTI Emmanuel

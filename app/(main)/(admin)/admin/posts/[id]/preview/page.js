@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import PostDetail from '@/app/components/blog/PostDetail';
 import CommentList from '@/app/components/blog/CommentList';
 import CommentForm from '@/app/components/blog/CommentForm';
-import { fetchPostById } from '../../../../../../lib/api';
+import { fetchPostById } from '@/lib/api';
 
 
 export default async function BlogPostPreviewPage({ params }) {

@@ -1,6 +1,6 @@
 
 import { FileText, FolderOpen, MessageSquare, Eye } from 'lucide-react';
-import {fetchAdminPosts, fetchCategories } from '../../../lib/api';
+import {fetchAdminPosts, fetchCategories } from '@/lib/api';
 import { cookies } from 'next/headers';
 
 export const metadata = {

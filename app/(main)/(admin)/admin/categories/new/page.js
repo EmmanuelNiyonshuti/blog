@@ -1,4 +1,4 @@
-import CategoryForm from '../../../../components/admin/CategoryForm';
+import CategoryForm from '@/app/components/admin/CategoryForm';
 
 export const metadata = {
   title: 'New Category - Admin',

@@ -62,7 +62,6 @@ export async function GET(request, { params }) {
         { status: 404 }
       );
     }
-
     return NextResponse.json({
       success: true,
       post
