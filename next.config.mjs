@@ -3,7 +3,7 @@ import { withSentryConfig } from '@sentry/nextjs';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
-  output: 'standalone',
+  // output: 'standalone',
   images: {
     remotePatterns: [
       {
@@ -17,11 +17,11 @@ const nextConfig = {
     ]
   },
   // Turbopack experimental features
-  experimental: {
-    turbo: {
-      // Turbopack rules if needed in future
-    },
-  },
+  // experimental: {
+  //   turbo: {
+  //     // Turbopack rules if needed in future
+  //   },
+  // },
 };
 
 // Export with Sentry configuration
