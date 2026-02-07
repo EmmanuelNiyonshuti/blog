@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "postinstall": "prisma generate",
-    "build": "prisma migrate deploy && next build --turbopack",
+    "build": "prisma generate && prisma migrate deploy && next build --turbopack",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "eslint --fix"
