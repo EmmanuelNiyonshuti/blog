@@ -44,7 +44,7 @@ export default async function ThoughtPage({ params }) {
             href="/thoughts"
             className="text-sm font-sans uppercase tracking-wider text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
           >
-            ← All Thoughts
+            ←
           </Link>
           <Link 
             href="/"
