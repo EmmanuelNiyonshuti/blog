@@ -3,7 +3,7 @@ import Image from "next/image";
 export const metadata = {
   title: 'About Me',
   description:
-    'Learn more about Emmanuel Niyonshuti, a backend developer passionate about technology and programming.',
+    'Emmanuel Niyonshuti, a backend software developer passionate about technology and programming.',
 };
 
 export default function AboutPage() {
@@ -45,7 +45,7 @@ export default function AboutPage() {
                 I&apos;ve learned a lot from other developers&apos; blogs and their work on the internet, so I decided to build my own space to document concepts I encounter in software development. 
                 If something here helps you, that&apos;s awesome.
               </p>
-              <p className="leading-relaxed text-gray-700 dark:text-gray-300">
+              {/* <p className="leading-relaxed text-gray-700 dark:text-gray-300">
                 If you&apos;re working on something involving backend development, APIs, integrations, databases or deployment and think I could help, feel free to reach out on my {' '}
                 <a
                   href="mailto:emmanuelniyonshuti13@gmail.com"
@@ -53,7 +53,7 @@ export default function AboutPage() {
                 >
                   email
                 </a> or use other social links above.
-              </p>
+              </p> */}
               <p className="mt-6 text-gray-700 dark:text-gray-300 font-medium">
                 — Emmanuel
               </p>
