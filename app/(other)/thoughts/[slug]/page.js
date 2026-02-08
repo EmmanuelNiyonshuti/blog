@@ -89,7 +89,7 @@ export default async function ThoughtPage({ params }) {
               href="/thoughts"
               className="text-sm font-sans uppercase tracking-wider text-blue-600 dark:text-blue-400 hover:underline"
             >
-              ← More Thoughts
+              ←
             </Link>
             <span className="text-xs text-zinc-500 dark:text-zinc-500">
               {frontmatter.date}
