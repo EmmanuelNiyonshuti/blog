@@ -16,8 +16,8 @@ export default async function ThoughtsPage() {
         {/* <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-4">
         </h1> */}
         <div className="flex justify-center gap-6 text-[10px] uppercase tracking-[0.4em] font-sans font-bold">
-          <span>•</span>
-          <span>Random Reflections && Thoughts</span>
+          {/* <span>•</span> */}
+          {/* <span>Random Reflections && Thoughts</span> */}
           <span>•</span>
           <span>{new Date().getFullYear()}</span>
         </div>
@@ -27,7 +27,7 @@ export default async function ThoughtsPage() {
       <div className="max-w-4xl mx-auto px-4 py-6">
         <Link 
           href="/"
-          className="inline-flex items-center gap-2 text-sm font-sans uppercase tracking-wider text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+          className="inline-flex items-center gap-2 text-xl font-sans uppercase tracking-wider text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
         >
           ←
         </Link>
