@@ -18,9 +18,16 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Name - Always Visible */}
-          <div className="flex items-center space-x-3 flex-shrink-0">
+          <div className="flex items-center space-x-4 flex-shrink-0">
             <Link 
-              href="/thoughts" 
+              href="/thoughts"
+              className="text-sm font-semibold text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+              onClick={closeMenu}
+            >
+              random
+            </Link>
+            <Link 
+              href="/"
               className="text-sm font-semibold text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
               onClick={closeMenu}
             >
@@ -109,6 +116,15 @@ export default function Navbar() {
         {isOpen && (
           <div className="md:hidden pb-4">
             <div className="flex flex-col space-y-4">
+              {/* Random Link */}
+              <Link 
+                href="/thoughts" 
+                className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+                onClick={closeMenu}
+              >
+                random
+              </Link>
+              
               {/* Navigation Links */}
               <Link 
                 href="/" 
