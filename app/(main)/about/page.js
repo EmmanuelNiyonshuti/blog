@@ -18,7 +18,6 @@ export default function AboutPage() {
         {/* Main Content */}
         <div className="prose prose-lg dark:prose-invert max-w-none mb-12">
           <div className="rounded-lg p-6 mb-8 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
-            {/* Profile Image */}
             <div className="flex justify-center mb-6">
               <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 dark:border-gray-700 shadow-lg">
                 <Image
@@ -45,15 +44,6 @@ export default function AboutPage() {
                 I&apos;ve learned a lot from other developers&apos; blogs and their work on the internet, so I decided to build my own space to document concepts I encounter in software development. 
                 If something here helps you, that&apos;s awesome.
               </p>
-              {/* <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-                If you&apos;re working on something involving backend development, APIs, integrations, databases or deployment and think I could help, feel free to reach out on my {' '}
-                <a
-                  href="mailto:emmanuelniyonshuti13@gmail.com"
-                  className="text-sky-600 dark:text-sky-400 hover:underline"
-                >
-                  email
-                </a> or use other social links above.
-              </p> */}
               <p className="mt-6 text-gray-700 dark:text-gray-300 font-medium">
                 — Emmanuel
               </p>

@@ -1,8 +1,7 @@
 import CategoriesSection from '../components/blog/CategoriesSection';
 import BlogContent from '../components/blog/BlogContent';
-import { BlogPostsProvider } from '../components/providers/BlogPostsProvider';
-import { CategoriesProvider } from '../components/providers/CategoriesProvider';
-import { fetchAllPosts, fetchCategories } from "@/lib/api";
+import {TECH_POST_DIR} from '@/lib/utils';
+import {getAllPosts, getAllCategories} from '@/lib/mdx-utils';
 
 export const metadata = {
   title: 'NIYONSHUTI Emmanuel | Software developer',
@@ -32,56 +31,38 @@ export const metadata = {
   },
 };
 
-export const revalidate = 300; // Revalidate every 5 minutes
 
 export default async function HomePage({ searchParams }) {
   const params = await searchParams;
   const page = parseInt(params?.page || '1');
-  const limit = 10;
+  const POSTS_PER_PAGE = 10;
 
-  // Fetch data on server (will be cached by Next.js)
-  // This runs ONLY on server - client uses localStorage cache
-  const [{ posts, allPosts, pagination }, categories] = await Promise.all([
-    fetchAllPosts(page, limit),
-    fetchCategories()
+  const [allPosts, categories] = await Promise.all([
+    getAllPosts(TECH_POST_DIR),
+    getAllCategories(TECH_POST_DIR),
   ]);
+
+  const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+  const paginatedPosts = allPosts.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
+
+  const pagination = {
+    currentPage: page,
+    totalPages,
+    totalPosts: allPosts.length,
+    hasNext: page < totalPages,
+    hasPrev: page > 1,
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Sidebar - Categories */}
         <aside className="lg:col-span-1 order-2 lg:order-1">
           <div className="lg:sticky lg:top-8">
-            {/* <div className="bg-white dark:bg-gray-900 rounded-lg p-6 shadow-sm"> */}
-              {/* 
-                CategoriesProvider: Caches categories in localStorage
-                - initialCategories: Server-fetched data (first load only)
-                - After hydration, uses cached data
-                - Refreshes in background if cache is stale
-              */}
-              <CategoriesProvider initialCategories={categories}>
-                <CategoriesSection />
-              </CategoriesProvider>
-            {/* </div> */}
+            <CategoriesSection categories={categories} />
           </div>
         </aside>
-
-        {/* Main Content */}
         <main className="lg:col-span-3 order-1 lg:order-2">
-          {/* 
-            BlogPostsProvider: Caches ALL posts in localStorage
-            - initialPosts: Server-fetched posts (first load only)
-            - initialPagination: Server-calculated pagination
-            - After hydration, uses cached data
-            - Pagination happens client-side with NO refetching
-            - Refreshes in background if cache is stale
-          */}
-          <BlogPostsProvider 
-            initialPosts={allPosts} 
-            initialPagination={pagination}
-          >
-            <BlogContent />
-          </BlogPostsProvider>
+          <BlogContent posts={paginatedPosts} pagination={pagination} />
         </main>
       </div>
     </div>

@@ -1,155 +1,58 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ChevronDown, Folder } from 'lucide-react';
-import { useCategories } from "../providers/CategoriesProvider";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { FolderIcon, ChevronIcon } from '../ui/Icons';
 
-export default function CategoriesSection() {
+
+export default function CategoriesSection({ categories = [] }) {
   const pathname = usePathname();
-  const { categories, isLoading } = useCategories();
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef(null);
-  
-  // Determine active category from URL
-  const getActiveCategory = () => {
-    if (pathname === '/') return null;
-    if (pathname.startsWith('/categories/')) {
-      return pathname.split('/categories/')[1];
-    }
-    return null;
-  };
-  
-  const activeSlug = getActiveCategory();
-  const activeCategory = categories.find(cat => cat.slug === activeSlug);
+  const [open, setOpen] = useState(false);
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  const activeSlug = pathname?.startsWith('/categories/')
+    ? pathname.split('/categories/')[1]
+    : null;
 
   return (
-    <div className="relative" ref={dropdownRef}>
-      {/* Compact trigger button */}
+    <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
       <button
-        onClick={toggleDropdown}
-        className={`w-full flex items-center justify-between px-4 py-3 rounded-lg border transition-all duration-200${
-          isOpen
-            ? 'bg-sky-50 dark:bg-sky-950 border-sky-300 dark:border-sky-700 shadow-md'
-            : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 hover:border-sky-200 dark:hover:border-sky-800 hover:bg-gray-50 dark:hover:bg-gray-800'
-        }`}
-        aria-expanded={isOpen}
-        aria-label="Categories menu"
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
       >
-        <div className="flex items-center gap-3">
-          <Folder className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-          <div className="flex flex-col items-start">
-            <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-              Categories
-            </span>
-            {activeCategory ? (
-              <span className="text-xs text-sky-600 dark:text-sky-400">
-                {activeCategory.name}
-              </span>
-            ) : (
-              <span className="text-xs text-gray-500 dark:text-gray-500">
-                {categories.length} total
-              </span>
-            )}
-          </div>
-        </div>
         <div className="flex items-center gap-2">
-          {isLoading && (
-            <span className="text-xs text-gray-400 dark:text-gray-600 animate-pulse">
-              ●
-            </span>
-          )}
-          <ChevronDown
-            className={`w-4 h-4 text-gray-600 dark:text-gray-400 transition-transform duration-200 ${
-              isOpen ? 'rotate-180' : 'rotate-0'
-            }`}
-          />
+          <FolderIcon open={open} />
+          <span className="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+            Categories
+          </span>
         </div>
+        <ChevronIcon open={open} />
       </button>
-
-      {/* Dropdown menu */}
-      {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-lg z-50 overflow-hidden animate-in slide-in-from-top-2 duration-200">
-          {categories.length > 0 ? (
-            <ul className="py-2 max-h-96 overflow-y-auto">
-              {/* All Posts link */}
-              <li>
-                <Link
-                  href="/"
-                  onClick={() => setIsOpen(false)}
-                  className={`flex items-center justify-between px-4 py-2.5 transition-colors ${
-                    !activeSlug
-                      ? 'bg-sky-100 dark:bg-sky-900 text-sky-600 dark:text-sky-400'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
-                  }`}
-                >
-                  <span className="text-sm font-medium">All Posts</span>
-                  {!activeSlug && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-sky-600 dark:bg-sky-400"></span>
-                  )}
-                </Link>
-              </li>
-
-              {/* Divider */}
-              <div className="border-t border-gray-200 dark:border-gray-800 my-2"></div>
-
-              {/* Category Links */}
-              {categories.map((category, index) => {
-                const isActive = activeSlug === category.slug;
-                const categoryHref = category.name === "Personal" 
-                  ? '/categories/personal' 
-                  : `/categories/${category.slug}`;
-                
-                return (
-                  <li key={category.id || category.slug || index}>
-                    <Link
-                      href={categoryHref}
-                      onClick={() => setIsOpen(false)}
-                      className={`flex items-center justify-between px-4 py-2.5 transition-colors ${
-                        isActive
-                          ? 'bg-sky-100 dark:bg-sky-900 text-sky-600 dark:text-sky-400'
-                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
-                      }`}
-                    >
-                      <span className="text-sm font-medium">{category.name}</span>
-                      {isActive && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-sky-600 dark:bg-sky-400"></span>
-                      )}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+      {open && (
+        <ul className="px-4 pb-4 space-y-1">
+          {categories.length === 0 ? (
+            <li className="text-sm text-gray-400 px-2 py-1">No categories yet.</li>
           ) : (
-            <div className="px-4 py-8 text-center">
-              <p className="text-sm text-gray-500 dark:text-gray-500 italic">
-                {isLoading ? 'Loading categories...' : 'No categories yet.'}
-              </p>
-            </div>
+            categories.map((cat) => {
+              const isActive = cat.slug === activeSlug;
+              return (
+                <li key={cat.slug}>
+                  <Link
+                    href={`/categories/${cat.slug}`}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors
+                      ${isActive
+                        ? 'bg-sky-50 dark:bg-sky-900/30 text-sky-600 dark:text-sky-400 font-medium'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-sky-600 dark:hover:text-sky-400'
+                      }`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isActive ? 'bg-sky-500' : 'bg-gray-300 dark:bg-gray-600'}`} />
+                    {cat.name}
+                  </Link>
+                </li>
+              );
+            })
           )}
-        </div>
+        </ul>
       )}
     </div>
   );

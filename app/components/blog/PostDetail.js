@@ -1,183 +1,69 @@
-'use client';
-
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import hljs from 'highlight.js';
-import { markdownToHtml } from '@/lib/markdownToHtml';
-
-import PostNotFound from './PostNotFound';
-import { formatDate } from "@/lib/utils";
+import { formatDate } from '@/lib/utils';
 
 export default function PostDetail({ post }) {
-  const [htmlContent, setHtmlContent] = useState('');
-  const [htmlExcerpt, setHtmlExcerpt] = useState('');
+  if (!post) return null;
 
-  // Convert markdown to HTML and highlight code
-  useEffect(() => {
-    // Convert markdown to HTML
-    const html = markdownToHtml(post.content);
-    setHtmlContent(html);
-    
-    // Convert excerpt markdown to HTML if it exists
-    if (post.excerpt) {
-      const excerptHtml = markdownToHtml(post.excerpt);
-      setHtmlExcerpt(excerptHtml);
-    }
-    
-    // Highlight code blocks and add copy buttons
-    setTimeout(() => {
-      const codeBlocks = document.querySelectorAll('pre code');
-      
-      codeBlocks.forEach((block, index) => {
-        // Highlight the code
-        hljs.highlightElement(block);
-        
-        // Get the parent <pre> element
-        const pre = block.parentElement;
-        
-        // Skip if button already exists
-        if (pre.querySelector('.copy-button')) return;
+  const { slug, frontmatter, content } = post;
+  const { title, category, categorySlug, tags, publishedAt, date, excerpt } = frontmatter;
 
-        if (!pre.parentElement.classList.contains('code-block-wrapper')) {
-          const wrapper = document.createElement('div');
-          wrapper.className = 'code-block-wrapper relative';
-          pre.parentNode.insertBefore(wrapper, pre);
-          wrapper.appendChild(pre);
-        }
-        const copyIcon = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-          </svg>
-        `;
-        
-        const checkIcon = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        `;
-        
-        // Create copy button
-        const button = document.createElement('button');
-        button.className = 'copy-button absolute top-2 right-2 p-2 text-gray-300 bg-gray-700 hover:bg-gray-600 rounded transition-colors duration-200 cursor-pointer';
-        button.setAttribute('data-index', index);
-        button.setAttribute('aria-label', 'Copy code to clipboard');
-        button.innerHTML = copyIcon;
-        
-        // Add click handler
-        button.addEventListener('click', async () => {
-          const code = block.textContent;
-          try {
-            await navigator.clipboard.writeText(code);
-            button.innerHTML = checkIcon;
-            button.classList.add('text-green-400');
-            
-            setTimeout(() => {
-              button.innerHTML = copyIcon;
-              button.classList.remove('text-green-400');
-            }, 2000);
-          } catch (err) {
-            console.error('Failed to copy code: ', err);
-            button.innerHTML = `
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="15" y1="9" x2="9" y2="15"></line>
-                <line x1="9" y1="9" x2="15" y2="15"></line>
-              </svg>
-            `;
-            button.classList.add('text-red-400');
-            setTimeout(() => {
-              button.innerHTML = copyIcon;
-              button.classList.remove('text-red-400');
-            }, 1000);
-          }
-        });
-        
-        // Add button to the wrapper
-        pre.parentElement.appendChild(button);
-      });
-    }, 10);
-  }, [post]);
-
-  if (!post) {
-    return <PostNotFound />
-  }
-
-  // Get current URL for sharing
-  const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
-  const postTitle = encodeURIComponent(post.title);
-  const postExcerpt = encodeURIComponent(post.excerpt || post.content.replace(/<[^>]*>/g, '').substring(0, 160));
-  
-  // Social sharing URLs
+  const currentUrl = `${process.env.NEXT_PUBLIC_BASE_URL || 'https://blog.niyonshutiemmanuel.com'}/blog/${slug}`;
   const shareUrls = {
-    twitter: `https://twitter.com/intent/tweet?text=${postTitle}&url=${encodeURIComponent(currentUrl)}`,
+    twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(currentUrl)}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`,
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`,
   };
 
-  const categoryName = post.category?.name || post.tags?.[0] || 'General';
-  const isExternal = post.isExternal || post.source === 'medium';
-
   return (
     <article className="max-w-4xl mx-auto px-4">
-      {/* Post Header */}
       <header className="mb-12">
         <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6 leading-tight">
-          {post.title}
+          {title}
         </h1>
-        
-        {/* Meta Information */}
+
         <div className="text-sm text-gray-600 dark:text-gray-400 mb-6 italic">
           <span>Posted by </span>
           <span className="font-medium text-sky-400 dark:text-sky-200">NIYONSHUTI Emmanuel</span>
           <span> on </span>
-          <span className="font-medium text-sky-400 dark:text-sky-200">{formatDate(post.publishedAt || post.createdAt)}</span>
-          
-          {!isExternal && (
+          <span className="font-medium text-sky-400 dark:text-sky-200">{formatDate(publishedAt || date)}</span>
+          {category && (
             <>
               <span> in </span>
-              <Link 
-                href={`/categories/${post.category?.slug || 'general'}`}
-                className="font-medium text-sky-400 dark:text-sky-200 transition-colors"
+              <Link
+                href={`/categories/${categorySlug}`}
+                className="font-medium text-sky-400 dark:text-sky-200 transition-colors hover:underline"
               >
-                {categoryName}
+                {category}
               </Link>
             </>
           )}
         </div>
 
-        {/* Excerpt - now properly rendered as HTML/markdown */}
-        {post.excerpt && (
-          <div 
-            className="prose-blog"
-            dangerouslySetInnerHTML={{ __html: htmlExcerpt }}
-          />
+        {excerpt && (
+          <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-relaxed italic">
+            {excerpt}
+          </p>
         )}
 
-        {/* Tags */}
-        {post.tags && post.tags.length > 0 && (
+        {tags && tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-6">
-            {post.tags.map((tag, index) => (
-              <span 
-                key={index}
-                className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-medium rounded-full"
-              >
+            {tags.map((tag) => (
+              <span key={tag} className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-medium rounded-full">
                 #{tag}
               </span>
             ))}
           </div>
         )}
-
-        {/* Divider */}
-        <div className="mt-2"></div>
       </header>
 
-      {/* Post Content */}
-      <div 
-        className="prose-blog max-w-none"
-        dangerouslySetInnerHTML={{ __html: htmlContent }}
-      />
-      <div className="mt-2"></div>
+      <div className="prose-blog max-w-none">
+        {content}
+      </div>
+
+      <div className="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800 flex gap-4 text-sm">
+        <a href={shareUrls.twitter} target="_blank" rel="noopener noreferrer" className="text-sky-500 hover:underline">Share on X</a>
+        <a href={shareUrls.linkedin} target="_blank" rel="noopener noreferrer" className="text-sky-500 hover:underline">Share on LinkedIn</a>
+      </div>
     </article>
   );
 }
