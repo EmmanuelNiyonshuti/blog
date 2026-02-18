@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
-import { fetchAllPosts } from '@/lib/api';
+import { getAllPosts } from '@/lib/mdx-utils';
+import { TECH_POST_DIR} from '@/lib/utils';
 
 export async function GET() {
   try {
-    const { posts } = await fetchAllPosts(1, 100);
+    const posts = await getAllPosts(TECH_POST_DIR);
     const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://blog.niyonshutiemmanuel.com';
     
     // Generate RSS XML
@@ -18,19 +19,19 @@ export async function GET() {
     <atom:link href="${siteUrl}/rss.xml" rel="self" type="application/rss+xml" />
     ${posts.map(post => {
       const postUrl = `${siteUrl}/blog/${post.slug}`;
-      const pubDate = new Date(post.publishedAt || post.createdAt).toUTCString();
+      const pubDate = new Date(post.frontmatter.publishedAt || post.frontmatter.date).toUTCString();
 
-      const description = post.excerpt?.replace(/<[^>]*>/g, '') || '';
-      
+      const description = post.frontmatter.metaDescription || post.frontmatter.excerpt?.substring(0, 160) || '';
+
       return `
     <item>
-      <title><![CDATA[${post.title}]]></title>
+      <title><![CDATA[${post.frontmatter.title}]]></title>
       <link>${postUrl}</link>
       <guid isPermaLink="true">${postUrl}</guid>
       <description><![CDATA[${description}]]></description>
       <pubDate>${pubDate}</pubDate>
-      ${post.category ? `<category><![CDATA[${post.category.name}]]></category>` : ''}
-      ${post.tags && post.tags.length > 0 ? post.tags.map(tag => `<category><![CDATA[${tag}]]></category>`).join('\n      ') : ''}
+      ${post.frontmatter.category ? `<category><![CDATA[${post.frontmatter.category}]]></category>` : ''}
+      ${post.frontmatter.tags && post.frontmatter.tags.length > 0 ? post.frontmatter.tags.map(tag => `<category><![CDATA[${tag}]]></category>`).join('\n      ') : ''}
     </item>`;
     }).join('')}
   </channel>
