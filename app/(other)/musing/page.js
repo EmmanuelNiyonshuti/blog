@@ -38,7 +38,7 @@ export default async function postsPage() {
                   </span>
                 </div>
                 
-                <Link href={`/posts/${post.slug}`}>
+                <Link href={`/musing/${post.slug}`}>
                   <h2 className="text-3xl md:text-4xl font-bold mb-4 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     {post.frontmatter.title}
                   </h2>
@@ -49,7 +49,7 @@ export default async function postsPage() {
                 </p>
                 
                 <Link 
-                  href={`/posts/${post.slug}`}
+                  href={`/musing/${post.slug}`}
                   className="inline-block text-sm font-sans uppercase tracking-wider text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   →

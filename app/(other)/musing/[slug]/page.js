@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import {getPostBySlug, getAllPosts} from '@/lib/mdx-utils';
-import { notFound } from 'next/navigation';
 import { RANDOM_POST_DIR } from '@/lib/utils';
 import PostNotFound from '@/app/components/blog/PostNotFound';
 
@@ -32,7 +31,9 @@ export default async function postPage({ params }) {
   const post = await getPostBySlug(RANDOM_POST_DIR, slug);
 
   if (!post) {
-    notFound();
+    return (
+      <PostNotFound />
+    )
   }
 
   const { frontmatter, content } = post;
