@@ -1,0 +1,77 @@
+---
+title: "http and websockets"
+slug: "websockets-and-http"
+excerpt: "WebSocket connections start as normal HTTP GET requests, and if the HTTP server agrees to upgrade the protocol, the connection switches to a full-duplex, bidirectional channel, abandoning HTTP’s request-response model"
+category: "Web Development"
+tags: []
+coverImage: ""
+date: "2025-12-12"
+publishedAt: "2025-12-13"
+metaDescription: ""
+---
+
+HTTP is a communication protocol, but what does that actually mean?
+The clean way to think about it is that HTTP is simply a set of rules that different programs agree to follow. If two programs follow the same rules, they can communicate.
+This also means something subtle but important: HTTP only exists as behavior implemented in software. There is no single "HTTP program" you install. Instead, many different applications implement the protocol: web browsers implement HTTP clients, servers like Nginx, Apache, Flask, and FastAPI implement HTTP servers, proxies and tools implement their own HTTP parsing, and so on. All of them follow the same specification, and that shared behavior is what makes HTTP.
+In the context of understanding WebSockets, the most important thing to know about HTTP is that it is strictly request-response. The client has to send a request first so the server can respond. And once the response is complete, the exchange is considered finished even if the underlying TCP connection (the transport layer that actually delivers the bytes; more on that later, maybe!) remains open for reuse. In this model, the server cannot spontaneously send an unrequested HTTP message to a client. If you think about it, this makes real-time communication difficult.
+If you want your application to support notifications, live updates, chats, or anything where the server needs to push data to the client, HTTP becomes limiting. People still achieve this goal through polling repeatedly asking the server if there are new messages or information the client wants. But this is not so reliable and http was not designed for that kind of things. RFC 6455 refers to it as "an abuse of HTTP." You can [read](https://www.rfc-editor.org/rfc/rfc6455#page-37) more if you're interested.
+
+So, **how do WebSockets work?** Well, a WebSocket connection starts as a normal HTTP GET request with special Upgrade and Connection headers that check if the server supports the WebSocket protocol. If it does, they switch protocols and abandon the request-response cycle of HTTP.
+
+**The Handshake**
+When the browser initiates a WebSocket connection, it sends what looks like a normal HTTP request:
+
+```
+GET /chat HTTP/1.1
+Host: localhost:8000
+Connection: Upgrade
+Pragma: no-cache
+Cache-Control: no-cache
+User-Agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36
+Upgrade: websocket
+Origin: http://127.0.0.1:8000
+Sec-WebSocket-Version: 13
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8,zh-TW;q=0.7,zh;q=0.6,fr-FR;q=0.5,fr;q=0.4,en-CA;q=0.3,et;q=0.2,zh-CN;q=0.1,rw;q=0.1
+Sec-WebSocket-Key: P/EAZNx+WFeGI/yCqKhrBQ==
+Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+```
+
+You can recognize some unusual headers in this request,  Upgrade: websocket header is the client asking for switching the protocol, The Sec-WebSocket-Key  header is a random base64-encoded value. The server takes this key, combines it with a magic GUID, hashes it, and sends back the result. If the response matches what the client expects, the server understands WebSocket.
+
+If the server accepts, it responds with something like this:
+
+```
+HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: K2pIvvYi4t4w7CVlgwwREj5ra28=
+Sec-WebSocket-Extensions: permessage-deflate
+date: Sat, 13 Dec 2025 18:41:19 GMT
+server: uvicorn
+```
+
+This HTTP 101 response is the last HTTP message you'll ever see on this connection. After this, the protocol changes. this is interesting! The connection now will be using websocket pritocol. 
+now it will be using binary frames Instead of text-based HTTP messages with headers, data is now sent in frames(small binary structures with):
+An opcode (the type of frame it is?)
+A length field
+The actual payload data
+
+There are different frame types as well and I am not going into that now, the key difference is that no HTTP headers on every message. basically, when you send message like "Hello", you're sending ~7 bytes total, not 200+ bytes of HTTP overhead. This is one of the reasons why WebSockets are efficient for real-time communication.
+**How does it stay alive then?**
+How do you know if the other side is still there? TCP doesn't tell you if the connection is dead until you try to send something! WebSockets solve this with Ping and Pong frames.
+Either side can send a Ping frame at any time. When you receive a Ping, you must respond with a Pong frame containing the same data. and this will prevent intermediaries (proxies, load balancers) from closing idle connections and Verify the remote endpoint is still responsive.
+
+and just like there's a handshake to open the connection, there's one to close it. Either side can initiate by sending a Close frame (opcode 0x8), which can optionally include:
+
+A status code (like 1000 for "normal closure" or 1001 for "going away")
+A reason string (for debugging)
+
+When you receive a Close frame, you must respond with your own Close frame, then close the underlying TCP connection. This two-way close handshake ensures neither side loses data, both parties agree the conversation is over before the TCP connection drops.
+
+some common status codes:
+1000: Normal closure (we're done)
+1001: Going away (server shutting down, browser navigating away)
+1002: Protocol error (malformed frame received)
+1006: Abnormal closure (connection lost without Close frame)
+

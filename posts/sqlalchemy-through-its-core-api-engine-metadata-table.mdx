@@ -1,0 +1,217 @@
+---
+title: "SQLAlchemy Through Its Core API"
+slug: "sqlalchemy-through-its-core-api-engine-metadata-table"
+excerpt: "SQLAlchemy Core provides an explicit way to define relational schemas and construct SQL using Python. This blog concentrates on the MetaData object and table definitions, looking at how SQLAlchemy Core represents and creates database structures."
+category: "backend development"
+tags: []
+coverImage: ""
+date: "2025-12-20"
+publishedAt: "2025-12-21"
+metaDescription: ""
+---
+
+When working with databases from a backend application, most of us default to using an ORM (Object Relational Mapper) to avoid writing raw SQL and dealing with lower-level database details. In Python, SQLAlchemy is one of the most commonly used tools for this.
+
+What’s interesting about SQLAlchemy is that it is not just an ORM. It consists of two main layers: **Core** and **ORM**, where the ORM is built on top of Core. In this article, I’ll focus on working with SQLAlchemy through its Core API rather than the ORM. 
+Why? Well, while I do like the ORM side in terms of how it feels more Python than database, I think it has more magic to work with than the Core API. The things you can do with the ORM, you can also do with Core, so this article is for anyone who is interested in learning about the Core API. Presumably, some familiarity with the ORM API helps, but it’s not required to go through the article. As for which one to use, you can compare them yourself and decide what you like.
+
+This article assumes a basic understanding of Python programming language and some familiarity with interacting with relational databases from a Python application.
+
+### What is SQLAlchemy?
+
+SQLAlchemy is a Python library for working with relational databases. It allows you to define Python objects that represent SQL concepts such as tables, columns, and queries, which are then compiled into actual SQL statements that your database can execute.
+
+sqlalchemy has two components: core and orm. core as the foundation, the database toolkit. This is where engines, connections, metadata, tables, and sql expressions are. with core, you explicitly build sql using python objects, for example:
+```
+user_table.insert().values(name="john")
+```
+the line above is a description of an insert sql statement. when you actually execute a statement, core compiles it into a sql string using a database-specific dialect (a layer that translates SQLAlchemy’s generic instructions into the exact SQL and driver calls a specific database understands), and then hands it off to the dbapi (psycopg2, mysqlclient, etc), which is what actually talks to the database. The ORM sits on top of Core. It adds two main things: object mapping (which are Python classes but mapped as database tables, and table rows which becomes Python objects) and sessions (which manage transactions and track changes to those objects).
+### installation
+
+```
+pip install SQLAlchemy
+```
+or with uv:
+```
+uv add SQLAlchemy
+```
+
+### The engine
+The engine is SQLAlchemy's way of managing connections to your database. in most cases, you don't want to create a new connection every single time you need to run a query. Opening a database 
+connection involves different other things under the hood like TCP handshakes, authentication, and session setup that can take up a little bit of time.Instead, you would open a few connections, keep them alive, and reuse them. This is what they call connection pooling.
+
+SQLAlchemy's engine does this automatically. When you create an engine, it sets up a connection pool (by default, a QueuePool with 5 slots). and with sqlalchemy it doesn'teven  actually connect to the database yet! instead the engine is lazy so they call!,  it only creates connections when you actually need them.
+The first time you try to execute something (use the engine to connect engine.connect, create tables, run a query, whatever), the engine grabs a connection from the pool. If the pool is empty, it creates a new connection. When your query is done ,  the connection goes back into the pool for reuse instead of being closed.
+
+You create an engine like this:
+```python
+from sqlalchemy import create_engine
+
+engine = create_engine(
+    "postgresql+psycopg2://john:super_secret@localhost:5432/test_db"
+)
+```
+
+The URL above contains:
+- `postgresql` - the database dialect (can be PostgreSQL, MySQL, SQLite, etc.)
+- `psycopg2` - the DBAPI driver (the Python library that actually talks to PostgreSQL)
+- `john:super_secret` - username and password
+- `localhost:5432` - host and port
+- `test_db` - database name
+
+You typically create one engine per database when your application starts up and keep it around for the lifetime of your application. The pool handles everything else - growing when you need more connections, recycling stale ones, limiting how many can be active at once.
+
+depending on you application needs you may need to tune this pool say may be your application is handling lots of concurrent requests, you can pass parameters like:
+```python
+engine = create_engine(
+    "postgresql+psycopg2://john:super_secret@localhost:5432/test_db",
+    pool_size=10,        # keep 10 connections in the pool
+    max_overflow=5,      # allow 5 extra connections beyond pool_size if needed
+    pool_recycle=3600,   # recycle connections after 1 hour
+)
+```
+keeping the defaults is usually fine for most applications.
+
+### The MetaData
+
+MetaData is where you register all your table definitions. It is a collection registry that stores Table objects, keyed by their table name.
+
+**Why do you need it? A few reasons:**
+When you define tables with foreign keys, SQLAlchemy needs to know about all the related tables to properly set up those relationships. The MetaData object is where it will look them up.
+When you actually create the tables (we'll get to this), SQLAlchemy needs to create them in the right order - tables without foreign keys first, then the tables that reference them. MetaData tracks all the tables to figure out this dependency order.
+And the other one is that it acts as a central place to keep all your schema definitions together. This is very important when you want to use a schema migration tool like Alembic (you just specify this metadata, because it essentially holds all the tables in your entire application).
+
+You create it like this:
+```python
+from sqlalchemy import MetaData
+
+metadata = MetaData()
+```
+That's it. Now you have an empty registry ready to hold table definitions.
+
+You typically create one MetaData object at the module level (like in a `models.py` or `schema.py` file) and use it throughout your application. When you define tables, you'll pass this metadata object to them, and they'll register themselves automatically.
+
+In case you get curious and want to see, it has more attributes you can inspect yourself. One of them is the .tables attribute which is a dictionary of all registered tables:
+```python
+print(metadata.tables)  # empty dict at first
+print(metadata.tables.keys())  # will show table names after you define them
+```
+
+If you're using the ORM, you don't see this MetaData object explicitly - it's created for you when you make your `Base = declarative_base()`. But it's still there, and you can access it with `Base.metadata`.
+
+### Defining Tables
+To add tables, you use the Table constructor:
+```
+from sqlalchemy import Table, Column, Integer, String, ForeignKey
+
+user_table = Table(
+    "users", # tablename(as a string), this is what the table will be called in the database
+    metadata, # The MetaData object to register with
+    # Column definitions
+    Column("id", Integer, primary_key=True),
+    Column("name", String(25), nullable=False),
+    Column("email", String(255), unique=True, nullable=False),
+)
+
+address_table = Table(
+    "addresses",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("user_id", ForeignKey("users.id"), nullable=False),
+    Column("street", String(100)),
+    Column("city", String(50)),
+)
+```
+Notice that user_table and address_table are just  Python variable name!. The actual table name in the database is "users" and "addresses". 
+When you define a table with a foreign key like ForeignKey("users.id"), you're referencing the database table name ("users"), not the Python variable name (user_table).
+After defining these tables, they're automatically registered in the metadata:
+```
+print(metadata.tables.keys())
+# dict_keys(['users', 'addresses'])
+```
+**Creating and Dropping Tables**
+Once you've defined your tables, you need to actually create them in the database. You can do this with:
+```
+metadata.create_all(engine)
+```
+This connects to the database and issues CREATE TABLE statements for all tables in the metadata. SQLAlchemy does this in a clever way, it will create tables in dependency order (tables without foreign keys first), and it checks if tables already exist before trying to create them.
+```
+metadata.drop_all(engine)
+```
+This issues DROP TABLE statements for all tables, in reverse dependency order (tables with foreign keys get dropped first).
+You can also create or drop individual tables:
+```
+user_table.create(engine)
+user_table.drop(engine)
+```
+Now, In real applications, you rarely use create_all() or drop_all() directly. Instead, you would use a schema migration tool like Alembic to manage schema changes over time. We'll touch on this next.
+
+**Working with Columns**
+After you've defined a table, you can reference its columns using the .columns attribute or you can just use .c:
+```
+# Accessing columns
+>>> user_table.c.name
+Column('name', String(length=25), table=<users>, nullable=False)
+>>> user_table.c.email
+Column('email', String(length=255), table=<users>, nullable=False)
+
+# Get all column names
+print(user_table.c.keys())  # ['id', 'name', 'email']
+```
+referencing columns when building queries:
+```
+from sqlalchemy import select
+
+# Build a SELECT query
+stmt = select(user_table).where(user_table.c.name == "john")
+
+# Execute it
+with engine.connect() as conn:
+    result = conn.execute(stmt)
+    for row in result:
+        print(row)
+```
+The with statement here is a context manager. When you do with engine.connect() as conn, it grabs a connection from the pool and assigns it to conn. When the block exits (either normally or because of an error), the connection automatically gets returned to the pool. You don't have to manually close it. This is something you'll use most of the time when working with connections.
+
+now, the example above uses engine.connect(), which is called "commit as you go" - you need to explicitly commit any changes:
+```
+from sqlalchemy import insert
+
+with engine.connect() as conn:
+    stmt = insert(user_table).values(name="john", email="john@example.com")
+    conn.execute(stmt)
+    conn.commit()  # You have to call commit explicitly
+  ```
+There's another way using engine.begin(), which automatically commits when the block exits (or rolls back if there's an error):
+```
+with engine.begin() as conn:
+    stmt = insert(user_table).values(name="john", email="john@example.com")
+    conn.execute(stmt)
+    # Automatically commits here when the block exits
+  ```
+### Using MetaData with Alembic
+
+When you use Alembic for database schema migrations, you need to tell it about your MetaData object. In your alembic/env.py file, you'll do something like this:
+```python
+from myapp.models import metadata #or whereever you created your metadata object
+```
+
+### Point Alembic to your metadata
+```
+target_metadata = metadata
+```
+If you're using the ORM, it's the same idea, just with Base.metadata:
+```python
+from myapp.models import Base
+target_metadata = Base.metadata
+```
+The MetaData object is what Alembic uses to understand your schema. This is why having all your tables registered in one MetaData (or one ORM Base) is so important.
+I actually talked a little but about this in another  [blog](https://www.niyonshutiemmanuel.com/blog/database-schema-migrations-with-alembic) if you are interested. 
+
+### Conclusion
+Every application using SQLAlchemy needs an engine to manage database connections. Whether you use Core or ORM, you always start with an engine. The MetaData object is the registry for your table schemas. In Core, you create the metadata instance yourself. In ORM, it's created for you via Base.metadata.
+
+As I said starting the article,  the choice between Core and ORM depends on your preference and how you want your application to be.  but, I think starting with Core and getting comfortable with it before moving to ORM can  help you avoid the magic you might feel from time to time when you jump straight into using the ORM. With that said there is nothing wrong with jumping straight to using the orm api. Both are valid and even better, you can mix both in the same application.
+
+
+

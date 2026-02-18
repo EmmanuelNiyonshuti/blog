@@ -1,0 +1,127 @@
+---
+title: "Datetimes, Timezones, and UTC in Python3 (Naive vs Aware Explained)"
+slug: "datetimes-timezones-and-utc-in-python"
+excerpt: "Dates, times and datetimes can be confusing in programming. This blog explains what they are and how Python handles them, focusing on naive and aware datetimes. I'm using Python 3.12, which is when they started recommending `datetime.now(UTC)` over the now-deprecated `datetime.utcnow()`."
+category: "Python"
+tags: ["python3","datetime","timezones","utc"]
+coverImage: ""
+date: "2025-11-23"
+publishedAt: "2025-11-23"
+metaDescription: ""
+---
+
+## What are they?
+
+A date is the combination of a year, month and day. A time is an hour, minute, seconds and optionally microseconds. A datetime (or date and time) represents both combined together.
+
+When you have a datetime, it's representing a specific moment in time. Like for example, we are on 11/22/2025 at 1:25:45. That's a datetime and it's obvious to everyone. But we know all regions on earth are not on the same timezone, right? So that datetime represents that specific moment at where you are.
+
+Here's where it gets tricky: the numbers 1:25:45 by themselves don't tell you the actual moment in time. If I'm in Kigali and you're in New York, and we both write down "1:25:45", we're talking about different moments. Your 1:25 PM happens hours before mine. The numbers are the same, but the actual point in time is different.
+
+## How Python sees datetimes
+
+In Python, they distinguish datetimes into two categories:
+
+**Naive** - A datetime that has no information about its timezone. Whatever timezone (e.g., UTC, local time) that datetime represents, it is up to the program running it to decide that.
+
+**Aware** - A datetime that knows what timezone it represents.
+
+*The Python documentation puts it like this*:
+
+> a naive object does not contain enough information to unambiguously locate itself relative to other date/time objects. Whether a naive datetime represents UTC, local time, or time in some other timezone is purely up to the program.
+
+```python
+from datetime import datetime, UTC
+
+# Naive datetime - no timezone info
+naive_dt = datetime(2025, 11, 22, 13, 25, 45)
+print(naive_dt.tzinfo)  # None
+
+# Aware datetime - has timezone information
+aware_dt = datetime(2025, 11, 22, 13, 25, 45, tzinfo=UTC)
+print(aware_dt.tzinfo)  # datetime.timezone.utc
+```
+
+You can see the `tzinfo` attribute of a Python datetime object holds the timezone information. When it is `None`, the datetime is naive. When it has a value, it's aware.
+
+## Why does this matter?
+
+The problem with naive datetimes is that Python doesn't know what they represent. If you store a naive datetime in a database, later when you read it back, you have no idea if those numbers mean UTC, local time, or something else.
+
+With aware datetimes, Python knows exactly what moment in time you're talking about. It can convert between timezones correctly because it knows where you started.
+
+Now, naive datetimes aren't inherently wrong. Say your application only runs in one timezone, your server is configured with that timezone, and you're not dealing with users across different locations , naive datetimes can work fine in that situation. But, the moment you need to work across timezones, you need aware datetimes.
+
+## What is UTC?
+
+I wanted to also talk a little bit about UTC (Coordinated Universal Time) in case it confuses you!. This is a universal reference point for time. It's not a timezone that belongs to any location, it's the zero point that all other timezones are measured against.
+
+For example, when you say "Kigali is UTC+2", that means Kigali time is 2 hours ahead of UTC. When it's 13:00 in UTC, it's 15:00 in Kigali.
+
+In programming, the more common practice is to store time in UTC and convert to other timezones only when displaying to users. This way, you always know exactly what moment in time you're working with.
+
+## The common workflow
+
+**1. Getting the current time**
+
+```python
+from datetime import datetime, UTC
+
+# Get current time in UTC (aware)
+utc_now = datetime.now(UTC)
+print(utc_now)  # 2025-11-22 11:25:45.123456+00:00
+```
+
+You might have seen `datetime.utcnow()` in older code. This has been deprecated because it returns a naive datetime even though it represents UTC time. Meaning it gives you UTC datetime but that datetime is naive , it doesn't have timezone information, which can be confusing.
+
+Also, be aware that using `datetime.now()` without arguments returns naive datetime in your system's timezone:
+
+```python
+# This returns naive datetime
+naive_now = datetime.now()  # naive, system timezone
+```
+
+**2. Converting between timezones**
+
+To convert between timezones, you use `astimezone()`. This only works on aware datetimes:
+
+```python
+from datetime import datetime, UTC
+from zoneinfo import ZoneInfo
+
+# Start with UTC
+utc_time = datetime.now(UTC)
+
+# Convert to Kigali timezone
+kigali_tz = ZoneInfo("Africa/Kigali")
+kigali_time = utc_time.astimezone(kigali_tz)
+
+print(utc_time)    # 2025-11-22 11:25:45+00:00
+print(kigali_time) # 2025-11-22 13:25:45+02:00
+```
+
+The actual moment in time is the same, but the numbers changed because we're viewing it from a different timezone.
+
+This works when you know which timezone to convert to. But here's the thing — in most cases, you don't actually know the timezone for every user. You could ask them to set it in their profile, or try to infer it from their location, but that's not always practical.
+
+**3. The practical approach: let the client handle it**
+
+What you usually do is keep your aware datetime in UTC, send it in your API response, and let the client (like a browser) handle the conversion to local time. Browsers know the user's timezone, so they can convert UTC to local time automatically:
+
+```python
+from datetime import datetime, UTC
+
+# Your backend: store and send UTC
+utc_time = datetime.now(UTC)
+# Send this in API response: "2025-11-22T11:25:45+00:00"
+
+# Browser JavaScript handles conversion, example:
+# new Date("2025-11-22T11:25:45+00:00").toLocaleString()
+# Shows in user's local timezone automatically
+```
+
+This is simpler and more reliable than trying to manage every user's timezone on the server. Your server works with UTC, your client converts to local time.
+
+## Summary
+
+A datetime is just numbers representing a moment in time, but without timezone information, those numbers are ambiguous. Python's naive datetimes lack timezone information and can cause bugs when working across timezones. Aware datetimes explicitly know what timezone they represent, making them safe to store and convert. The common practice is to store in UTC and convert to user timezones only for display.

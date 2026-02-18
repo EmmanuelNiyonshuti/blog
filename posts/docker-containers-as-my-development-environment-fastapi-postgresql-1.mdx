@@ -1,0 +1,356 @@
+---
+title: "Docker Containers: FastAPI + PostgreSQL"
+slug: "docker-containers-as-my-development-environment-fastapi-postgresql-1"
+excerpt: "How I use Docker containers while developing a FastAPI application with PostgreSQL, using uv as the package manager. I am talking through my current local development setup, including the Dockerfile, docker-compose, and volume mounting for live reload."
+category: "Software Development"
+tags: ["docker","docker compose","fastapi","postgresql"]
+coverImage: ""
+date: "2026-01-02"
+publishedAt: "2026-01-05"
+metaDescription: ""
+---
+
+The way I started using Docker was probably not very common. Let me give you some context about how I got into it. In 2024, I was learning software engineering at ALX SE, where Docker was an optional tool for working on projects. In most cases, I didn't actually use it. However, we were required to run some of our projects on Python 3.8, Node 18 (I think), and MySQL (I don't remember the exact version), and sometimes these versions didn't match what I already had on my machine.
+When we started, I didn't bother much with tools to manage different versions of these software packages. I did discover pyenv along the way and used it a couple of times if you don't know pyenv, it's a tool for managing different Python versions (this was before uv). I also used nvm (a Node version manager) occasionally, but I think at some point I might have gotten bored or frustrated with the process and nvm seemed much more straightforward to me than pyenv!
+Since I knew and had read a little about Docker containers, I started using docker containers instead. so, instead of trying to switch between different versions, I would pull an image from Docker Hub for the specific version of Python or MySQL I needed, volume mount my project directory (I'll talk about volumes in this article) to the container, and then run my code in the container environment. I know we can chalk that up to a skill issue at some point, I think, but it kind of solved my problem for some time as my code would pass their automated checker. The thing is, it was one of those things where you feel like you get the hang of it even though it still feels like a magic.
+
+In this article, I'm talking about how to actually use Docker containers as your development environment and potentially deploy with them. To work with Docker containers, you have to get comfortable with two main concepts: **Images** and **Containers**.
+**The Image**: This is a complete package or blueprint of your application. When using Docker, you deal with images by either pulling them from Docker Hub, which is a repository containing pre-built and ready-to-use images, or by building one yourself by writing a Dockerfile.
+**The Container**: This is the image when it's actually running. You run a container from a container image.
+A basic workflow is: you write a Dockerfile, you build an image from that file, and then you run a container from that image.
+Everything I talk about in this article revolves around those two concepts. I have a FastAPI + PostgreSQL backend, and I'm walking through my Docker setup while developing this application. The complete code I used is available here: [fastapi-uv-docker-template](https://github.com/EmmanuelNiyonshuti/fastapi-uv-docker-template)
+
+### My Project Structure
+
+on my computer this is how my project looks like :
+
+```bash
+emmanuel@LAP-01:~/web-backend$ tree --prune -I "__pycache__|*.pyc"
+.
+├── Dockerfile
+├── README.md
+├── alembic
+│   ├── README
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions
+│       └── 7c0c48b52736_add_users_table.py
+├── alembic.ini
+├── app
+│   ├── __init__.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   ├── deps.py
+│   │   ├── main.py
+│   │   └── routes
+│   │       ├── __init__.py
+│   │       └── user.py
+│   ├── core
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   └── db.py
+│   ├── main.py
+│   └── models.py
+├── docker-compose.yml
+├── pyproject.toml
+└── uv.lock
+
+7 directories, 21 files
+emmanuel@LAP-01:~/web-backend$ 
+```
+ 
+ I used the [tree](https://linux.die.net/man/1/tree) command with some flag to hide Python cache files. 
+It's a basic FastAPI project with uv as the package manager, PostgreSQL as the database, and SQLAlchemy as the orm. This is a setup that made the most sense to me as I can develop and potentially deploy everything through Docker containers.
+
+### The Dockerfile - Building My App Image
+
+```dockerfile
+FROM python:3.12-slim
+
+WORKDIR /web-backend
+
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# Copy dependency files first
+COPY pyproject.toml uv.lock ./
+
+# Install dependencies
+RUN uv sync --frozen --no-cache --no-dev
+
+ENV PYTHONPATH=/web-backend
+
+COPY ./app ./app
+COPY ./alembic ./alembic
+COPY ./alembic.ini ./
+
+CMD ["uv", "run", "fastapi", "run", "app/main.py", "--port", "8000"]
+```
+
+**FROM python:3.12-slim**
+
+The first thing you do is pulling the base image of your application. in this case we have a python application so our base image will be python.  Docker has pre-built and ready to use images that you can pull its the public repository so, I start with an official Python image that already has Python 3.12 installed. The `slim` variant is smaller debian based image. but you can choose other variants as well.
+
+**WORKDIR /web-backend**
+
+setting the working directory to `/web-backend` and creates it if it doesn't exist. Every command after this runs from `/web-backend`. I chose `/web-backend` but you could use `/app` or  whatever makes sense to you.The important thing is that this becomes the root of your project in the container, similar to how `~/web-backend` is the root on my local machine. I like to have my container almost mirroring the local project structure.
+```dockerfile
+COPY --from=ghcr.io/astral-sh/uv:latest  /uv /uvx /bin/**
+```
+This line copies the uv program from another Docker image into mine. Instead of installing uv by downloading and running an install script, we just copying an already-compiled uv binary directly. The format is `COPY --from=source destination`. So I'm copying `/uv` and `/uvx` from the `ghcr.io/astral-sh/uv:latest` image and putting them in `/bin/` in my container. The uv team provides these pre-built binaries in docker images for some benefits including overall smaller image size and improved speed than building uv from the source.
+
+You can also pin to a specific version instead of using `latest`:
+```dockerfile
+COPY --from=ghcr.io/astral-sh/uv:0.9.21 /uv /uvx /bin/
+```
+```dockerfile
+ENV PYTHONDONTWRITEBYTECODE=1 and PYTHONUNBUFFERED=1**
+```
+These are Python-specific optimizations. `PYTHONDONTWRITEBYTECODE` prevents Python from creating `.pyc` files  `PYTHONUNBUFFERED` makes Python print output immediately instead of buffering it, which means I see my logs in real-time when running `docker-compose logs`. there are some others you can add but those are just what I have for now.
+```dockerfile
+**COPY pyproject.toml uv.lock ./**
+```
+copying the project dependency files, when you are working with uv as your package manager you don't need requirements.txt as you would do with pip. instead you have those two files which contains all of the project dependencies and their locked version as well. but we copied them first before the application code, a thing to know about is that when Docker build the image it will cache instructions in layers and these dependency files don't really change that often so, the next time we rebuild the container image instead of docker trying to install the dependencies again if we did not add any extra dependencies it will reuse the cache.
+```dockerfile
+RUN uv sync --frozen --no-cache**
+```
+this is a `uv sync` command that is being executed.  this command ensures virtual environment exactly matches the dependencies listed in uv.lock file. The `--frozen` flag means uv won't update the lock file`uv.lock`. The `--no-cache` flag will tell uv not to cache downloaded packages (Docker's layer caching handles this better).
+uv creates a virtual environment at `/web-backend/.venv` automatically in the container
+```dockerfile
+ENV PYTHONPATH=/web-backend**
+```
+this is to enable imports like `from app.models import User`.  with this Python will know that`/web-backend` is the root of the project.
+
+```dockerfile
+COPY ./app ./app and COPY ./alembic ./alembic**
+```
+Now I copy my actual application code and alembic for database migrations management.. If I modify a Python file, only this layer and everything after it gets rebuilt. All the previous layers (including the slow dependency installation) use the cache.
+
+Notice I'm copying `./app` on my computer to `./app` in the container (which becomes `/web-backend/app` because my WORKDIR is `/web-backend`).
+```dockerfile
+CMD ["uv", "run", "fastapi", "run", "app/main.py","--port", "8000"]**
+```
+This is the default command that runs when the container starts. I'm using the exec form (the array syntax) instead of the shell form because it handles signals properly.
+FastAPI [recommends](https://fastapi.tiangolo.com/deployment/docker/#use-cmd-exec-form) using this exec form too.
+in development I'll override this in docker-compose to use `fastapi dev` for auto-reload.  command instruction in docker compose service takes precedence over this.
+
+### The .dockerignore File
+Before building the image, Docker needs to know what files to ignore. This is like `.gitignore` but for Docker:
+
+```
+__pycache__
+*.pyc
+.env
+.venv
+.git
+```
+preventing  Docker from copying unnecessary files into the build context, which speeds up builds too. we definitely don't want to copy our local `.venv` or `.env` file into the image!
+
+with this in place now I can build container image
+```
+docker build -t web-image .
+```
+the above command will build a container image with a name web-image from Dockerfile in the current directory. after that you can check if your images with `docker images` . with that container image in place I will have to run another command to actually run a container from it. `docker run -d web-image` will actually run a container from that image -d is optional and it make it run in the background.
+
+with this in place I can keep developing while my application is running in the container. but, as we have the database the application talks to we need more than one container for this application. we do this with docker compose. docker compose allow us to run multi container applications like this one.
+### Docker Compose
+
+we have two services: FastAPI app and PostgreSQL. to use docker compose we will write single YAML (`compose.yaml or docker-compose.yml`) file to configure this entire application stack.
+
+```yaml
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_SERVER=db # will intercept the value from .env
+      - POSTGRES_PORT=5432
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    volumes:
+      - ./app:/web-backend/app
+      - ./alembic:/web-backend/alembic
+    command: uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000
+
+  db:
+    image: postgres:17
+    env_file:
+      - .env
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+```
+
+in this file we have two services (web and db)
+**web service (my FastAPI app)**
+
+`build: .` tells Docker to build an image from the Dockerfile in the current directory. Unlike the db service which uses a pre-built image, my web service needs to be built from my custom Dockerfile that we already have.
+
+`ports: - "8000:8000"` maps port 8000 on my computer to port 8000 in the container. The format is `HOST:CONTAINER`. So when I visit `localhost:8000` on my browser, it will forwards to port 8000 inside the container.
+
+`env_file: - .env` loads environment variables from my `.env` file. This is cleaner than hardcoding them in the compose file. My `.env` looks like this:
+
+```bash
+POSTGRES_USER= emmanuel
+POSTGRES_PASSWORD= super_secret
+POSTGRES_DB= dev_db
+POSTGRES_SERVER= localhost
+POSTGRES_PORT= 5433
+SECRET_KEY=dev-secret-key
+```
+
+`environment:`
+If you look at the environment variables in the `.env file` we have `POSTGRES_SERVER= localhost` and `POSTGRES_PORT= 5433` but inside the web service we changed them to `POSTGRES_SERVER= db` and` POSTGRES_PORT= 5432`. I did this to override those environment variables in the container so that web container can communicate with db container. there are more ways you can achieve what this though but this why I do override them so essentially, each of these two services `web` and `db` is running in its own container. If I let the FastAPI application in the web container use localhost and port 5433, it won't find the database.
+That localhost:5433 setup works on the local machine (like when I run migrations from my terminal) because on my computer, localhost means my actual computer, and port 5433 is the "gate" that leads into the container.
+But, inside the container, localhost means the container itself. So if the web app looks at localhost, it is looking at its own container, not the database container. In a Docker Compose network, containers don't use localhost to talk to each other, they use the service name. In our particular case, the service name is db and it is running on port 5432 inside the network.
+
+`depends_on` with `condition: service_healthy` means the web container won't start until the `db` container passes its health check. Without this,  FastAPI app might try to connect to the database before PostgreSQL is ready and it would crash.
+
+`volumes` - this is very important during development and this is by far one of my favorite feature of Docker. Each line will create a live link between my computer and the container. meaning when I edit a file in my editor, the change appears instantly in the container. FastAPI's dev mode will see the change and auto-reloads.
+
+```yaml
+    volumes:
+      - ./app:/web-backend/app
+      - ./alembic:/web-backend/alembic
+```
+
+The format is `HOST_PATH:CONTAINER_PATH`. So my `./app` directory on my computer is mounted to `/web-backend/app` in the container. 
+I also mounted alembic as well, this is because I might do somethings in the migration scripts.
+
+`command` overrides the CMD in my Dockerfile. In development I want `fastapi dev` for auto-reload and benefits with development server, the `fastapi run` in Dockerfile is optimized for production environment.
+
+**db service (PostgreSQL)**
+
+`image: postgres:17` uses the official PostgreSQL image from Docker Hub. I don't need a custom Dockerfile for this because PostgreSQL provides everything I need.
+
+`env_file: - .env`
+It will load the same variables I listed above in the web service. Normally, when you are not developing with docker containers, you have to have some  PostgreSQL database running on your computer or may be somewhere else, log into it, and write SQL statements to create the user for your application or use the existing one, create the database for your application, and grant permissions for that user to this database or you write a sql script file and execute it against the database and it does all that. either way you do it, you take those credentials and put them in your app.
+
+But here with Docker, we are just giving it the environment variables. These pre-built database image knows how to do all that work for us. I don't have to manually go into the database to set everything up; the Postgres image has a built-in script that runs the very first time the container starts.  It looks for variables `POSTGRES_USER`, `POSTGRES_PASSWORD`, and `POSTGRES_DB`, and automatically creates that user and that database for me. This automatic setup only happens the very first time the container starts. After that, the database is stored in the volume, so even if I restart the container, my data and users are already there and waiting. and if I stop, delete or restart the db container those data won't be lost because postgres_data volume will take care of that.
+
+`ports: - "5433:5432"`  and here I'm mapping host port 5433 to container port 5432. 5433 Because I already have PostgreSQL running on my computer on port 5432. Using 5433 avoids conflicts. But inside the Docker network, other containers will still connect to port 5432.
+
+`volumes: - postgres_data:/var/lib/postgresql/data` as we talked about it above in env_file this one uses a named volume instead of a bind mount. This will persists my database data even when I stop or restart the containers which I most likely will. If I run `docker-compose down`, the containers are removed but the `postgres_data` volume remains with all my data. Only `docker-compose down -v` (with the `-v` flag) deletes volumes.
+
+`healthcheck` runs `pg_isready` every 5 seconds to check if PostgreSQL is actually ready to accept connections. 
+
+### Running Everything
+
+now I have this in place I can start my application with one command.
+
+```bash
+docker compose up
+```
+This command will build the web image (if it doesn't exist), pulls the postgres image, creates containers, sets up networking, and starts everything.
+
+If I want to have it run in the background:
+```bash
+docker compose up -d
+```
+then I  keep developing the application 
+I can check logs with:
+```bash
+docker compose logs -f web
+docker compose logs -f db
+```
+
+When I'm done:
+```bash
+docker compose down
+```
+This  stops and removes containers, but keeps volumes (my database data). If I want a completely fresh start:
+```bash
+docker compose down -v
+```
+The `-v` flag deletes volumes too. Be careful with this because it will actually wipe your database!
+
+**database migrations**:
+
+initializing alembic
+```
+docker compose exec web uv run alembic init alembic
+```
+auto generating the migration scripts
+```
+docker compose exec web uv run alembic --autogenerate -m'add is_superuser in users table'
+```
+upgrading the database:
+```
+docker compose exec web uv run alembic upgrade head
+```
+Everything is the same as using Alembic normally, except we preface it with `docker compose exec web` because we need to run the command inside the container where our code and virtual environment live. By using exec web, I am telling Docker: "Go inside the running container named 'web' and run this command there." Since the web container is already on the same network as the database, Alembic will have no trouble finding it. 
+you can go into the shell in container as well with `docker compose exec -it web bash` to see how things are looking.
+
+Overall, you can notice  that we only used just one compose.yml file, and it works fine for now. But Docker Compose is powerful. We can go even further by using overrides. like we can create a compose.override.yml file and overrides the services we have inside compose.yaml. Think about how handy this is when you have different environments like development, staging, and production. but it doesn't have to be an application with all those environments. you could even have a smaller application like this one and do that. in fact let's create compose.override.yml file, in this file I am going to take instructions from compose.yml file we already have and instead put them in this override. this override will serve as our development compose file with things like volume mounting. we will take out the volumes, development command as well the environment instructions. Our compose.override.yml will have:
+```yaml
+services:
+  web:
+    environment:
+      - POSTGRES_SERVER=db
+      - POSTGRES_PORT=5432
+    volumes:
+      - ./app:/web-backend/app
+      - ./alembic:/web-backend/alembic
+    command: uv run fastapi dev --host 0.0.0.0 --port 8000
+```
+then we will remain with compose.yml like this:
+```
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+
+  db:
+    image: postgres:17
+    env_file:
+      - .env
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+```
+
+now, I can still just run:
+```
+docker compose up
+```
+Docker Compose automatically looks for the base file and then the override file, merging them together. Everything runs exactly as it did before! If you want to use different names, you can specify them manually with the -f flag (like docker compose -f compose.yml -f compose.prod.yml up).
+
+### wrapping up
+I’ve found Docker containers to be really convenient for both developing and deploying applications. But, you need to have your configurations down. and the more you use it, the more you get comfortable with the commands and what your particular application needs.
+I know I’ve only touched on some of these things lightly and skipped others, but these were the essentials I needed to get this specific setup running.
+
+Also, Happy new Year!

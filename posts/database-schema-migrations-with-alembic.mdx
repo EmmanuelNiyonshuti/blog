@@ -1,0 +1,133 @@
+---
+title: "Database schema migrations with Alembic"
+slug: "database-schema-migrations-with-alembic"
+excerpt: "Evolving database schema alongside your code with Alembic"
+category: "backend development"
+tags: []
+coverImage: ""
+date: "2025-12-07"
+publishedAt: "2025-12-08"
+metaDescription: ""
+---
+
+This article is about keeping your database schema in sync with your code. It is not about moving data between databases, which is a different problem that requires different tools.
+
+People often refer to this process as “database migration,” but what we’re really talking about here is the ongoing work of evolving your database structure as your application changes.
+
+If you’re not familiar with database schema migration, I will give you an example: imagine your application needs to store some data(users, items, or other information). You define tables for this data in your code, often using a tool like an ORM (object relational mapper for example, SQLAlchemy that lets you describe the database structure as Python objects). Or, you might use lower-level tools to connect your code directly to the database. Either way, your code now has a blueprint of the tables you want in your database.
+
+A migration tool ensures that your database matches that blueprint. Later, if you need to modify a table say, remove a column, rename a field, or change a datatype the migration tool applies those changes automatically. For example, if your users table initially has a username column but you later decide it’s unnecessary, the tool will remove it from the database as well. This is exactly what a tool like Alembic were made for.
+
+This article assumes some familiarity with Python, but the concepts of database schema migration apply to any programming language. Here, we focus on Alembic as the example tool.
+
+## Overview of How it works
+
+Alembic tracks schema changes as Python files called revisions. Each revision is a script containing two functions:
+
+```
+- upgrade()  # applies the change to your database
+- downgrade()  # undoes it (in case you care about rollbacks)
+```
+
+These revision files live in a versions/ directory and are linked together using a down_revision attribute. The first migration sets down_revision = None, and each subsequent migration points to its predecessor. This is how Alembic determines the correct order to apply revisions.
+
+## The migration environment
+
+Before you can create any revisions, you need to set up what Alembic calls the "migration environment." This is the directory structure where migration scripts and configuration live. You create it once and maintain it alongside your code.
+
+## Installing & initializing Alembic
+
+**installing alembic**
+Alembic is installed like any other Python package, you install it using your package manager. using uv you might do:
+
+```
+uv add alembic
+```
+
+
+If you're not using uv (which will handle virtual environments automatically), make sure you create and activate your virtual environment . while you could install it system-wide, It is more common to install it in virtual environment as it will use  SQLAlchemy and database drivers that are more appropriate for local installations.
+
+**initializing alembic**
+Once installed, initialize Alembic with the init command. Run this in the directory where your application code lives.
+The reason is that Alembic invokes env.py whenever you run commands, and that script needs to be able to import your SQLAlchemy models. If your Python path is not set correctly,
+Alembic will not find them.
+initialize alembic with
+
+```
+alembic init alembic
+```
+
+After running  that command, Alembic will create a directory called alembic/ (you can change the name if you want, but most people leave it as the default). 
+
+```
+- versions/  # where your revision files will go (it will be empty at first)
+- env.py  # the Python script that will run whenever you invoke alembic command
+- script.py.mako  # a template used to generate new revision files(the default one will be what Alembic call generic template)
+- alembic.ini  # configuration file at the root of your project
+```
+
+
+## Alembic.ini && env.py
+Amongst the files alembic will create upon its initialization, lets focus on two important ones `alembic.ini` and `env.py`, alembic.ini file will be placed at the root of your project. This is the configuration file Alembic reads before doing anything else.
+In practice, you won’t spend much time here, but it is worth knowing what it controls because it can bite you with weird errors if you ignore it entirely.
+The are couple things in this file you can modify to your preference but one of the main thing here is sqlalchemy.url, which is your database connection string. as you run your migrations env.py file will load the database url for connection from this file unless configured otherwiese.  but, you probably don't want to hardcode your database credentials in a file that gets committed, so in most cases you'll have to override this in env.py using environment variables.
+
+you can do this by loading your database url from your environment variables and using `set_main_option` method on alembic config object. 
+```
+config.set_main_option("sqlalchemy.url", db_url)
+```
+that will override the database url string to whatever you set your db_url you loaded from the environment variables. this is the one way you can do this. 
+
+
+## Working with Revisions & Autogenerating Migrations
+
+Once your environment is set up, you start creating migration scripts. You can write them by hand or let Alembic generate them for you.
+When you run
+```
+alembic revision -m "create users table"
+```
+ you get a new file in versions/ with empty upgrade() and downgrade() functions. At that point it's just a template that you will need to fill in what actually changes. This can be very useful when you want to add something new for example adding seed scripts or may be doing something complex that autogenerate wouldn't understand.
+The other option is autogenerate. This is where Alembic looks at your SQLAlchemy models, compares them to what's actually in the database, and writes the migration scripts for you. But for this to work, Alembic needs to know two things: where your database is (that's the URL you configured in env.py), and what your models look like.
+The models part requires you to set `target_metadata` in `env.py`. Assuming the application has declarative base you will import that and point it there. Though if you don't have the declarative base like in case you used sqlalchemy core API then you can import `metadata` object. Don't forget to import all your models/tables you want the autogeneration to generate the script for(If you only import `Base/metadata`, the autogeration will generate empty scripts):
+
+```
+from app.models.mymodel import MyModel 
+
+from myapp.models import Base
+target_metadata = Base.metadata
+```
+
+Now when you run 
+
+```
+alembic revision --autogenerate -m "add is_active column"
+```
+
+Alembic connects to your database, sees what tables and columns exist, compares that to your models, and generates a migration with the differences.
+Here's the thing they tell us to keep in mind though, autogenerate is helpful but it's not magic. It's doing a diff, not understanding what you're trying to do. So, it misses renames , it'll see a column disappear and a new one appear, and think you want to drop one and add another. It also doesn't always catch constraint changes or custom types. And sometimes it generates weird stuff you didn't expect. For me I've had it once try to drop PostGIS tables because they showed up in the database but not in my models, which would fail anyway because my user doesn't own those tables!
+So, we should always look at what it generated before we run it. 
+>Autogenerate is not intended to be perfect!.
+
+## Running migrations
+When you're ready to apply migrations, you run
+
+```
+alembic upgrade head
+```
+
+to apply everything pending, or
+
+```
+alembic upgrade <revision_id>
+```
+
+To go to a specific revision. What actually happens here is pretty straightforward. Alembic connects to your database and checks for a table called `alembic_version`. If it doesn't exist, it creates it. This table has one column and one row  that stores the current revision ID. That's almost the entire tracking mechanism!.
+Alembic reads that value, loads all the revision files from versions/, and figures out which ones need to run to get from where you are to where you want to be. Then it runs the upgrade() function in each file, one by one, in order. After each one succeeds, it updates alembic_version with the new revision ID.
+If something fails during a migration, Alembic stops and doesn't update the version table. So when you fix the problem and run it again, it picks up from where it left off!.
+The `alembic_version table` is simple but it's important. avoid editting it manually. If you need to mark a migration as applied without actually running it , maybe you applied it by hand or something , use 
+
+```
+alembic stamp <revision_id>
+```
+
+instead of touching the table directly.

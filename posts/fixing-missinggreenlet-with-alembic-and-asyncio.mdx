@@ -1,0 +1,152 @@
+---
+title: "Fixing MissingGreenlet with Alembic and Asyncio"
+slug: "fixing-missinggreenlet-with-alembic-and-asyncio"
+excerpt: "If you're using SQLAlchemy with asyncio and asyncpg, running alembic autogenerate might throw a confusing MissingGreenlet error. This article shows  you exactly how to solve it."
+category: "backend development"
+tags: ["sqlalchemy","alembic"]
+coverImage: ""
+date: "2026-02-16"
+publishedAt: "2026-02-16"
+metaDescription: ""
+---
+
+If you're using sqlalchemy with async/await (asyncio) in your application - meaning you have an async engine created with `create_async_engine()` and you're using an async database driver like asyncpg - and you tried to autogenerate your migration script with alembic and hit an error that says:
+```bash
+sqlalchemy.exc.MissingGreenlet
+```
+
+and you are looking for how you can fix it, then you are at the right place. I am using postgresql database but this should be the same for other relational databases too. This error can be confusing, at least for me, because it doesn't tell us exactly what went wrong. Though the error is explained in sqlalchemy docs, I don't think it is explained for this particular situation with alembic migrations.
+
+In this article I am going to talk about how you can resolve this error in particular to the schema migration with alembic and get your schema autogenerations and upgrading to work.
+
+
+### TLDR
+1. You could let alembic migrations stay synchronous by just using the synchronous database driver(psycopg2) for managing migrations which will demand you installing the database driver.*
+
+2. Instead of having to install psycopg2 just because of alembic migrations, you can make alembic use SQLAlchemy Async engine.
+
+
+We have an async_engine in the application.
+```bash
+async_engine = create_async_engine(
+    url=f"postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}",
+    echo=True,
+)
+```
+
+And we also have some tables in the application. I will define mine using python classes with sqlalchemy orm. I will first create declarative_base so the tables can inherit from it, and then create a table and name it `users`. 
+```bash
+import uuid
+
+import sqlalchemy as sa
+import sqlalchemy.orm as so
+
+Base = so.declarative_base()
+
+class User(Base):
+    __tablename__ = "users"
+    uid: so.Mapped[str] = so.mapped_column(
+        sa.String, primary_key=True, default=lambda: str(uuid.uuid4())
+    )
+    email: so.Mapped[str] = so.mapped_column(sa.String, unique=True)
+    password: so.Mapped[str] = so.mapped_column(sa.String)
+```
+With this in place, I will initialize alembic 
+```bash
+alembic init alembic
+```
+After this command you get a complete environment for alembic. One thing we need to take care of is giving alembic our database connection url which it loads from the .ini file from a key `sqlalchemy.url` by default and the Base metadata to know about tables in our application. We don't need alembic to read the database connection url from the .ini file because that can be a problem since this file is to be kept in the version control as well. So instead I need to find a way to bring the connection url inside the env.py and override the one it tries to read from the .ini `sqlalchemy.url`. 
+
+So, we will import the async_engine from the module we put it in into our alembic env.py file and we will override the key on the config object. Do this somewhere below `config = context.config` in the env.py, so here we go:
+```bash
+config.set_main_option(
+    "sqlalchemy.url", async_engine.url.render_as_string(hide_password=False)
+)
+```
+Now I have overrode the database connection, but wait! This is not just the url! Well, if I only use the url string the password will be hidden and I will keep getting `sqlalchemy.exc.OperationalError` with the error saying that the `password authentication failed`. This is because sqlalchemy intentionally hides the password in the url by default.
+
+Now with that in place, we should be able to autogenerate our migration scripts, you might think or have thought!. But it won't work. This is the error that running `alembic revision --autogenerate -m'users table'` gives me:
+```bash
+  File "/home/emmanuel/lab/migration_tut/.venv/lib/python3.14/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 123, in await_only
+    raise exc.MissingGreenlet(
+    ...<2 lines>...
+    )
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+```
+Strange! luckily, I have url I can head to for some help. If I head to the provided url I will see this:
+> A call to the async DBAPI was initiated outside the greenlet spawn context usually setup by the SQLAlchemy AsyncIO proxy classes. Usually this error happens when an IO was attempted in an unexpected place, using a calling pattern that does not directly provide for use of the await keyword. When using the ORM this is nearly always due to the use of lazy loading, which is not directly supported under asyncio without additional steps and/or alternate loader patterns in order to use successfully.
+
+If you have a pretty good understanding of the inner workings of sqlalchemy with asyncio then you have a better understanding than me of why this error happens. For me I would presumably think that there is somewhere I am trying to perform something that is expected to be asynchronous but I am doing it synchronously. If that makes any sense, like there is something I am not awaiting for when I should be awaiting for it. But there isn't in the application, it's probably on alembic's side.
+
+
+**There are two ways we can solve this error**. One is we can let alembic handle migration synchronously as it normally does, we can use synchronous database driver  like psycopg instead. In this way, since the postgresql dialect we used defaults to using psycopg2 driver, we can update our `env.py` file to do this:
+```bash
+config.set_main_option(
+    "sqlalchemy.url", async_engine.url.render_as_string(hide_password=False).replace(
+        "postgresql+asyncpg", "postgresql")
+)
+```
+You can explicitly replace `"postgresql+asyncpg"` with    `"postgresql+psycopg2"` but I did not have to because again psycopg2 is the default driver for postgresql dialect in python. With that in place, we then have to install `psycopg2` in our virtual environment. I recommend you just install `psycopg2-binary` binary package which comes pre-compiled and you will not need to install anything extra on the system.
+```
+pip install psycopg2-binary
+
+# uv
+uv add psycopg2-binary
+```
+If for some reason you want to install the source version psycopg2 instead, you'll need to install some build dependencies first. On Ubuntu which I use, you'd run:
+```bash
+sudo apt update
+sudo apt install libpq-dev python3-dev build-essential
+```
+Then:
+```bash
+pip install psycopg2
+# or with uv
+uv add psycopg2
+```
+
+
+At this point, we are good to go. I can autogenerate the migration scripts and upgrade the database now.
+But, that is one way to do it. Another way is, we can make alembic use SQLAlchemy Async engine. As of now, Alembic doesn't provide an async API directly, but it does provide this option in its docs [using-asyncio-with-alembic](https://alembic.sqlalchemy.org/en/latest/cookbook.html#using-asyncio-with-alembic)
+
+To do this, we need to update our env.py file to use asyncio. I will place the code here, but it's all from the alembic docs. We will need to replace the `run_migrations_online()` function in env.py and everything else stays the same.
+
+```bash
+from sqlalchemy.ext.asyncio import async_engine_from_config
+import asyncio
+
+def do_run_migrations(connection):
+    context.configure(connection=connection, target_metadata=target_metadata)
+
+    with context.begin_transaction():
+        context.run_migrations()
+
+
+async def run_async_migrations():
+    """In this scenario we need to create an Engine
+    and associate a connection with the context.
+
+    """
+
+    connectable = async_engine_from_config(
+        config.get_section(config.config_ini_section, {}),
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+    )
+
+    async with connectable.connect() as connection:
+        await connection.run_sync(do_run_migrations)
+
+    await connectable.dispose()
+
+
+def run_migrations_online():
+    """Run migrations in 'online' mode."""
+
+    asyncio.run(run_async_migrations())
+
+if context.is_offline_mode():
+    run_migrations_offline()
+else:
+    run_migrations_online()
+```

@@ -1,0 +1,148 @@
+---
+title: "Externally-managed Python Environments and uv"
+slug: "externally-managed-python-environments"
+excerpt: "Externally-managed Python environments, dist-packages vs site-packages, and how modern tools like uv handle package isolation."
+category: "Python"
+tags: []
+coverImage: ""
+date: "2026-01-16"
+publishedAt: "2026-01-24"
+metaDescription: ""
+---
+
+Python environment isolation is one of the important parts of working with Python. In this article I'm going to be talking about externally-managed Python environments, uv-managed Python environments, and some other things that revolve around Python package locations and virtual environments.
+I got prompted to write this article mostly because of an error you hit when you try to install a pip package system-wide, but I couldn't find a way to just write only about it. So I thought that it would be much better to instead talk about Python environments in a broader sense so that you can solve  problems like that when you encounter one.
+
+**A quick note**: I primarily use Ubuntu as my operating system, so this article is written from that perspective. It should apply to other Linux distributions, though I might be off on a few points since this is a broader topic. And more importantly, this reflects my current understanding of it, hence there may be things I might skip or overlook.
+
+
+### externally-managed-environment
+
+You hit this when you try to install a package system-wide with pip on your Linux machine.
+```bash
+emmanuel@LAPTOP-A0O3BKPI:~$ pip install ruff
+error: externally-managed-environment
+
+× This environment is externally managed
+╰─> To install Python packages system-wide, try apt install
+    python3-xyz, where xyz is the package you are trying to
+    install.
+```
+
+This error tells us that the environment we're trying to install our package in is externally managed, meaning it's managed by the operating system. So we should use the package manager for it, like apt for example, to install that package so it won't corrupt the system's packages. This is basically [PEP 668](https://peps.python.org/pep-0668/), which was introduced a couple years ago and implemented in Python 3.11.
+
+Using the OS package manager is better because it's more aware than pip, so it won't corrupt packages that your OS might be depending on. The operating system - Linux distro in this case - has its own Python, or system Python. It relies on this Python installation for some of the tools it uses. Some might even be the very tool you might be attempting to install sometimes, hence, it warns us to not corrupt it.
+
+So, how do you solve this? Using virtual environments for your packages is the more intuitive way I guess. But, I think in most cases you don't run into this error because you forgot virtual environments exist. Rather, it's when you want to install a CLI tool system-wide. 
+
+For command line tools - say you want to install black or ruff, tools you don't import in your code - you use `pipx install <package>`. Or if you use uv, `uv tool install <package>`.
+
+You might see the error message suggesting the use of apt to install Python packages like `python3-requests`. While you can install packages this way, they are intended for system-level dependencies required by Ubuntu. For your own development, you should not install Python packages through apt; instead, it is advised to use virtual environments for projects and tools like pipx or uv for CLI tools.
+
+In my case when I hit this error, I should have used `uv tool install <package>` instead of trying to pip install it system-wide.
+
+### dist-packages vs site-packages
+
+Debian-based Linux distributions like Ubuntu modify Python package locations. Instead of using the standard site-packages, they use dist-packages.
+```bash
+emmanuel@LAPTOP-A0O3BKPI:~$ ls /usr/lib/python3
+dist-packages
+```
+
+You've probably seen site-packages in error tracebacks - file paths often point into it. That's where Python looks for installed packages. Basically, when you start a Python interpreter, it runs a module called `site.py`. This module sets up Python's module search path `sys.path`, which is an array of string paths - those are the paths where Python searches for modules you import in your code. Debian modifies this to add dist-packages directories to the list so that system Python will search for modules in that dist-packages directory as well.
+
+Debian based linux distributions like Ubuntu uses Python for its core tools, and those tools rely on specific Python packages. If we install or upgrade packages with pip that the OS depends on, we might break things on the system. hence, they keep them separate:
+- `dist-packages` for OS-managed packages (those installed with apt)
+- `site-packages` for user-installed packages (those installed with pip)
+- 
+There's a blog that goes into this really well if you want to learn more about it: [Filipe Laíns - Python, Debian, and the install locations](https://ffy00.github.io/blog/02-python-debian-and-the-install-locations/). I'm not going to explain all the details because I don't fully understand them myself, but I think this is the general idea.
+
+I think Python seems to have somehow adopted what Debian was doing rather than the other way around. Debian was modifying Python to protect their system, and then Python itself introduced PEP 668 to formalize this protection. Modern Python tools like uv now embrace this isolation approach even more.
+
+### System packages and virtual environments
+
+In some cases you might have packages installed system-wide and don't want to reinstall them in every project virtual environment. There is a way you can bridge your virtual environment to access system packages. You can set `include-system-site-packages = true` in your venv's `pyvenv.cfg`.
+But this only works if you created the venv with your operating system's Python. You can check which Python created the venv, you find that in `pyvenv.cfg` under the `home` key. 
+
+If you're using uv and created the venv with a uv-managed Python, `include-system-site-packages` won't pull in Ubuntu's apt-installed packages. With uv you won't be able to access those system-wide packages because uv-managed Python environments don't mix system-wide packages with packages installed inside the uv environment.
+
+While you can find ways around this, it's encouraged to instead use virtual environments for development packages and keep things isolated.
+
+### uv and modern Python tooling
+
+uv is a python package and project manager written in Rust that has gained huge traction in the Python ecosystem.
+If you have not used uv before, you most likely have  used or use tools like pip for installing packages. Well, uv does everything you do with pip plus the enhanced performance and combinations of all other things like virtual environment management, project dependency locking,  managing different versions of python, etc. which with pip you normally do separately . uv consolidate all of these  into one tool with enhanced speed and simplicity of using it.
+
+I'll touch on the basics of getting started with uv since it relates to what we're  talking about.
+Installing uv is straightforward. On Linux or macOS:
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Once you have that, here are a few things you can do:
+
+Installing a CLI tool globally(ruff as my example!):
+```bash
+uv tool install ruff
+```
+
+Running a Python script with a specific version without installing it:
+```bash
+uv run --python 3.12 script.py
+```
+
+Creating a new project with dependencies:
+```bash
+uv init my-project
+cd my-project
+uv add requests
+```
+I'm not going to explain most of the things you can do with uv because the [documentation](https://docs.astral.sh/uv/) does that really well, and honestly these LLM tools can help quickly  if you forget certain commands. you can also copy paste some certain parts of the documentation for the llm to demystify it for you.
+
+Anyways, uv seems to embrace the whole isolation thing that PEP 668 is about. When you use uv to run something or install a package for a project, it automatically creates a virtual environment if one doesn't exist. you can see in the commands above there is nowhere I run `python3 -m venv <my_virtualenvironmant_name>` because uv takes care of that, but you can also create it if you want to by running `uv venv` . 
+
+### uv-managed Python installations
+
+uv can also manage different Python versions for you. Most people including myself used to use `pyenv` for this. pyenv is quite a mature tool now and works well, but it requires compilation and can be slow to install new Python versions compared to uv.
+
+with uv you can install a Python version with:
+```bash
+uv python install 3.14
+```
+
+And list what you have:
+```bash
+uv python list
+```
+I have Python 3.12 from Ubuntu, plus Python 3.8 all the way up to 3.14 managed by uv. I barely use some of them really.
+```bash
+emmanuel@LAPTOP-A0O3BKPI:~$ which python3 # system python executable location
+/usr/bin/python3
+emmanuel@LAPTOP-A0O3BKPI:~$ python3 --version
+Python 3.12.3
+emmanuel@LAPTOP-A0O3BKPI:~$ ls /home/emmanuel/.local/share/uv/python/
+cpython-3.10.18-linux-x86_64-gnu  cpython-3.13.6-linux-x86_64-gnu     cpython-3.9.23-linux-x86_64-gnu
+cpython-3.11.13-linux-x86_64-gnu  cpython-3.14.2-linux-x86_64-gnu
+cpython-3.12.11-linux-x86_64-gnu  cpython-3.8.20-linux-x86_64-gnu
+emmanuel@LAPTOP-A0O3BKPI:~$
+```
+
+They're completely separate installations. You can see in the path too. Each one has its own `site-packages` directory:
+```bash
+emmanuel@LAPTOP-A0O3BKPI:~$ ls /home/emmanuel/.local/share/uv/python/cpython-3.14.2-linux-x86_64-gnu/lib/python3.14/site-packages/
+README.txt  pip  pip-25.3.dist-info
+emmanuel@LAPTOP-A0O3BKPI:~$
+```
+
+When I create a venv with uv's Python and check `sys.path`, it only picks up uv's own site-packages. That seems intentional. From what I understand, uv focuses on isolated environments and explicit dependencies, without mixing in system packages.
+### Python 3.14 does something different
+
+One point I can't leave out is that Python 3.14 does something different. In Python 3.13 and earlier, the `site` module was responsible for detecting virtual environments and updating `sys.prefix` to point to the venv.
+
+Python 3.14 moved this earlier. Now it happens during path initialization, before `site.py` even runs. So `sys.prefix` points to your venv even if you start Python with `-S` (which disables site).
+
+I think this is part of making virtual environment detection more fundamental to Python itself, rather than something that happens in a module that can be disabled.
+
+### Conclusion
+
+There's a lot more to Python environments, Python packaging and module search than what I covered here. I touched on several things that relate to each other - externally-managed environments, dist-packages, uv - rather than focusing on just one. Maybe I'll write about using uv specifically in another article. Ultimately, I hope you learned something from this.

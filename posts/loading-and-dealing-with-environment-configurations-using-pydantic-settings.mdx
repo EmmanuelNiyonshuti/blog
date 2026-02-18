@@ -1,0 +1,207 @@
+---
+title: "Environment Configurations Using Pydantic Settings"
+slug: "loading-and-dealing-with-environment-configurations-using-pydantic-settings"
+excerpt: "Loading and Dealing with Environment Configurations Using Pydantic Settings."
+category: "backend development"
+tags: []
+coverImage: ""
+date: "2025-12-15"
+publishedAt: "2025-12-16"
+metaDescription: ""
+---
+
+Pydantic v2 moved the functionality for handling application settings and environment variables into a separate package called `pydantic_settings`. It provides an elegant and reliable way to manage your application's configuration.
+If you haven't used pydantic_settings, you might be familiar with other packages like python-dotenv for loading environment variables, or some other package to achieve the same goal. The advantage of pydantic_settings is that it not only loads your environment variables but also brings all of Pydantic's powerful validation and type-checking features.
+In this article, I'm going to show you how you can use pydantic_settings to load your environment variables and also how you can easily switch between different environments. It's one easy technique I've found to be simple and useful for switching different environments, but there are probably other ways you can do it, so don't take it as the only way.
+This article assumes some familiarity with the Python programming language, and while not strictly required, it's better to also have some basic understanding of working with Pydantic.
+
+### Installation
+You'll need to install the pydantic_settings package using your preferred package manager. I recommend creating a virtual environment first so the package stays project-specific rather than installed system-wide.
+
+Installing with pip:
+```
+pip install pydantic_settings
+```
+or with uv
+```
+uv add pydantic_settings
+```
+
+### BaseSettings
+Normally, when you use Pydantic in a  project, your models inherit from pydantic.BaseModel. However, depending on your use case, you might inherit from other base classes. for example, if you're building a backend with SQLModel in a FastAPI project, your models would inherit from SQLModel instead.
+For application settings and environment variables specifically, your Pydantic model(s) inherit from a different base class: pydantic_settings.BaseSettings.
+```
+from pydantic_settings import BaseSettings
+
+class Settings(BaseSettings):
+          database_url: str
+```
+Settings is just an arbitrary name, you can call it whatever makes sense for your project. I'm using database_url as an example environment variable here.
+In this code, I've imported the BaseSettings class, created a Settings class, and added one required field. With this setup, BaseSettings assumes that database_url is already loaded into the system environment when you run your script or start your application.
+
+There are several ways you can load your application settings, but pydantic_settings offers a particularly elegant approach to handle this.
+
+### How does pydantic settings reads these values?
+By default, pydantic settings (`BaseSettings`) tends to read these values in order of priority.
+it will read arguments passed directly when instantiating the class , then values from the environment variables already present in the shell or os environment, and then the default values specified in the class definition.
+
+**Loading Environment Variables with load_dotenv**
+You could load your environment variables using load_dotenv at the top of your file. For example, assuming you have database_url defined in your .env file:
+```
+from dotenv import load_dotenv
+from pydantic_settings import BaseSettings
+
+load_dotenv()
+
+class Settings(BaseSettings):
+    database_url: str
+  
+s = Settings()
+```
+This approach works perfectly fine. The load_dotenv() function reads your .env file and loads all variables into the system environment before you instantiate Settings.
+
+**Specifying the Environment File at Instantiation**
+Alternatively, you can specify which environment file to use when creating an instance:
+```
+s = Settings(_env_file=".env")
+```
+With this Pydantic Settings will load variables from the specified file. The `_env_file` parameter overrides any env_file setting in model_config (which we haven't set in our example yet).
+Now, you might think, "Well, I can just load a different environment file say .env.prod using `_env_file` and it will use that instead of .env." However, it won't work as you'd expect. Your settings will still be those from .env that were loaded by load_dotenv(). If you've already used load_dotenv(), the` _env_file` parameter won't override those loaded variables. The load_dotenv() approach loads variables into the system environment immediately (before your class is even instantiated), while` _env_file` is handled by Pydantic Settings itself during instantiation.
+
+
+### Working with Multiple Environments
+The other way, which may be simpler in this situation, is that you can use `SettingsConfigDict` that Pydantic settings provides. You can keep your .env file and prefix your environment variables. For example:
+```
+.env
+DEV_DATABASE_URL=postgresql+psycopg2://username:password@hostname:5432/my_app_dev_db
+PROD_DATABASE_URL=postgresql+psycopg2://username:password@hostname:5432/my_app_prod_db
+```
+
+then in And in your Pydantic model configurations
+
+```
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    database_url: str
+ 
+class ProdConfig(Settings):
+    model_config = SettingsConfigDict(env_prefix="PROD_")
+```
+
+When you want to use the `ProdConfig`, Pydantic settings will take care of this by looking for variables prefixed with the prefix you just specified. Now you can go from there and add more classes and environments.
+
+Normally, you rarely need to explicitly or I might say use the load_dotenv. Instead, this `SettingsConfigDict` and `BaseSettings` will take care of the loading of environment variables for you. As you see, we used the load_dotenv but we didn't install python-dotenv as we would normally do! pydantic_settings comes with it.
+Taking a look at my installation here:
+```
+Resolved 8 packages in 1.03s
+Installed 7 packages in 47ms
+ + annotated-types==0.7.0
+ + pydantic==2.12.5
+ + pydantic-core==2.41.5
+ + pydantic-settings==2.12.0
+ + python-dotenv==1.2.1   
+ + typing-extensions==4.15.0
+ + typing-inspection==0.4.2
+```  
+
+You can see the package installed right there as well.
+So you can specify your env file inside the model config, and Pydantic will load it:
+```
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env")
+    database_url: str
+ 
+class ProdConfig(Settings):
+    model_config = SettingsConfigDict(env_prefix="PROD_")
+```
+
+With this, it will take care of loading your environment variables, prefix as the same, and do the validations as well.
+You might want to set `extra="ignore"`when you want Pydantic to ignore extra variables that you might have in your environment variables. You can also set the encoding you want your env file to be read in, as it defaults to your operating system's encoding. There are more important arguments you can specify!
+So you can override your model_config at instantiation time. you might not even need to have the separate ProdConfig class anyways. You can keep everything inside the settings and then specify the env file you want to load from at instantiation time.
+```
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env")
+    database_url: str
+```
+So, you can go from there as well.
+
+### Switching environments
+This is one of many ways you can work with your application environment variables, but what I want to talk about is using separate config Pydantic models, inheriting from this base settings, keeping everything inside one env file, prefixing them accordingly, having an environment state variable to determine which environment to use, and overriding it whenever you want to switch which environment you want your application to run in.
+
+Consider you have your application in this folder structure:
+```
+.
+├── app
+│   ├── __init__.py
+│   ├── config.py
+│   └── main.py
+├── tests
+│   ├── __init__.py
+│   ├── conftest.py
+│   └── test_main.py
+└── .env
+```
+
+You can have something like this in your config:
+```
+from functools import lru_cache
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class BaseConfig(BaseSettings):
+    ENV_STATE: str
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+class GlobalConfig(BaseConfig):
+    DATABASE_URL: str
+
+class DevConfig(GlobalConfig):
+    model_config = SettingsConfigDict(env_prefix="DEV_")
+
+class TestConfig(GlobalConfig):
+    model_config = SettingsConfigDict(env_prefix="TEST_")
+
+class ProdConfig(GlobalConfig):
+    model_config = SettingsConfigDict(env_prefix="PROD_")
+
+@lru_cache()
+def get_config(env_state: str):
+    config_dict = {"dev": DevConfig, "test": TestConfig, "prod": ProdConfig}
+    return config_dict[env_state]()
+
+config = get_config(BaseConfig().ENV_STATE)
+```
+Now, what is happening in here? It's still the same concept, but let me explain.
+
+We have a `BaseConfig` that reads the `ENV_STATE` environment variable. This is the variable that determines which environment we're running in. It also sets up the basic configuration like pointing to our `.env `file and telling Pydantic to ignore extra variables that might be in the environment but not in our model.
+Then we have GlobalConfig, which inherits from BaseConfig. This is where we define fields that might be common across all environments. In this case, we have `DATABASE_URL`. Then we have three environment-specific configs: `DevConfig`, `TestConfig`, and `ProdConfig`. Each one inherits from `GlobalConfig` and sets an `env_prefix` in `model_config`. So when we use `DevConfig`, Pydantic will look for variables like `DEV_DATABASE_URL` in our environment(the `.env`file since thats what we specified). When we use `ProdConfig`, it will look for `PROD_DATABASE_URL`, and so on.
+The `get_config` function is where things get a little bit interesting. It's decorated with `@lru_cache()`, which means once we call it with a specific `env_state`, it will cache  the result. I like to put it this way because I don't need to keep re-instantiating or creating the config object every time I import it in the application since it would also read the `.env` file as well and I don't change these environment variables that often so I keep it this way in most cases. 
+  The `get_config` function takes an `env_state` string and returns the appropriate config class instance. The `config_dict` maps environment names to their corresponding config classes.  If `env_state` is `"dev"`, it returns `DevConfig()`, if it's `"prod"`, it returns` ProdConfig()`, and so on.
+ 
+Finally, at the bottom, we have `config = get_config(BaseConfig().ENV_STATE)`. This is where we actually create our config instance. We instantiate `BaseConfig` just to read the `ENV_STATE` variable, then pass that to `get_config`, which returns the appropriate environment config.
+
+`.env `file will look something like this:
+```
+ENV_STATE=dev
+
+#delopment environment
+DEV_DATABASE_URL=postgresql://localhost/dev_db
+
+# Test environment
+TEST_DATABASE_URL=postgresql://localhost/test_db
+
+# Production environment
+PROD_DATABASE_URL=postgresql://production_server/prod_db
+```
+now, all your configurations live in one place, and switching environments is as simple as changing the `ENV_STATE `variable. If you are writting tests for your application for example with pytest. You can switch the environment at the top of your `conftest` by just: 
+```
+import os
+os.environ["ENV_STATE"] = "test"
+```
+ As your application grows and you add more configuration options, you just add them to the appropriate `config class` with the right prefix in your `.env`file.
+This is the way I've been using this, and it's served me well so far. There are many ways you can achieve the 
+same thing and you can also enhance this one to suit your use case. I hope you learned something from this!
