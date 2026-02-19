@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export const metadata = {
   title: 'About Me',
@@ -33,15 +34,15 @@ export default function AboutPage() {
             {/* Bio Content */}
             <div className="space-y-4">
               <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-                Hi 👋, I&apos;m Emmanuel Niyonshuti, a software developer based in Rwanda.
-                I got into software development while studying a BSc with Honours in Crop Production.
-                I completed a 12-month online Software Engineering program alongside that degree. 
+                Hi 👋, I&apos;m Emmanuel Niyonshuti, you can call me Emmanuel. I am a software developer based in Rwanda with a strong interest in backend engineering.
+                I discovered software engineering while studying a B.Sc. Hons in Crop Production in 2023 and did a year-long Software Engineering program alongside it.
               </p>
               <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-                After university, I worked at two startups before choosing to focus on deepening my skills and exploring freelance work.
+                After university, I worked at two early stage startups where I worked on building and maintaining web applications.
               </p>
               <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-                I&apos;ve learned a lot from other developers&apos; blogs and their work on the internet, so I decided to build my own space to document concepts I encounter in software development. 
+                I learn a lot from other developers&apos; work on the internet, so I decided to put together my own blog to do some writing.
+                All projects are on <a className="text-blue-600" href="https://github.com/EmmanuelNiyonshuti" target="_blank" rel="noopener noreferrer">GitHub</a>.
                 If something here helps you, that&apos;s awesome.
               </p>
               <p className="mt-6 text-gray-700 dark:text-gray-300 font-medium">
