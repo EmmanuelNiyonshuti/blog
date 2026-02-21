@@ -1,0 +1,111 @@
+---
+title: "Next.js-ing My Blog"
+slug: "nextjs-ing-my-blog"
+excerpt: "migrating my blog to serving markdown files"
+category: "dev"
+tags: ["nextjs", "blog", "markdown"]
+date: "2026-02-26"
+publishedAt: "2026-02-26"
+metaDescription: "how I migrated this blog three times and ended up just serving static markdown files."
+---
+
+Three times I have changed this blog and now I ended up serving static markdown files!
+
+I first started this as a blogging application but I wanted it to be a full stack application, with some backend and a database.
+I did not think I was just going to put together a simple static personal blog; I wanted it to be something a little dynamic.
+
+Why did I even want a blog in the first place? Well, it came from other people's blogs online that I'd been going into to pick up something or just read stuff.
+I eventually found it as something great.What's interesting is that you can't really share something you haven't done yourself. All of that baked in drove me toward putting together my own. And that was enough for me to not really care whether blogging is a dying thing or not nowadays.
+I did have an account on Medium with like 2 blogs I wrote when I was enrolled in this software engineering program, but I just didn't feel like keeping up with Medium.
+
+
+I started building it using Next.js 15 for the frontend, then an Express backend API using prisma orm with a postgresql database . I started it right around the time I had almost finished working on another website, which I also built with Next.js 15.
+Using the Next.js 15 App Router felt like I could finally put together frontend work fast, and I really liked it.
+```
+Next.js 15  +  Express  +  Prisma ORM  +  PostgreSQL
+                                                      
+     frontend        backend       orm        database
+         │               │           │            │
+         └───────────────┴───────────┴────────────┘
+                           │
+                      Render (free)
+                      ┌──────────┐
+                      │  💤      │  ← cold start: 5 seconds
+                      └──────────┘
+```
+I finally got it working but it was kinda rough! In fact, my very first post on here was titled `Handling HttpOnly Cookies Between Next.js and a Backend API on Different Domains` I was trying to handle JWT-based authentication where I was trying to set a JWT token in the cookie from the backend and then have a Next.js middleware read that token from the cookie for all my blog private routes.
+The Next.js middleware couldn't read the token in cookies set by backend residing on render. You can read that post if you want to know more.
+I wanted to start it as a blog web app, with support for comments, replies, authentication, and actually *writing* the blogs in the browser, not in my editor or somewhere else.
+
+This worked for me for a bit, even though it was slow. It was taking around 10 seconds to fetch a blog, and some of my server components were re-fetching every time you visited a page! The 5-second cold start on Render's free plan. I couldn't be okay with it and I wasn't planning to switch to a paid plan! yes, it was all on hobby plan.
+
+I figured,*Since Next.js is fullstack anyway, why not just use its routes and handle everything inside it*.
+
+That way the problem with cold start from render would go away and everything would be running on Vercel and life will hopeful be a litle easy. I thought that was a reasonable idea even though it will not solve the slow development problem.
+Then I moved the backend routes into Next.js routes.
+
+I was setting the JWT token in cookies through a Next.js app route, and the middleware handled authentication just fine.
+But development was still a pain. Spinning up the development server was taking so long, My server components were still fetching data from the database through the routes still taking around 5 seconds for page reloads and stuff.
+
+Another thing I can't skip is that I was using `react-simplemde-editor` combined with other stuff to write markdown and render the HTML properly. The bigger problem was finding the right package combination for what I wanted to do I jumped between a few of them trying to get it right!
+
+I tolerated it for a bit, but I was always frustrated by how slow the development was. Compilation was taking ~20 seconds And even after it finished, touching anything in a file would make the dev server panic, It was choking my RAM and sometimes the os would kill the process and I would have to start again.
+In fact, I did one day think *Maybe I can take this off Vercel and deploy it in Docker containers on a small VPS on DigitalOcean.*
+
+Yes vercel was not the problem here, I started containerizing it with Docker, but the dev server kept panicking. 
+Trying to rebuild the image over and over again and I just left it. I told myself I'd come back when I am actually ready to deploy it too. *(I never came back to it.)*
+
+
+I kept it like that, The live app wasn't fast, but it wasn't super noticeable either ~4 seconds to render a blog, and it had a loading state.
+
+I looked around because there was probably something I missed or used wrong. I was using `next/image` for lazy loading the images, I was using the Turbopack bundler from the start, I didn't have any antivirus running either which they recommend checking
+and I tried other things they suggest too. I tried caching my blogs in localStorage and revalidating after a few minutes, which helped the live site a little, but in development it was still exactly the same.
+
+I realizing that may be I learned Next.js fast and shallow, and got too excited to notice.
+
+A few weeks ago now, I wanted to add a small space called `musing` which would house all the posts or other things that aren't technical. I figured I could add it with its own layout, different from the main blog.
+And then I thought, I don't want this section to *also* go through writing in the browser and persisting everything in PostgreSQL. I used Next.js route groups to separate it from the other routes, gave it its own layout, and made use of `next-mdx-remote` to serve markdown. That worked pretty well for me.
+
+One day I checked my email and saw Neon had sent me a notification saying *I'd hit 80% of my compute*! 11 blog posts(I had drafts too) total and already at 80%! It was probably the Vercel side causing extra database calls, I think. So I decided to serve MDX for the whole thing and I did. Finally, we can breathe now!
+
+```sql
+blog=> SELECT COUNT(*) FROM posts;
+ count
+-------
+    11
+(1 row)
+blog=> \d posts;
+                                            Table "public.posts"
+     Column      |              Type              | Collation | Nullable |              Default
+-----------------+--------------------------------+-----------+----------+-----------------------------------
+ id              | integer                        |           | not null | nextval('posts_id_seq'::regclass)
+ title           | text                           |           | not null |
+ slug            | text                           |           | not null |
+ content         | text                           |           | not null |
+ excerpt         | text                           |           |          |
+ status          | "Status"                       |           | not null | 'DRAFT'::"Status"
+ tags            | text[]                         |           |          |
+ coverImage      | text                           |           |          |
+ createdAt       | timestamp(3) without time zone |           | not null | CURRENT_TIMESTAMP
+ updatedAt       | timestamp(3) without time zone |           | not null |
+ publishedAt     | timestamp(3) without time zone |           |          |
+ authorId        | integer                        |           | not null |
+ categoryId      | integer                        |           |          |
+ metaDescription | text                           |           |          |
+Indexes:
+    "posts_pkey" PRIMARY KEY, btree (id)
+    "posts_slug_key" UNIQUE, btree (slug)
+Foreign-key constraints:
+    "posts_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "user"(id) ON UPDATE CASCADE ON DELETE RESTRICT
+    "posts_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES categories(id) ON UPDATE CASCADE ON DELETE SET NULL
+Referenced by:
+    TABLE "comments" CONSTRAINT "comments_postId_fkey" FOREIGN KEY ("postId") REFERENCES posts(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+blog=>
+```
+But honestly, I don't know I don't quite have the same sense of control I had before. Even though it was kind of a mess.*As my understanding of frontend development improve and nextjs keeps improving, who knows! it might change.*
+
+
+Hey, you're Still Here? If you actually read all the way to this point, I appreciate that. I hope something in here sparked an idea, saved you some time, or at least maybe made you feel better about your own over-engineered project!
+
+*Thanks for reading*. 🙏
