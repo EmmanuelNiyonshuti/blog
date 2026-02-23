@@ -33,13 +33,13 @@ Next.js 15  +  Express  +  Prisma ORM  +  PostgreSQL
                       │  💤      │  ← cold start: 5 seconds
                       └──────────┘
 ```
-I finally got it working but it was kinda rough! In fact, my very first post on here was titled `Handling HttpOnly Cookies Between Next.js and a Backend API on Different Domains` I was trying to handle JWT-based authentication where I was trying to set a JWT token in the cookie from the backend and then have a Next.js middleware read that token from the cookie for all my blog private routes.
+I finally got it working but it was kinda rough! In fact, my very first post on here was titled [Handling HttpOnly Cookies Between Next.js and a Backend API on Different Domains](https://blog.niyonshutiemmanuel.com/blog/handling-httponly-cookies-between-nextjs-and-a-backend-api-on-different-domains). I was trying to handle JWT-based authentication where I was trying to set a JWT token in the cookie from the backend and then have a Next.js middleware read that token from the cookie for all my blog private routes.
 The Next.js middleware couldn't read the token in cookies set by backend residing on render. You can read that post if you want to know more.
 I wanted to start it as a blog web app, with support for comments, replies, authentication, and actually *writing* the blogs in the browser, not in my editor or somewhere else.
 
 This worked for me for a bit, even though it was slow. It was taking around 10 seconds to fetch a blog, and some of my server components were re-fetching every time you visited a page! The 5-second cold start on Render's free plan. I couldn't be okay with it and I wasn't planning to switch to a paid plan! yes, it was all on hobby plan.
 
-I figured,*Since Next.js is fullstack anyway, why not just use its routes and handle everything inside it*.
+I figured, *Since Next.js is fullstack anyway, why not just use its routes and handle everything inside it*.
 
 That way the problem with cold start from render would go away and everything would be running on Vercel and life will hopeful be a litle easy. I thought that was a reasonable idea even though it will not solve the slow development problem.
 Then I moved the backend routes into Next.js routes.
