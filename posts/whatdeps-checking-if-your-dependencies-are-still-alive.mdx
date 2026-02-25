@@ -1,0 +1,93 @@
+---
+title: "whatdeps: checking if your dependencies are still alive"
+slug: "whatdeps-checking-python-dependencies"
+excerpt: "a CLI tool to check Python package health from PyPI and GitHub"
+category: "python"
+tags: ["python", "whatdeps", "pypi", "cli"]
+date: "2026-02-25"
+publishedAt: "2026-02-25"
+metaDescription: "whatdeps - a CLI tool to check Python package health from PyPI and GitHub"
+---
+
+I built a small cli tool last month and called it `whatdeps`. The name is a bit vague, I know.
+
+The thing is, apart from myself, there is a team of developers that i heard before hesitating to add a dependency to their python project.
+Having no quick way to know if it was still maintained. Looking around to know if the python project dependency you are using or about to use is still alive?!
+
+There are tools out there that do quite similar things but, most of them are either checking the sizes of the dependencies, other dependencies they depend on(dependency tree), scanning for security vulnerabilities,  or other similar things.
+But, they actually are more of diagnostic tools. `whatdeps` is informational, it gives you a health snapshot of your dependencies so you can make your own assessment,
+the closest thing would be to manually search for the dependency you are about to use or using on pypi and github.
+
+### How does it work?
+
+I used argparse for the CLI, If you don't give it a file, it looks for `pyproject.toml` or `requirements.txt` and its variants in the current directory.
+
+Once it finds a dependency file, it parses it. For `pyproject.toml`, it tries to do a good job at handling the standard [PEP 621](https://peps.python.org/pep-0621/) format, but also reads Poetry and Hatch configurations. I tried to cover the common cases.
+For requirements files, it reads each line, strips out the version specifiers and extras, and extracts the package name.
+
+Then it goes through each package. First, it hits PyPI's JSON API to get the release information. When it was last updated, what Python versions it requires. PyPI also returns project URLs, and if there's a GitHub link in there, the tool makes another request to GitHub's API for repository metadata.
+Last push date, open vs closed issues, stars, whether it's archived.
+If the package is installed in your current virtual environment, it also calculates disk usage. It does this by looking in the `site-packages` directory and adding up file sizes for anything matching the package name. It handles both underscore and dash variations since some packages use one in their name but the other when installed.
+
+All the HTTP requests run asynchronously using httpx with orjson for fast JSON parsing. A progress bar shows up while it's working, and then everything gets displayed in a table using Rich.
+
+You can use it in virtual environment or as a tool  on your system.
+
+### Installation
+it is available on [pypi](https://pypi.org/project/whatdeps/) and the code is on my [github](https://github.com/EmmanuelNiyonshuti/whatdeps) 
+
+If you want to try it out here, you can install it as a commandline tool with pipx or uv tool
+```bash
+uv tool install whatdeps
+
+pipx install whatdeps
+```
+or
+You can install it in your project environment with pip or uv
+```bash
+pip install whatdeps
+
+uv add whatdeps
+```
+
+You run it in a project directory:
+```bash
+whatdeps
+```
+Or point it at a dependency specification file:
+```bash
+whatdeps -f requirements.txt
+```
+
+The output looks something like this:
+```
+Inspecting 3 packages (2 production dependencies, 1 other dependencies)
+  Fetching metadata from PyPI and GitHub... ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100%
+
+                                                       Production Dependencies
+╭───────────────────┬────────────────────────┬─────────────┬───────────────────┬──────────────────┬───────────────────┬─────────────╮
+│                   │    supported python    │     Size on │  Last Release on  │   Last Push on   │  Issues (O/C) on  │  Stars on   │
+│ package name      │        version         │        Disk │       PyPi        │      GitHub      │      GitHub       │   GitHub    │
+├───────────────────┼────────────────────────┼─────────────┼───────────────────┼──────────────────┼───────────────────┼─────────────┤
+│ alembic           │         >=3.10         │       1.3MB │    2026-02-10     │    2026-02-23    │     114/1071      │    3,974    │
+│ fastapi           │         >=3.10         │      32.2KB │    2026-02-24     │    2026-02-25    │     148/3493      │   95,556    │
+╰───────────────────┴────────────────────────┴─────────────┴───────────────────┴──────────────────┴───────────────────┴─────────────╯
+
+                                                         Other Dependencies
+╭───────────────────┬────────────────────────┬─────────────┬───────────────────┬──────────────────┬───────────────────┬─────────────╮
+│                   │    supported python    │     Size on │  Last Release on  │   Last Push on   │  Issues (O/C) on  │  Stars on   │
+│ package name      │        version         │        Disk │       PyPi        │      GitHub      │      GitHub       │   GitHub    │
+├───────────────────┼────────────────────────┼─────────────┼───────────────────┼──────────────────┼───────────────────┼─────────────┤
+│ pytest            │         >=3.10         │      25.2KB │    2025-12-06     │    2026-02-24    │     1006/5382     │   13,655    │
+╰───────────────────┴────────────────────────┴─────────────┴───────────────────┴──────────────────┴───────────────────┴─────────────╯
+```
+You can look at that and see FastAPI was updated recently, has a good issue resolution ratio (148 open, 3493 closed), and is clearly popular.
+
+The issue ratio gives you a rough sense of maintenance. A package with 10 open and 500 closed issues is probably better maintained than one with 500 open and 50 closed.
+
+### What might come later?
+
+I've thought about adding security vulnerability checking, but tools like `pip-audit` already do that well. I'd only add it if I find myself wanting both types of information in one go during my workflow.
+For now, it does what I needed. If you find something worth adding or run into a problem, feel free to open an issue on GitHub.
+
+---
