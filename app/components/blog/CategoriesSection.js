@@ -24,11 +24,11 @@ export default function CategoriesSection({ categories = [] }) {
         <div className="flex items-center gap-2">
           <FolderIcon open={open} />
           <div className="flex flex-col items-start">
-            <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+            <span className="text-xs font-semibold tracking-wider text-gray-500 dark:text-gray-400">
               Categories
             </span>
             <span className="text-xs text-sky-600 dark:text-sky-400 font-medium">
-              {activeCategory ? activeCategory.name : 'All'}
+              {activeCategory ? activeCategory.name.toLowerCase() : 'All'}
             </span>
           </div>
         </div>
@@ -68,7 +68,7 @@ export default function CategoriesSection({ categories = [] }) {
                       }`}
                   >
                     <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isActive ? 'bg-sky-500' : 'bg-gray-300 dark:bg-gray-600'}`} />
-                    {cat.name}
+                    {cat.name.toLowerCase()}
                   </Link>
                 </li>
               );
