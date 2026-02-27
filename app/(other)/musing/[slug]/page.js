@@ -57,14 +57,12 @@ export default async function postPage({ params }) {
         </div>
       </header>
 
-      {/* Article */}
       <article className="max-w-3xl mx-auto px-4 py-16">
-        {/* Metadata */}
         <div className="text-center mb-12">
-          <span className="text-xs font-sans uppercase tracking-[0.3em] text-zinc-500 dark:text-zinc-500">
+          <span className="text-xs font-sans text-zinc-500 dark:text-zinc-500">
             {frontmatter.category || 'post'} • {frontmatter.date}
           </span>
-          <h1 className="text-4xl md:text-5xl font-bold mt-4 mb-6 tracking-tight">
+          <h1 className="text-4xl md:text-3xl font-bold mt-4 mb-6 tracking-tight">
             {frontmatter.title}
           </h1>
           {frontmatter.excerpt && (
@@ -74,20 +72,16 @@ export default async function postPage({ params }) {
           )}
         </div>
 
-        {/* Divider */}
-        <div className="flex justify-center mb-12">
-          <div className="w-24 h-px bg-zinc-800 dark:bg-zinc-200"></div>
-        </div>
         <div className="prose-content">
           {content}
         </div>
 
         {/* Footer */}
-        <div className="mt-24 pt-12 border-t border-zinc-300 dark:border-zinc-700">
+        <div className="mt-24 pt-12">
           <div className="flex justify-between items-center">
             <Link 
               href="/musing"
-              className="text-sm font-sans uppercase tracking-wider text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-sm font-sans uppercase text-blue-600 dark:text-blue-400 hover:underline"
             >
               ←
             </Link>

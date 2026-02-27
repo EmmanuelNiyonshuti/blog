@@ -10,7 +10,6 @@ export const metadata = {
     default: 'NIYONSHUTI Emmanuel | Software Developer',
     template: '%s | NIYONSHUTI Emmanuel',
   },
-  description: 'Software developer, thinker, and curator of digital fragments.',
   alternates: {
     canonical: './',
     types: {
@@ -38,6 +37,9 @@ export default function RootLayout({ children }) {
             <main className="flex-1">
               {children}
             </main>
+            <footer className="flex text-left py-6 text-sm text-zinc-500 dark:text-zinc-500">
+              <p>© {new Date().getFullYear()} Musing</p>
+            </footer>
           </div>
         </ThemeProvider>
       </body>
