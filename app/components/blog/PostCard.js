@@ -6,19 +6,14 @@ export default function PostCard({ post }) {
   const { title, excerpt, category, tags, publishedAt, date } = frontmatter;
 
   return (
-    <article className="mb-6">
+    <article className="mb-3">
       <Link href={`/blog/${slug}`}>
-        <div className="group relative w-full bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-[30px] border-4 border-gray-300 dark:border-gray-600 p-6 cursor-pointer transition-all duration-300 hover:shadow-lg shadow-md hover:scale-[1.02] flex flex-col min-h-50" style={{
+        <div className="group relative w-3/4 bg-linear-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-[60px] p-6 cursor-pointer transition-all duration-300 hover:shadow-lg shadow-md hover:scale-[1.02] flex flex-col min-h-50 border border-gray-200 dark:border-gray-700" style={{
           backgroundClip: 'padding-box',
           clipPath: 'polygon(30px 0, calc(100% - 30px) 0, 100% 30px, 100% calc(100% - 30px), calc(100% - 30px) 100%, 30px 100%, 0 calc(100% - 30px), 0 30px)'
         }}>
           
           <div className="flex flex-col gap-3 flex-1">
-            {/* Header*/}
-            <div className="flex items-center gap-2 text-xs font-bold tracking-widest">
-              {category && <span className="text-sky-600 dark:text-sky-400">{category.toLowerCase()}</span>}
-            </div>
-
             {/* Title */}
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug line-clamp-2 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
               {title}
