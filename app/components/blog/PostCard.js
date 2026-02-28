@@ -7,11 +7,10 @@ export default function PostCard({ post }) {
 
   return (
     <article className="mb-3">
-      <Link href={`/blog/${slug}`}>
-        <div className="group relative w-3/4 bg-linear-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-[60px] p-6 cursor-pointer transition-all duration-300 hover:shadow-lg shadow-md hover:scale-[1.02] flex flex-col min-h-50 border border-gray-200 dark:border-gray-700" style={{
-          backgroundClip: 'padding-box',
-          clipPath: 'polygon(30px 0, calc(100% - 30px) 0, 100% 30px, 100% calc(100% - 30px), calc(100% - 30px) 100%, 30px 100%, 0 calc(100% - 30px), 0 30px)'
-        }}>
+      <div className="group relative w-full md:w-3/4 mx-auto md:mx-0 bg-linear-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 rounded-[60px] p-6 transition-all duration-300 hover:shadow-lg shadow-md hover:scale-[1.02] flex flex-col min-h-50 border border-gray-200 dark:border-gray-700" style={{
+        backgroundClip: 'padding-box',
+        clipPath: 'polygon(30px 0, calc(100% - 30px) 0, 100% 30px, 100% calc(100% - 30px), calc(100% - 30px) 100%, 30px 100%, 0 calc(100% - 30px), 0 30px)'
+      }}>
           
           <div className="flex flex-col gap-3 flex-1">
             {/* Title */}
@@ -46,8 +45,10 @@ export default function PostCard({ post }) {
               </div>
             )}
           </div>
-        </div>
-      </Link>
+        <Link href={`/blog/${slug}`} className="absolute inset-0 z-10" aria-label={`Read ${title}`}>
+          <span className="sr-only">Read {title}</span>
+        </Link>
+      </div>
     </article>
   );
 }
