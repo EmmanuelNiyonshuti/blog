@@ -48,7 +48,7 @@ export default function PostDetail({ post }) {
         {tags && tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-6">
             {tags.map((tag) => (
-              <span key={tag} className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs font-medium rounded-full">
+              <span key={tag} className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-sky-400 dark:text-sky-200 text-xs font-medium rounded-full italic">
                 #{tag}
               </span>
             ))}
