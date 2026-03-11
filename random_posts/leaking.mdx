@@ -1,0 +1,60 @@
+---
+title: "Leaking"
+slug: "leaking"
+excerpt: "The last couple of years have been strange if you are upskilling in software engineering while AI tools are getting better every few months."
+date: "2026-3-11"
+publishedAt: "2026-3-11"
+---
+
+## Prompting LLMs
+
+LLMs (Large language models) have been around for a bit now, starting with ChatGPT which launched and went viral in November 2022. Early versions hallucinated a lot even on simple questions. The interface was compelling enough to keep pulling you back, but the answers were unreliable especially when you were completely new to something you were asking.
+That seemed to make it easy to trust and dangerous to rely on! The healthy way ended up being: to only use it on things you already had some understanding of, go back and forth with follow-up questions, and supplement with official documentation.
+
+For explaining concepts it was great. For fixing code, it would sometimes spit it back with few logical mistakes, assuming a lot and seeming lazy. You'd go back and forth and sometimes just end up doing it yourself.
+
+For me, around this time I switched from GPT to Claude for coding related tasks, Claude seemed to reason better about code and would push back when something didn't make sense which was not the case with GPT!.
+
+## Between Vibe Coding and Agentic Engineering
+
+Before jumping to Cursor, I first found **V0.dev** — an AI-powered UI builder created by Vercel. I learned about it in a coding session held by [Ehoneah Obed](https://www.ehoneahobed.com/) where he literally built an MVP of a hospital management web application using V0.dev, coupling it with other AI tools too.
+
+V0.dev lets you generate full UI components from a prompt, accessible straight from the browser. Things that take months learning and doing, now it would do in one shot. It seemed to like React and TypeScript a lot, defaulting to them even when the prompt said nothing about a stack.
+
+Fast forward to 2025  **Cursor AI**. Released in 2023, but most people including me didn't pick it up until later. This is now essentially a coding agent in your IDE building a project and executing commands for you. You install it as your IDE, tell it what to build, and it sets up the project, creates files, runs commands, everything! You can build fast, even things you don't have skills for yet.
+
+I gave it a try on few projects in late 2025, basically describing everything I think I want in a prompt, giving a prompt to an LLM GPT in this case to make the prompt effective so cursor can understand and do a good job, pass the prompt to claude to improve it and then finally give it cursor ai. 
+That got me a pretty good result! in my experience and I have found this to be common from other developers too, The thing is when you went back to write something normally that Cursor had already done for you in a previous project, you get stuck. Even things you had done before on your own - if Cursor had done it in between, you feel like you are being super slow that you should go back to cursor and just let it do it!
+Some people seemed to make this a new way of doing things and completely abandoned manually writting code.
+
+Later that time [Andrej Karpathy](https://en.wikipedia.org/wiki/Andrej_Karpathy) — an AI researcher who cofounded and formerly worked at OpenAI coined the term **"vibe coding"**
+describing it as fully giving in to the AI, not even really reading the code, just vibing with what it produces and nudging it toward what you want. It went everywhere fast because it named something people were already doing but hadn't put a label on.
+
+Now, The so called vibe coding has started giving way to something people are now calling **agentic engineering**!  Think of Vibe coding as you prompting, accepting, maybe tweaking. Agentic engineering is more structured as you are orchestrating agents that have specific context, constraints, and instructions, which are essentially markdown files you write. Tools like Claude Code, OpenAI Codex, and others that run in the terminal are what people are using with this. 
+At this point now, These ai agents are actually executing inside your project with memory of what they are doing.
+
+For me, right now, I use **Copilot** inside VS Code sometimes in agent mode and sometimes in chat mode depending on what I need. I also use **opencode** with Gemini for agentic coding. For opencode I initialize it on a project first to generate an `AGENTS.md` file, then add skills to it, essentially telling it what it should and should not do. But, I barely use the agent when I am new to something or when there is no strict deadline.
+
+Why those tools specifically? Copilot, is very helpful in autocompletion sometimes and they give it to me for free , and opencode allows me to select different models without being vendor locked.
+
+Anyways, I like to think that maybe learning is evolving too. But, I am not sure of that, and I am not willing to convince myself that this is a fact just to feel better about it. As someone who is not that very experienced, I still know that I need to absorb as much actual skillset as I can.
+
+<em>I am not yet fully convinced of the position or skills of an engineer who builds software by running ai agents and prompting them</em>. But, I am also not saying AI is bad, abandon it! if you actually can do that! I am saying to see it as a tool. Maybe a great one! We already learn libraries and call methods on them to do things we want anyway. But I am not trying to be the experienced guy who says *"it's just another abstraction"* and waves it off. I don't think it is that simple either.
+
+In [The Law of Leaky Abstractions](https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/), [Joel Spolsky](https://en.wikipedia.org/wiki/Joel_Spolsky) says:
+
+> So the abstractions save us time working, but they don't save us time learning.
+
+## What I Keep Coming Back To
+
+What experienced developers also seem to be figuring out is that this is not just people like me who are confused about how to use these tools well. Senior engineers, people with years of production experience, are also navigating this in real time. It looks a lot like research. Everyone is running their own experiments, reporting results and may be adjusting. It does seem like there is a settled answer yet.
+
+The difference is that experienced people have a baseline to measure against — they know what it feels like to fully own something they built.
+
+## Insightful Blogs
+
+There are many developers sharing their honest experience with AI-assisted development but I found it clearly described in a blog by Tom Wojcik: [What AI coding costs you](https://tomwojcik.com/posts/2026-02-15/finding-the-right-amount-of-ai/).
+
+And another one that hit differently about what is actually happening is: [LLM Use in the Python Source Code](https://blog.miguelgrinberg.com/post/llm-use-in-the-python-source-code) by Miguel Grinberg. Let me think about that for a sec. One of the biggest open source projects in existence, and contributors are pushing Claude-generated code into it. oh man! This is happening. It is the actual core of how software is being built now and we need to adapt.
+
+[simonwillison.net](https://simonwillison.net/) is consistently giving actual useful, grounded information about all of this. If you want to stay close to what is actually happening with these tools and how people are genuinely using them day to day, that is one of the places.
