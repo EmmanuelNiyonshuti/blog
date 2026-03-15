@@ -12,7 +12,7 @@ export default function CodeBlock({ children, ...props }) {
 
   return (
     <div className="relative my-6">
-      <pre {...props} className="!my-0">
+      <pre {...props} className="my-0!">
         {children}
       </pre>
       <CopyButton code={codeText} />
