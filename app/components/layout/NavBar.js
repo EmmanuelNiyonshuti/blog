@@ -18,7 +18,7 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Name - Always Visible */}
-          <div className="flex items-center space-x-4 shrink-0">
+          <div className="flex items-center space-x-4 shrink">
             <Link 
               href="/"
               className="text-sm font-semibold text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
@@ -27,6 +27,7 @@ export default function Navbar() {
               NIYONSHUTI Emmanuel
             </Link>
           </div>
+          {/* middle div */}
           <div className="hidden md:flex items-center space-x-8">
             <Link 
               href="/" 
@@ -46,7 +47,6 @@ export default function Navbar() {
             >
               About Me
             </Link>
-
           </div>
           
           {/* Desktop Social Links + Theme - Hidden on Mobile */}
