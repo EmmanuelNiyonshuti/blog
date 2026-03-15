@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import PostCard from './PostCard';
 
@@ -17,33 +15,32 @@ export default function BlogContent({ posts = [], pagination }) {
           ))}
         </div>
       )}
-
       {/* Pagination */}
-      {pagination && pagination.totalPages > 1 && (
-        <div className="flex items-center justify-between mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
-          {pagination.hasPrev ? (
-            <Link
-              href={`/?page=${pagination.currentPage - 1}`}
-              className="px-4 py-2 text-sm font-medium text-sky-600 dark:text-sky-400 border border-sky-300 dark:border-sky-700 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors"
-            >
-              ← Previous
-            </Link>
+    {pagination && pagination.totalPages > 1 && (
+      <div className="flex items-center justify-between mt-12 pt-8">
+      {pagination.hasPrev ? (
+        <Link
+        href={`/?page=${pagination.currentPage - 1}`}
+        className="px-4 py-2 text-sm font-medium text-sky-600 dark:text-sky-400 border border-sky-300 dark:border-sky-700 rounded-xl hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors"
+        >
+        ← Previous
+        </Link>
+        ) : <div />}
+        
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+        Page {pagination.currentPage} of {pagination.totalPages}
+        </span>
+        
+        {pagination.hasNext ? (
+          <Link
+          href={`/?page=${pagination.currentPage + 1}`}
+          className="px-4 py-2 text-sm font-medium text-sky-600 dark:text-sky-400 border border-sky-300 dark:border-sky-700 rounded-xl hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors"
+          >
+          Next →
+          </Link>
           ) : <div />}
-
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            Page {pagination.currentPage} of {pagination.totalPages}
-          </span>
-
-          {pagination.hasNext ? (
-            <Link
-              href={`/?page=${pagination.currentPage + 1}`}
-              className="px-4 py-2 text-sm font-medium text-sky-600 dark:text-sky-400 border border-sky-300 dark:border-sky-700 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-900/20 transition-colors"
-            >
-              Next →
-            </Link>
-          ) : <div />}
-        </div>
-      )}
-    </div>
-  );
+          </div>
+          )}
+      </div>
+    );
 }
