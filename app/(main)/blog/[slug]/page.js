@@ -49,16 +49,7 @@ export default async function BlogPostPage({ params }) {
   const { slug } = await params;
   const post = await getPostBySlug(TECH_POST_DIR, decodeURIComponent(slug));
 
-  if (!post)
-  return (
-    <PostNotFound />
-  );
+  if (!post) return <PostNotFound />;
 
-  return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="max-w-4xl mx-auto">
-        <PostDetail post={post} />
-      </div>
-    </div>
-  );
+  return <PostDetail post={post} />;
 }
