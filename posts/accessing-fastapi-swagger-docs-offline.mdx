@@ -1,0 +1,106 @@
+---
+title: "Accessing FastAPI Swagger docs offline"
+slug: "accessing-fastapi-swagger-docs-offline"
+excerpt: "how can you access fastapi swagger docs offline"
+category: "python"
+date: "2026-03-21"
+publishedAt: "2026-03-21"
+metaDescription: "how can you access fastapi swagger docs offline"
+---
+
+One of the things that make people including myself like FastAPI is its ability to generate
+swagger API documentation automatically for you. However, you can only access these docs when
+you run your application while connected to the internet. In this blog post I am going to explain
+why that is and how you can overcome it.
+
+FastAPI is a Python web framework for building APIs and microservices. It is not only used for that —
+you can do many things any web framework can do too. The reason we say it's for building APIs is
+partly because it makes it very easy and fast to build them.
+
+When you spin up a FastAPI development server, you can access its swagger documentation at
+`http://localhost:8000/docs`. If you have used other web frameworks like Flask,
+getting docs set up usually means reaching for an extra library or doing some manual configuration.
+FastAPI comes with that out of the box.
+
+To do this, FastAPI utilizes Python type hints and Pydantic models to construct a JSON file that
+conforms to [OpenAPI standards](https://www.openapis.org/). This is the `openapi.json` file you
+see when you access `/docs`. FastAPI knows how to parse this file, then serves an HTML page that
+loads the Swagger UI — which is a JavaScript bundle, a CSS file, and a favicon. Those three files
+are what your browser fetches from a CDN when you first open `/docs`.
+
+The answer is obvious! let's download those files from the CDN, put them in our project's static
+folder, and make FastAPI skip the default docs and use ours instead.
+
+Let's start a FastAPI application. I will use `uv`:
+
+```bash
+mkdir my_app
+cd my_app
+uv add "fastapi[standard]"
+```
+
+`main.py`:
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/hello")
+async def greeting():
+    return {"msg": "Hi👋"}
+```
+
+Now let's use `curl` to download the files. I will first create a static folder in the root directory:
+
+```bash
+mkdir -p static/docs
+```
+
+Then download the files:
+
+```bash
+curl -o static/docs/swagger-ui-bundle.js https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui-bundle.js
+curl -o static/docs/swagger-ui.css https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css
+curl -o static/docs/favicon.png https://fastapi.tiangolo.com/img/favicon.png
+```
+
+We will disable the default docs so we can mount our own instead, then create a custom `/docs`
+route that overrides the function responsible for returning the Swagger UI HTML:
+
+```python
+from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.openapi.docs import get_swagger_ui_html
+
+app = FastAPI(docs_url=None, redoc_url=None)
+
+# mount the static files on the application
+app.mount("/static/docs", StaticFiles(directory="static/docs"), name="static_docs")
+
+# create a custom /docs endpoint
+# overrides get_swagger_ui_html so it uses our local files instead of the CDN
+# include_in_schema=False because we don't need this route to appear in our schema
+@app.get("/docs", include_in_schema=False)
+async def custom_docs(request: Request):
+    return get_swagger_ui_html(
+        openapi_url=request.app.openapi_url,
+        title=request.app.title,
+        swagger_js_url="/static/docs/swagger-ui-bundle.js",
+        swagger_css_url="/static/docs/swagger-ui.css",
+        swagger_favicon_url="/static/docs/favicon.png"
+    )
+
+@app.get("/hello")
+async def greeting():
+    return {"msg": "Hi👋"}
+```
+
+That's all to it. One thing to keep in mind is that these CDN files can change depending on the
+FastAPI version you are running. If you update FastAPI down the line, it is worth re-running those
+`curl` commands to pull the matching versions of the static files, otherwise your docs could silently
+break or look off.
+
+Now I can access my swagger docs while offline. If you would rather use a package that handles this
+for you, there is one on PyPI named `fastapi-offline` it does the same thing under the hood,
+but, with the static files bundled in at install time.
