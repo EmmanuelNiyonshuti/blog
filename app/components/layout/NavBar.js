@@ -41,12 +41,13 @@ export default function Navbar() {
             >
               Musing
             </Link>
-            <Link 
+            {/* removed about me route */}
+            {/* <Link 
               href="/about"
               className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
             >
               About Me
-            </Link>
+            </Link> */}
           </div>
           
           {/* Desktop Social Links + Theme - Hidden on Mobile */}
@@ -130,13 +131,14 @@ export default function Navbar() {
               >
                 Musing
               </Link>
-              <Link 
+              {/* removed about me */}
+              {/* <Link 
                 href="/about"
                 className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
                 onClick={closeMenu}
               >
                 About Me
-              </Link>
+              </Link> */}
 
               {/* Divider */}
               <div className="border-t border-gray-200 dark:border-gray-800 my-2"></div>
