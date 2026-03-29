@@ -1,12 +1,13 @@
 import CategoriesSection from '../components/blog/CategoriesSection';
 import BlogContent from '../components/blog/BlogContent';
-import {TECH_POST_DIR} from '@/lib/utils';
-import {getAllPosts, getAllCategories} from '@/lib/mdx-utils';
+import { TECH_POST_DIR } from '@/lib/utils';
+import { getAllPosts, getAllCategories } from '@/lib/mdx-utils';
+import SearchBar from '../components/ui/SearchBar';
 
 export const metadata = {
   title: 'NIYONSHUTI Emmanuel | Software developer',
   description: 'Notes on software development.',
-  
+
   openGraph: {
     title: 'NIYONSHUTI Emmanuel | Software developer',
     description: 'Notes on software development.',
@@ -15,7 +16,7 @@ export const metadata = {
     images: [
       {
         url: 'https://res.cloudinary.com/dx8m9dy9d/image/upload/v1766339600/blog-preview_h6mkod.jpg',
-        width: 1200, 
+        width: 1200,
         height: 630,
         alt: 'NIYONSHUTI Emmanuel Blog Preview',
       },
@@ -30,7 +31,6 @@ export const metadata = {
     creator: '@emmanuelio',
   },
 };
-
 
 export default async function HomePage({ searchParams }) {
   const params = await searchParams;
@@ -56,14 +56,18 @@ export default async function HomePage({ searchParams }) {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
         <aside className="lg:col-span-1 order-2 lg:order-1">
-          <div className="lg:sticky lg:top-8">
+          <div className="lg:sticky lg:top-8 flex flex-col gap-6">
+            <SearchBar />
             <CategoriesSection categories={categories} />
           </div>
         </aside>
+
         <main className="lg:col-span-3 order-1 lg:order-2">
           <BlogContent posts={paginatedPosts} pagination={pagination} />
         </main>
+
       </div>
     </div>
   );
