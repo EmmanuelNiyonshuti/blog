@@ -2,7 +2,8 @@
 
 Moved from a fullstack Next.js + PostgreSQL, and that's what almost all the commits are about!
 
-If you want to use it, you will have to swap out the content in `posts/` `random_posts/` with your own `.md` or `.mdx` files, update the metadata (name, URLs, social links) that are scattered around the pages and the about page.
+If you want to use this, it might be good to know that a lot of this blog was built with heavy `AI-assisted coding`, and then edited and adjusted manually as I went.
+To use it, You will have to swap out the content in `posts/` `random_posts/` with your own `.md` or `.mdx` files, update the metadata (name, URLs, social links) that are scattered around the pages.
 
 ## Getting started
 
