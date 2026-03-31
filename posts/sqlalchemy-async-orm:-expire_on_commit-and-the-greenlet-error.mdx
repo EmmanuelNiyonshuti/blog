@@ -1,0 +1,117 @@
+---
+title: "SQLAlchemy Async ORM: expire_on_commit and the greenlet error"
+slug: "disable-expire-on-commit-with-sqlalchemy"
+excerpt: "why & when you'd set expire_on_commit=False with SQLAlchemy async ORM"
+category: "python"
+date: "2026-03-31"
+publishedAt: "2026-03-31"
+metaDescription: "why & when you'd set expire_on_commit=False with SQLAlchemy async ORM"
+---
+
+*pre*: This is not a concern for sqlalchemy core api user.
+
+### TLDR:
+If you use the sqlalchemy async orm api and you try to access object attributes after committing a session, you will have to call `await session.refresh(your_object)` for each object you want to access. if you forget, you will run into the greenlet error. setting `expire_on_commit=False` is one way to avoid that.
+
+
+## the basics
+You need to first create an `engine` that will manage the connection to the 
+relational database of your choice, the next step after is to create a highlever interface to the database, called a `session`. 
+you bind this session to the engine you created, and you use this session to interact with your database. 
+```python
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+engine = create_engine("sqlite:///mydatabase.db")
+Session = sessionmaker(bind=engine)
+session = Session()
+```
+The next step to this is creating your database tables which is done by creating a `Base` or `Model` class that will hold the metadata for your tables(name of this class is up to you, those names are the most commonly used), and then you create your tables as classes that inherit from it. after you create your tables, you can use the `session` to interact with your database.
+```python
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import DeclarativeBase
+
+engine = create_engine("sqlite:///mydatabase.db")
+Session = sessionmaker(bind=engine)
+session = Session()
+
+class Model(DeclarativeBase):
+    pass
+
+# creating a user table
+
+class User(Model):
+    __tablename__ = "users"
+
+    uid = Column(Integer, primary_key=True)
+    name = Column(String)
+```
+Usually, you will need to go a little but further and configure the metadata for you tables metadata in this `Model class` by setting the `naming_conventions` for your tables metadata so you can control the names of the `constraints` and `indexes` that will be generated for your tables, but lets not go into that in this article.
+
+## async orm api
+That was for the most basic common sqlalchemy orm api usage, but what if we want to use the async api? what if we want to interact with our database in a non blocking way? well, sqlalchemy orm api has an async version that you can use to interact with your database in a non blocking way. Though, we will need to modify our code a bit, we will need an `async database driver`, examples are  `asyncpg` for postgres, `aiomysql` for mysql and `aiosqlite` for sqlite. sqlalchemy uses `greenlet` library to handle the async code, we will need to have that installed as well. For now, know that greenlet is a library written in C that provides light weight coroutines for python, basically it can allow you to run multiple functions concurrently in the same thread, it is similar to asyncio but it takes a different approach to handle async code in python.
+You can install sqlalchemy with the async dependencies by running `pip install sqlalchemy[asyncio]` and it will include `greenlets` dependency. 
+
+Let's modify our code example to use the async api, we will need to use the `create_async_engine` function to create our engine, and we will need to use the `async_sessionmaker` function to create our session. also, we will need to use the `await` keyword when we interact with our database, and we will need to run our code inside an async function.
+
+```python
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+engine = create_async_engine("sqlite+aiosqlite:///mydatabase.db")
+Session = async_sessionmaker(bind=engine)  # expire_on_commit=True by default
+
+session = Session()
+
+class Model(DeclarativeBase):
+    pass
+
+
+class User(Model):
+    __tablename__ = "users"
+
+    uid: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str]
+
+
+async def add_user(name: str) -> User:
+    user = User(name=name)
+    session.add(user)
+    await session.commit()
+    return user
+
+
+async def create_tables():
+    async with engine.begin() as conn:
+        await conn.run_sync(Model.metadata.create_all)
+
+async def main():
+    await create_tables()
+    user = await add_user(name="Foo")
+    print(user.uid)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+Can you spot the problem here? lets run the code and see what happens.
+
+```bash
+...
+raise exc.MissingGreenlet(
+    ...<2 lines>...
+    )
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+```
+
+In out code above we add a user and commit it to the database and return the user object, right after we commit the session the session expires all the data in it by default, this means that all the data in the session is marked as expired. but then we try to access the `uid` of the user object that we just added, and since the session has expired, it will try to refresh the data by querying the database, but since this refresh attempt happens outside the greenlet context (the async context ended at commit), it raises the greenlet error.
+To fix this, we can set the `expire_on_commit` parameter to `False` when we create our session, this will prevent the session from expiring the data after we commit it, and we will be able to access the `uid` of the user object without any issues.
+
+```python
+Session = async_sessionmaker(bind=engine, expire_on_commit=False)
+```
+outuput of the code above will be:
+```bash
+1
+```
+We could have just called `await session.refresh(user)` right after we committed the session to refresh the data in the session, but we will have to do that for every object we want to access its attributes, I think that is very easy to forget to do compared to setting `expire_on_commit` to `False`.
