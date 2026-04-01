@@ -43,13 +43,13 @@ class User(Model):
 Usually, you will need to go a little bit further and configure the metadata for you tables in this `Model class` by setting the `naming_conventions` for your tables metadata so you can control the names of the `constraints` and `indexes` that will be generated for your tables, but lets not go into that in this article.
 
 ## async orm api
-That was for the most basic common sqlalchemy orm api usage, but what if we want to use the async api? what if we want to interact with our database in a non blocking way? well, sqlalchemy orm api has an async version that you can use to interact with your database in a non blocking way. Though, we will need to modify our code a bit, we will need an `async database driver`, examples are  `asyncpg` for postgres, `aiomysql` for mysql and `aiosqlite` for sqlite. sqlalchemy uses `greenlet` under the hood to make its async API work, so we need to have it installed as well. it is a dependency that helps sqlalchemy handle async database operations under the hood.
+That was for the most basic common sqlalchemy orm api usage, but what if we want to use the async api? what if we want to interact with our database in a non blocking way?
+well, sqlalchemy orm api has an async version that you can use to interact with your database in a non blocking way. Though, we will need to modify our code a bit, we will need an `async database driver`, examples are  `asyncpg` for postgres, `aiomysql` for mysql and `aiosqlite` for sqlite.
+sqlalchemy uses `greenlet` under the hood to make its async API work, so we need to have it installed as well. it is a dependency that helps sqlalchemy handle async database operations.
 you can install sqlalchemy with the async dependencies by running:
 ```python
 pip install sqlalchemy[asyncio]
 ```
-
-
 Let's modify our code example to use the async api, we will need to use the `create_async_engine` function to create our engine, and we will need to use the `async_sessionmaker` function to create our session.
 
 ```python
@@ -102,7 +102,7 @@ raise exc.MissingGreenlet(
 sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
 ```
 
-In our code above we tried to add a user and commit it to the database and return the user object, right after we commit the session the session expires all the data in it by default but, then we try to access the `uid` of the user object that we just added, and since the session has expired, it will try to refresh the data by querying the database, but since this refresh attempt happens outside the greenlet context (the async context ended at commit), it raises the greenlet error.
+In our code above we tried to add a user and commit it to the database and return the user object, right after we commit, the session expires all the data in it by default but, then we try to access the `uid` of the user object that we just added and since the session has expired, it will try to `refresh` the data by querying the database, and this refresh attempt happens outside the greenlet context (the async context ended at commit), it raises the greenlet error.
 To fix this, we can set the `expire_on_commit` parameter to `False` when we create our session, this will prevent the session from expiring the data after we commit it, and we will be able to access the `uid` of the user object without any issues.
 
 ```python
