@@ -3,6 +3,7 @@ import BlogContent from '../components/blog/BlogContent';
 import { TECH_POST_DIR } from '@/lib/utils';
 import { getAllPosts, getAllCategories } from '@/lib/mdx-utils';
 import SearchBar from '../components/ui/SearchBar';
+import Welcome from '../components/ui/Welcome';
 
 export const metadata = {
   title: 'NIYONSHUTI Emmanuel | Software developer',
@@ -57,14 +58,15 @@ export default async function HomePage({ searchParams }) {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
-        <aside className="lg:col-span-1 order-2 lg:order-1">
-          <div className="lg:sticky lg:top-8 flex flex-col gap-6">
+        <aside className="lg:col-span-1 order-2 lg:order-1 self-stretch">
+          <div className="lg:sticky lg:top-8 flex flex-col gap-16">
             <SearchBar />
             <CategoriesSection categories={categories} />
+            <Welcome />
           </div>
         </aside>
 
-        <main className="lg:col-span-3 order-1 lg:order-2">
+        <main className="lg:col-span-3 order-1 lg:order-2 pl-15">
           <BlogContent posts={paginatedPosts} pagination={pagination} />
         </main>
 
@@ -72,3 +74,5 @@ export default async function HomePage({ searchParams }) {
     </div>
   );
 }
+
+
