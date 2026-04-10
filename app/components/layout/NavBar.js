@@ -96,20 +96,6 @@ export default function Navbar() {
           <div className="md:hidden pb-4">
             <div className="flex flex-col space-y-4">
 
-              {/* Mobile Search */}
-              {/* <form onSubmit={handleSearchSubmit} className="px-3">
-                <div className="relative">
-                  <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search posts..."
-                    className="w-full pl-8 pr-3 py-1.5 text-xs rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 transition-colors"
-                  />
-                </div>
-              </form> */}
-
               {/* Nav Links */}
               <Link href="/" className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors" onClick={closeMenu}>
                 Home
@@ -117,7 +103,12 @@ export default function Navbar() {
               <Link href="/musing" className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors" onClick={closeMenu}>
                 Musing
               </Link>
-
+              <Link
+                href="/til"
+                className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+              >
+                TIL
+              </Link>
               <div className="border-t border-gray-200 dark:border-gray-800 my-2"></div>
 
               {/* Social Links */}
