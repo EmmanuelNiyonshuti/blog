@@ -2,13 +2,16 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import ThemeToggle from '@/app/components/ui/theme-toggle';
 import RSSLink from '../RssLink';
-import { X } from 'lucide-react';
+import { X} from 'lucide-react';
 import { LinkedInIcon, GitHubIcon, XIcon, MastodonIcon } from '../ui/Icons';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+
+  const router = useRouter();
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
@@ -16,10 +19,13 @@ export default function Navbar() {
   return (
     <nav className="border-b border-gray-200 bg-white dark:bg-gray-900 dark:border-gray-800">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* Main Row */}
         <div className="flex justify-between items-center h-16">
-          {/* Logo/Name - Always Visible */}
+
+          {/* Logo/Name */}
           <div className="flex items-center space-x-4 shrink">
-            <Link 
+            <Link
               href="/"
               className="text-sm font-semibold text-gray-900 dark:text-gray-100 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
               onClick={closeMenu}
@@ -27,77 +33,52 @@ export default function Navbar() {
               NIYONSHUTI Emmanuel
             </Link>
           </div>
-          {/* middle div */}
+
+          {/* Desktop Middle Nav */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
             >
               Home
             </Link>
-            <Link 
+            <Link
               href="/musing"
               className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
             >
               Musing
             </Link>
-            {/* removed about me route */}
-            {/* <Link 
-              href="/about"
+            <Link
+              href="/til"
               className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
             >
-              About Me
-            </Link> */}
+              TIL
+            </Link>
           </div>
-          
-          {/* Desktop Social Links + Theme - Hidden on Mobile */}
+
+          {/* Desktop Right: Social + Theme */}
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
-            <a 
-              href="https://github.com/EmmanuelNiyonshuti" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-              title="GitHub"
-            >
-              <GitHubIcon className="w-5 h-5 hover:text-gray-900 dark:hover:text-white" />
+            <a href="https://github.com/EmmanuelNiyonshuti" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors" title="GitHub">
+              <GitHubIcon className="w-5 h-5" />
             </a>
-            <a 
-              href="https://www.linkedin.com/in/niyonshuti-emmanuel-82877b285/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-gray-600 dark:text-gray-300 transition-colors"
-              title="LinkedIn"
-            >
-              <LinkedInIcon className="w-5 h-5 hover:text-blue-700 dark:hover:text-blue" />
+            <a href="https://www.linkedin.com/in/niyonshuti-emmanuel-82877b285/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 transition-colors" title="LinkedIn">
+              <LinkedInIcon className="w-5 h-5" />
             </a>
-            <a 
-              href="https://x.com/emmanulio" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-gray-600 dark:text-gray-300 transition-colors"
-              title="Twitter/X"
-            >
-              <XIcon className="w-5 h-5 hover:text-blue-700 dark:hover:text-blue" />
+            <a href="https://x.com/emmanulio" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 transition-colors" title="Twitter/X">
+              <XIcon className="w-5 h-5" />
             </a>
-            <a 
-              href="https://mastodon.social/@emmanuelniyonshuti"
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-gray-600 dark:text-gray-300 transition-colors"
-              title="Mastodon"
-            >
-              <MastodonIcon className="w-5 h-5 hover:text-blue-600 dark:hover:text-blue" />
+            <a href="https://mastodon.social/@emmanuelniyonshuti" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 transition-colors" title="Mastodon">
+              <MastodonIcon className="w-5 h-5" />
             </a>
             <RSSLink />
           </div>
-          
-          {/* Mobile Hamburger Button */}
+
+          {/* Mobile Hamburger */}
           <div className="md:hidden">
-            <button 
+            <button
               onClick={toggleMenu}
-              className="text-gray-900 dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-300 p-2 cursor-pointer transition-colors" 
-              title="Menu"
+              className="text-gray-900 dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-300 p-2 cursor-pointer transition-colors"
               aria-label="Toggle menu"
             >
               {isOpen ? (
@@ -110,76 +91,48 @@ export default function Navbar() {
             </button>
           </div>
         </div>
-
-        {/* Mobile Menu - Dropdown */}
+        {/* Mobile Menu Dropdown */}
         {isOpen && (
           <div className="md:hidden pb-4">
             <div className="flex flex-col space-y-4">
-              
-              {/* Navigation Links */}
-              <Link 
-                href="/" 
-                className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
-                onClick={closeMenu}
-              >
+
+              {/* Mobile Search */}
+              {/* <form onSubmit={handleSearchSubmit} className="px-3">
+                <div className="relative">
+                  <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search posts..."
+                    className="w-full pl-8 pr-3 py-1.5 text-xs rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 transition-colors"
+                  />
+                </div>
+              </form> */}
+
+              {/* Nav Links */}
+              <Link href="/" className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors" onClick={closeMenu}>
                 Home
               </Link>
-              <Link 
-                href="/musing"
-                className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
-                onClick={closeMenu}
-              >
+              <Link href="/musing" className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors" onClick={closeMenu}>
                 Musing
               </Link>
-              {/* removed about me */}
-              {/* <Link 
-                href="/about"
-                className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
-                onClick={closeMenu}
-              >
-                About Me
-              </Link> */}
 
-              {/* Divider */}
               <div className="border-t border-gray-200 dark:border-gray-800 my-2"></div>
 
               {/* Social Links */}
               <div className="flex items-center space-x-6 px-3">
-                <a 
-                  href="https://github.com/EmmanuelNiyonshuti" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-                  title="GitHub"
-                >
-                  <GitHubIcon className="w-5 h-5 hover:text-gray-900 dark:hover:text-white" />
+                <a href="https://github.com/EmmanuelNiyonshuti" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors" title="GitHub">
+                  <GitHubIcon className="w-5 h-5" />
                 </a>
-                <a 
-                  href="https://www.linkedin.com/in/niyonshuti-emmanuel-82877b285/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-gray-600 dark:text-gray-300 transition-colors"
-                  title="LinkedIn"
-                >
-                  <LinkedInIcon className="w-5 h-5 hover:text-blue-700 dark:hover:text-blue" />
+                <a href="https://www.linkedin.com/in/niyonshuti-emmanuel-82877b285/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 transition-colors" title="LinkedIn">
+                  <LinkedInIcon className="w-5 h-5" />
                 </a>
-                <a 
-                  href="https://x.com/emmanulio" 
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-600 dark:text-gray-300 transition-colors"
-                  title="Twitter/X"
-                >
-                  <XIcon className="w-5 h-5 hover:text-blue-700 dark:hover:text-blue" />
+                <a href="https://x.com/emmanulio" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 transition-colors" title="Twitter/X">
+                  <XIcon className="w-5 h-5" />
                 </a>
-                <a 
-                  href="https://mastodon.social/@emmanuelniyonshuti"
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-gray-600 dark:text-gray-300 transition-colors"
-                  title="Mastodon"
-                >
-                  <MastodonIcon className="w-5 h-5 hover:text-blue-700 dark:hover:text-blue" />
+                <a href="https://mastodon.social/@emmanuelniyonshuti" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 transition-colors" title="Mastodon">
+                  <MastodonIcon className="w-5 h-5" />
                 </a>
                 <RSSLink />
                 <ThemeToggle />
