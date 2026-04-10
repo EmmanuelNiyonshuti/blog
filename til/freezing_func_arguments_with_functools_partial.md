@@ -1,10 +1,10 @@
 ---
-title: "function with some of its arguments values frozen"
+title: "function with some of its argument values frozen"
 slug: "new-version-of-a-function-with-some-of-its-arguments-values-frozen"
 excerpt: "functools.partial - to create a new version of a function with some of its arguments values frozen"
 category: "python3"
-date: "2026-04-5"
-publishedAt: "2026-04-5"
+date: "2026-04-8"
+publishedAt: "2026-04-8"
 metaDescription: "functools.partial - to create a new version of a function with some of its arguments values frozen"
 ---
 consider this coroutine function:
