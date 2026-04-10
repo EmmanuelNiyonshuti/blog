@@ -11,13 +11,11 @@ metaDescription: ""
 consider this arbitrary function:
 
 ```python3
-
 def f(user_id: str, /, message, *, channel: str) -> bool:
     pass
-
 ```
 `/` means everything to its left must be passed positionally. so `user_id` cannot be passed as a keyword argument
-```
+```python3
 f("123", "hello", channel="general")     # ok
 f(user_id="123", message="hello", channel="general")  # TypeError
 ```
