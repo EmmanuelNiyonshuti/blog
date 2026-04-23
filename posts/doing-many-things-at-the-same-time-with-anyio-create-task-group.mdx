@@ -1,0 +1,109 @@
+---
+title: "Doing Many Things at the same time with AnyIO create_task_group"
+slug: "doing-many-things-at-the-same-time-with-anyio-create_task_group"
+excerpt: "Doing Many Things at the same time with AnyIO create_task_group"
+category: "python3"
+date: "2026-04-21"
+publishedAt: "2026-04-21"
+---
+we can use AnyIO `create_task_group` to run tasks concurrently on a specific backend that we specify. I am sure you have written or at least came across python code with `async def` or even `async with` and `await` in their syntax. these are coroutine functions and async context managers. in coming sentences I might use abbr like `coro` to refer to coroutines.
+
+### coroutines and generators
+a coroutine object is able to suspend its execution and remembers where it left off.
+
+```python3
+>>> async def func():
+...     print("hello")
+...
+>>> func()
+<coroutine object func at 0x72d0251365c0>
+>>>
+```
+not that different from a generator, in a sense that it is also able to pause and resume from where it left.
+
+```python3
+>>> def fn():
+...    yield 1
+...    yield 2
+...
+>>> fn()
+<generator object fn at 0x72d024ee14e0>
+>>>
+```
+calling a coro function only creates a coro object, it doesn't run it like a normal function would. to run it, it needs an event loop. with the generator above I 
+could loop through its values or call `next()` on it until it's exhausted and hits 
+`StopIteration`. I could not do the same with a coro object. instead, only the event 
+loop knows how to do the pausing and resuming with that coro. the event loop 
+recognizes a coroutine function, and whenever it hits an `await` inside it, it 
+suspends execution there and only comes back to it once whatever was being awaited 
+has completed.
+
+### task groups and AnyIO
+```python3
+>>> async def func_1():
+...     await anyio.sleep(1)
+...
+>>> async def main():
+...     async with anyio.create_task_group() as tg:
+...         tg.start_soon(func_1)
+...
+>>> anyio.run(main, backend="trio")
+```
+we can run many things inside the `anyio.create_task_group()` context manager and it will 
+only close after all tasks have completed. notice the `tg.start_soon`, that won't run 
+inline right where we called it instead it schedules it for execution on the next event 
+loop iteration.that's the default behavior.
+these tasks will run on `trio` since that's what's specified as the backend, by default 
+AnyIO picks `asyncio`.
+
+you might have some confusion here as to what AnyIO does or may be wonder why not just use one of
+these async libraries directly. asyncio has some well known [shortcomings](https://sailor.li/asyncio#major-2) and Trio was actually 
+designed from the ground up to fix them, stricter task and cancellation handling being 
+the core of it, though that's a rabbit hole of its own. the problem is you can't just drop 
+Trio into an asyncio codebase or the other way around. AnyIO bring those 
+better ideas to asyncio as well, now we can write code once and choose which backend runs it.
+
+taking a simple small example below, say you have an API that requires authentication before any endpoint is reachable. you cannot fire requests until the token is live. you can use `tg.start()` to hold the caller right there until the task signals it's ready via `task_status.started()`. once auth confirms itself, three requests go out concurrently, and `tg.create_task()` hands back a `TaskHandle` for each. this is something asyncio's `TaskGroup` has no concept of. after the group closes you can read the results right off the handles.
+
+```python3
+import anyio
+from asyncio import run
+from anyio.abc import TaskStatus
+
+async def authenticate(task_status: TaskStatus = anyio.TASK_STATUS_IGNORED) -> None:
+    await anyio.sleep(0.3)  # token exchange
+    task_status.started()   # token is live, caller unblocks
+
+async def fetch(endpoint: str, delay: float) -> str:
+    await anyio.sleep(delay)  # simulates actual network time
+    return f"{endpoint}: 200 OK"
+
+async def main():
+    async with anyio.create_task_group() as tg:
+        await tg.start(authenticate)
+        handles = [
+            tg.create_task(fetch("/users", 1.0)),
+            tg.create_task(fetch("/orders", 0.5)),
+            tg.create_task(fetch("/products", 1.5)),
+        ]
+    for h in handles:
+        print(h.return_value)
+
+run(main())
+```
+
+### the eventloop
+same as asyncio, Trio also has its own event loop implementation. the event loop 
+implementation is what actually determines how fast your tasks switch between each 
+other and how quickly it suspends one and picks up another. the built-in ones are not 
+the most efficient out there. on the asyncio backend you can swap in `uvloop` for 
+example, which is written in C. Trio's event loop is its own thing and not swappable in the same way.
+
+---
+### wrapping up
+AnyIO consolidates and enhances both `trio` and `asyncio` and lets you select which 
+one to run your async code on. there's a good chance you might already be running 
+AnyIO in your code without noticing. for example, if you use FastAPI or Starlette, you're running 
+on AnyIO. what this article went through is really just the surface. underneath all 
+of this lives structured concurrency, cancellation scopes, and event loop mechanics 
+that go much deep a rabbit hole I'm still trying to travel through myself. bye!
