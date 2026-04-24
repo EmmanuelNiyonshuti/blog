@@ -49,15 +49,19 @@ has completed.
 ...
 >>> anyio.run(main, backend="trio")
 ```
-we can run many things inside the `anyio.create_task_group()` context manager and it will 
+we established that a coro needs an event loop to actually run. `anyio.run` is how 
+you hand your entry coroutine to one. it spins up the event loop, runs your coroutine 
+to completion, then tears it down. it's the same as calling `asyncio.run` or `trio.run` 
+directly depending on the backend. in a web framework, you won't call this yourself, the framework does it under the hood.
+
+we could run many things inside the `anyio.create_task_group()` context manager and it will 
 only close after all tasks have completed. notice the `tg.start_soon`, that won't run 
 inline right where we called it instead it schedules it for execution on the next event 
 loop iteration.that's the default behavior.
 these tasks will run on `trio` since that's what's specified as the backend, by default 
 AnyIO picks `asyncio`.
 
-you might have some confusion here as to what AnyIO does or may be wonder why not just use one of
-these async libraries directly. asyncio has some well known [shortcomings](https://sailor.li/asyncio#major-2) and Trio was actually 
+you might wonder why not just use one of these async libraries directly. asyncio has some well known [shortcomings](https://sailor.li/asyncio#major-2) and Trio was actually 
 designed from the ground up to fix them, stricter task and cancellation handling being 
 the core of it, though that's a rabbit hole of its own. the problem is you can't just drop 
 Trio into an asyncio codebase or the other way around. AnyIO bring those 
@@ -67,7 +71,6 @@ taking a simple small example below, say you have an API that requires authentic
 
 ```python3
 import anyio
-from asyncio import run
 from anyio.abc import TaskStatus
 
 async def authenticate(task_status: TaskStatus = anyio.TASK_STATUS_IGNORED) -> None:
@@ -89,17 +92,9 @@ async def main():
     for h in handles:
         print(h.return_value)
 
-run(main())
+anyio.run(main)
 ```
 
-### the eventloop
-same as asyncio, Trio also has its own event loop implementation. the event loop 
-implementation is what actually determines how fast your tasks switch between each 
-other and how quickly it suspends one and picks up another. the built-in ones are not 
-the most efficient out there. on the asyncio backend you can swap in `uvloop` for 
-example, which is written in C. Trio's event loop is its own thing and not swappable in the same way.
-
----
 ### wrapping up
 AnyIO consolidates and enhances both `trio` and `asyncio` and lets you select which 
 one to run your async code on. there's a good chance you might already be running 
