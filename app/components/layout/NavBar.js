@@ -36,11 +36,17 @@ export default function Navbar() {
 
           {/* Desktop Middle Nav */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link
+            {/* <Link
               href="/"
               className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
             >
               Home
+            </Link> */}
+            <Link
+              href="/blog"
+              className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+            >
+              Blog
             </Link>
             <Link
               href="/musing"
