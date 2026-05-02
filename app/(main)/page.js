@@ -23,7 +23,6 @@ export default function HomePage() {
         <p className="text-gray-500">Anything else?</p>
         <p className='text-sm'>I have a growing interest in async programming.
           I occasionally work on and contribute to open source — you can find my work on <Link href="https://github.com/EmmanuelNiyonshuti" className="underline underline-offset-4">GitHub</Link>.
-          The <Link href="https://github.com/EmmanuelNiyonshuti/blog" className="underline underline-offset-4">source</Link> of this blog is there too if you are curious.
         </p>
       </div>
 
