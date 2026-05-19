@@ -17,7 +17,7 @@ export default function PostDetail({ post }) {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <Link
-        href="/"
+        href="/blog"
         className="inline-flex items-center gap-1.5 text-sm text-gray-400 dark:text-gray-500 hover:text-sky-600 dark:hover:text-sky-400 transition-colors mb-8 group"
       >
         <svg
@@ -114,10 +114,10 @@ export default function PostDetail({ post }) {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-900 dark:bg-gray-700 rounded-xl hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors shadow-sm"
                   >
+                    Share on
                     <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zM17.083 19.77h1.833L6.984 4.126H5.054L17.083 19.77z" />
                     </svg>
-                    Share on X
                   </a>
                   <a
                     href={shareUrls.linkedin}
