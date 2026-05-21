@@ -49,12 +49,6 @@ export default function Navbar() {
               Blog
             </Link>
             <Link
-              href="/musing"
-              className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
-            >
-              Musing
-            </Link>
-            <Link
               href="/til"
               className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
             >

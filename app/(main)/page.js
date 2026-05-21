@@ -87,9 +87,7 @@ export default function HomePage() {
       <Section label="about this web blog">
         <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
           this web blog is for me to write(sometimes) about things I am learning/re-learning/etc in the{' '}
-          <Link href="/blog" className="underline underline-offset-4 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">blog</Link>,
-          share opinions in{' '}
-          <Link href="/musings" className="underline underline-offset-4 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">musings</Link>,
+          <Link href="/blog" className="underline underline-offset-4 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">blog</Link>
           and til in{' '}
           <Link href="/til" className="underline underline-offset-4 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">til</Link> page.
         </p>
