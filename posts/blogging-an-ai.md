@@ -27,4 +27,6 @@ I don’t think it’s necessarily bad to be nudged by a machine when something 
 What I don’t like is the overconfidence and hallucinations that sometimes come with this.
 When you talk about something fairly new, it can confidently push corrections even when it’s wrong.
 
-Ultimately, I'm not going to hand over my original writing to an LLM for polishing the same way anymore. And I know the debate about using AI or not even for this kind of thing is a long old one. At this point I can't imagine not using some of these tools. Now, Instead of feeding my entire blog post into it, I'd rather just ask about a specific sentence or paragraph when I feel stuck finding the right way to express something
+Ultimately, I'm not going to hand over my original writing to an LLM for polishing the same way anymore. 
+And I know the debate about using AI or not even for this kind of thing is a long old one.
+At this point I can't imagine not using some of these tools. Now, Instead of feeding my entire blog post into it, I'd rather just ask about a specific sentence or paragraph when I feel stuck finding the right way to express something.
