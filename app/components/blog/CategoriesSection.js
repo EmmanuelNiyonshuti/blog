@@ -38,7 +38,7 @@ export default function CategoriesSection({ categories = [] }) {
         <ul className="px-3 pb-3 space-y-0.5 border-t border-gray-100 dark:border-gray-800 pt-2">
           <li>
             <Link
-              href="/"
+              href="/blog"
               onClick={() => setOpen(false)}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors
                 ${!activeSlug
