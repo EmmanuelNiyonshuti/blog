@@ -97,14 +97,8 @@ export default function Navbar() {
             <div className="flex flex-col space-y-4">
 
               {/* Nav Links */}
-              <Link href="/" className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors" onClick={closeMenu}>
-                home
-              </Link>
               <Link href="/blog" className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors" onClick={closeMenu}>
                 blog
-              </Link>
-              <Link href="/musing" className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors" onClick={closeMenu}>
-                Musing
               </Link>
               <Link
                 href="/til"
