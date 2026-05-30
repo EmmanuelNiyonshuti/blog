@@ -17,7 +17,7 @@ const SkillRow = ({ label, items }) => (
 );
 
 const skills = [
-  { label: 'backend    :', items: ['FastAPI', 'Flask', 'Django'] },
+  { label: 'backend    :', items: ['Starlette', 'FastAPI', 'Flask'] },
   { label: 'databases  :', items: ['PostgreSQL', 'MySQL'] },
   { label: 'frontend   :', items: ['React', 'Next.js'] },
   { label: 'cloud & deployments:', items: ['Docker', 'DigitalOcean', 'Render', 'Railway', 'Vercel'] },
@@ -85,10 +85,10 @@ export default function HomePage() {
       </Section>
 
       <Section label="about this web blog">
-        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
+        <p className="text-sm font-mono text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
           this web blog is for me to write(sometimes) about things I am learning/re-learning/etc in the{' '}
           <Link href="/blog" className="underline underline-offset-4 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">blog</Link>
-          and til in{' '}
+         {' '}and til in{' '}
           <Link href="/til" className="underline underline-offset-4 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">til</Link> page.
         </p>
       </Section>
@@ -108,13 +108,12 @@ export default function HomePage() {
             ...
           </div>
           <div className="space-y-4">
-            <p className="text-xs font-mono text-gray-400 dark:text-gray-500">contributions</p>
+            <p className="text-xl text-gray-400 dark:text-gray-500">contributions</p>
             {contributions.map((p) => <ProjectItem key={p.name} {...p} />)}
             ...
           </div>
         </div>
       </Section>
-
     </div>
   );
 }
