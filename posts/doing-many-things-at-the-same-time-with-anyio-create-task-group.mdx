@@ -11,7 +11,7 @@ we can use AnyIO `create_task_group` to run tasks concurrently on a specific bac
 ### coroutines and generators
 a coroutine object is able to suspend its execution and remembers where it left off.
 
-```python3
+```python
 >>> async def func():
 ...     print("hello")
 ...
@@ -21,7 +21,7 @@ a coroutine object is able to suspend its execution and remembers where it left 
 ```
 not that different from a generator, in a sense that it is also able to pause and resume from where it left.
 
-```python3
+```python
 >>> def fn():
 ...    yield 1
 ...    yield 2
@@ -69,7 +69,7 @@ better ideas to asyncio as well, now we can write code once and choose which bac
 
 taking a simple small example below, say you have an API that requires authentication before any endpoint is reachable. you cannot fire requests until the token is live. you can use `tg.start()` to hold the caller right there until the task signals it's ready via `task_status.started()`. once auth confirms itself, three requests go out concurrently, and `tg.create_task()` hands back a `TaskHandle` for each. this is something asyncio's `TaskGroup` has no concept of. after the group closes you can read the results right off the handles.
 
-```python3
+```python
 import anyio
 from anyio.abc import TaskStatus
 
