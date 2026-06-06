@@ -9,7 +9,7 @@ export default function RSSLink() {
       aria-label="RSS Feed"
     >
       <svg 
-        className="w-5 h-5" 
+        className="w-3 h-3" 
         fill="currentColor" 
         viewBox="0 0 24 24"
       >

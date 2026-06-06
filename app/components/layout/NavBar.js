@@ -60,16 +60,16 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
             <a href="https://github.com/EmmanuelNiyonshuti" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors" title="GitHub">
-              <GitHubIcon className="w-5 h-5" />
+              <GitHubIcon className="w-3 h-3" />
             </a>
             <a href="https://www.linkedin.com/in/niyonshuti-emmanuel-82877b285/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 transition-colors" title="LinkedIn">
-              <LinkedInIcon className="w-5 h-5" />
+              <LinkedInIcon className="w-3 h-3" />
             </a>
             <a href="https://x.com/e_mmanuel_n" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 transition-colors" title="Twitter/X">
-              <XIcon className="w-5 h-5" />
+              <XIcon className="w-3 h-3" />
             </a>
             <a href="https://mastodon.social/@emmanuelniyonshuti" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 transition-colors" title="Mastodon">
-              <MastodonIcon className="w-5 h-5" />
+              <MastodonIcon className="w-3 h-3" />
             </a>
             <RSSLink />
           </div>
@@ -112,16 +112,16 @@ export default function Navbar() {
               {/* Social Links */}
               <div className="flex items-center space-x-6 px-3">
                 <a href="https://github.com/EmmanuelNiyonshuti" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors" title="GitHub">
-                  <GitHubIcon className="w-5 h-5" />
+                  <GitHubIcon className="w-3 h-3" />
                 </a>
                 <a href="https://www.linkedin.com/in/niyonshuti-emmanuel-82877b285/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 transition-colors" title="LinkedIn">
-                  <LinkedInIcon className="w-5 h-5" />
+                  <LinkedInIcon className="w-3 h-3" />
                 </a>
                 <a href="https://x.com/e_mmanuel_n" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 transition-colors" title="Twitter/X">
-                  <XIcon className="w-5 h-5" />
+                  <XIcon className="w-3 h-3" />
                 </a>
                 <a href="https://mastodon.social/@emmanuelniyonshuti" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 transition-colors" title="Mastodon">
-                  <MastodonIcon className="w-5 h-5" />
+                  <MastodonIcon className="w-3 h-3" />
                 </a>
                 <RSSLink />
                 <ThemeToggle />
