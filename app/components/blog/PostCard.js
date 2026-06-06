@@ -8,7 +8,7 @@ export default function PostCard({ post }) {
   return (
     <li className="flex justify-between gap-2 py-2">
       <Link className="hover:text-blue-500 hover:underline" href={`/blog/${slug}`}>{title}</Link>
-      <span className="text-sm text-gray-500">{formatDate(publishedAt || date)}</span>
+      <span className="text-xs text-gray-500">{formatDate(publishedAt || date)}</span>
     </li>
   );
 }
