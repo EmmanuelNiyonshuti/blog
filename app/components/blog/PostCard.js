@@ -6,9 +6,9 @@ export default function PostCard({ post }) {
   const { title, publishedAt, date } = frontmatter;
 
   return (
-    <li className="flex justify-between items-baseline gap-4 py-3 border-b border-gray-800">
-      <Link href={`/blog/${slug}`}>{title}</Link>
-      <span className="text-sm text-gray-500 shrink-0">{formatDate(publishedAt || date)}</span>
+    <li className="flex justify-between gap-2 py-2">
+      <Link className="hover:text-blue-500 hover:underline" href={`/blog/${slug}`}>{title}</Link>
+      <span className="text-sm text-gray-500">{formatDate(publishedAt || date)}</span>
     </li>
   );
 }

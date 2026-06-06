@@ -7,7 +7,7 @@ export default function BlogContent({ posts = [], pagination }) {
       {posts.length === 0 ? (
         <p>No posts yet.</p>
       ) : (
-        <ul style={{ listStyle: 'none', padding: 0 }}>
+        <ul>
           {posts.map((post) => (
             <PostCard key={post.slug} post={post} />
           ))}
@@ -15,7 +15,7 @@ export default function BlogContent({ posts = [], pagination }) {
       )}
 
       {pagination && pagination.totalPages > 1 && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
+        <div className="flex justify-between mt-4">
           {pagination.hasPrev
             ? <Link href={`/blog?page=${pagination.currentPage - 1}`}>← Previous</Link>
             : <span />}

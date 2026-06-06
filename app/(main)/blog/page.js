@@ -59,7 +59,7 @@ export default async function HomePage({ searchParams }) {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <Sidebar categories={categories} />
-        <main className="lg:col-span-3 order-1 lg:order-2 pl-5">
+        <main className="lg:col-span-2 order-1 lg:order-2 pl-5">
           <BlogContent posts={paginatedPosts} pagination={pagination} />
         </main>
       </div>
