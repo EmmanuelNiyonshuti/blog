@@ -104,12 +104,13 @@ export default function HomePage() {
       <Section label="open source">
         <div className="space-y-6">
           <div className="space-y-2">
-            {mine.map((p) => <ProjectItem key={p.name} {...p} />)}
-            ...
-          </div>
           <div className="space-y-4">
             <p className="text-xl text-gray-400 dark:text-gray-500">contributions</p>
             {contributions.map((p) => <ProjectItem key={p.name} {...p} />)}
+            ...
+          </div>
+            <p className="text-xl text-gray-400 dark:text-gray-500">projects</p>
+            {mine.map((p) => <ProjectItem key={p.name} {...p} />)}
             ...
           </div>
         </div>
