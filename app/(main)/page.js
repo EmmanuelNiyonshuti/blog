@@ -1,10 +1,21 @@
 import Link from 'next/link';
 
-const Section = ({ label, children }) => (
-  <div className="space-y-3">
-    <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-gray-500 font-mono">
-      {label}
-    </p>
+const Section = ({ label, href, children }) => (
+ <div className="space-y-3">
+    {href ? (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-xs uppercase tracking-widest text-blue-500 dark:text-blue-400 font-mono hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+      >
+        {label}
+      </a>
+    ) : (
+      <p className="text-xs uppercase tracking-widest text-gray-400 dark:text-gray-500 font-mono">
+        {label}
+      </p>
+    )}
     <div>{children}</div>
   </div>
 );
@@ -101,20 +112,27 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <Section label="open source">
-        <div className="space-y-6">
-          <div className="space-y-2">
+    <Section label="open source" href="https://opensource.com/resources/what-open-source">
+      <div className="space-y-6">
+        <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+          I regularly contribute to open source libraries that I use.
+        </p>
+        <div className="space-y-2">
           <div className="space-y-4">
             <p className="text-xl text-gray-400 dark:text-gray-500">contributions</p>
+            <p className="text-xs text-gray-500 dark:text-gray-500">active contributions to projects</p>
             {contributions.map((p) => <ProjectItem key={p.name} {...p} />)}
             ...
           </div>
+          <div className="space-y-4">
             <p className="text-xl text-gray-400 dark:text-gray-500">projects</p>
+            <p className="text-xs text-gray-500 dark:text-gray-500">open source tools I built and maintain</p>
             {mine.map((p) => <ProjectItem key={p.name} {...p} />)}
             ...
           </div>
         </div>
-      </Section>
+      </div>
+    </Section>
     </div>
   );
 }
