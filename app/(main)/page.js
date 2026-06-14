@@ -34,57 +34,7 @@ const skills = [
   { label: 'cloud & deployments:', items: ['Docker', 'DigitalOcean', 'Render', 'Railway', 'Vercel'] },
 ];
 
-const projects = [
-  {
-    name: 'whatdeps',
-    description: 'tiny cli tool for inspecting python projects package dependencies status on github and pypi.',
-    url: 'https://github.com/EmmanuelNiyonshuti/whatdeps',
-    mine: true,
-  },
-  {
-    name: 'sualw',
-    description: 'cli tool for suspending process logs and getting them back on demand (built purely in python3)',
-    url: 'https://github.com/EmmanuelNiyonshuti/sualw',
-    mine: true,
-  },
-  {
-    name: 'AnyIO',
-    description: 'Asynchronous networking and concurrency library that works on top of either Asyncio or Trio',
-    url: 'https://github.com/agronholm/anyio',
-    mine: false,
-  },
-  {
-    name: 'OpenAgri-Irrigation-Management',
-    description: 'OpenAgri IRM service that does Evapotranspiration (ETo) calculations and Soil Moisture Analysis, depending on the specific data input.',
-    url: 'https://github.com/agstack/OpenAgri-IrrigationManagement',
-    mine: false,
-  },
-  {
-    name: 'OpenAgri-Weather-Service',
-    description: 'OpenAgri Weather Service API that is designed to deliver weather forecasts alongside with critical agricultural indicators.',
-    url: 'https://github.com/EmmanuelNiyonshuti/OpenAgri-WeatherService',
-    mine: false,
-  },
-];
-
-const ProjectItem = ({ name, description, url }) => (
-  <div>
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-sm font-medium underline underline-offset-4 hover:text-gray-500 dark:hover:text-gray-400 transition-colors"
-    >
-      {name}
-    </a>
-    <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{description}</p>
-  </div>
-);
-
 export default function HomePage() {
-  const mine = projects.filter((p) => p.mine);
-  const contributions = projects.filter((p) => !p.mine);
-
   return (
     <div className="max-w-xl mx-auto px-6 py-15 space-y-10">
 
@@ -94,16 +44,6 @@ export default function HomePage() {
           Software developer · Kigali, Rwanda 🇷🇼
         </p>
       </Section>
-
-      <Section label="about this web blog">
-        <p className="text-sm font-mono text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
-          this web blog is for me to write(sometimes) about things I am learning/re-learning/etc in the{' '}
-          <Link href="/blog" className="underline underline-offset-4 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">blog</Link>
-         {' '}and til in{' '}
-          <Link href="/til" className="underline underline-offset-4 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">til</Link> page.
-        </p>
-      </Section>
-
       <Section label="skills">
         <div className="space-y-2">
           {skills.map(({ label, items }) => (
@@ -111,28 +51,18 @@ export default function HomePage() {
           ))}
         </div>
       </Section>
-
-    <Section label="open source" href="https://opensource.com/resources/what-open-source">
-      <div className="space-y-6">
-        <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-          I regularly contribute to open source libraries that I use.
+      <Section label="This website">
+        <p className="text-sm font-mono text-gray-600 dark:text-gray-400 leading-relaxed mt-3">
+          This site is{' '}
+          <Link href="https://github.com/EmmanuelNiyonshuti/blog" className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" target="_blank" rel="noopener noreferrer">
+          open source
+          </Link> and is written in Javascript using Next.js(+15 App Router) web framework and Tailwind CSS for styling, blogs are served
+          using next-mdx-remote to compile Markdown + JSX at runtime.
+          <br />
+          <br />
+          This site exists primarily as a place for me to blog about software things.
         </p>
-        <div className="space-y-2">
-          <div className="space-y-4">
-            <p className="text-xl text-gray-400 dark:text-gray-500">contributions</p>
-            <p className="text-xs text-gray-500 dark:text-gray-500">active contributions to projects</p>
-            {contributions.map((p) => <ProjectItem key={p.name} {...p} />)}
-            ...
-          </div>
-          <div className="space-y-4">
-            <p className="text-xl text-gray-400 dark:text-gray-500">projects</p>
-            <p className="text-xs text-gray-500 dark:text-gray-500">open source tools I built and maintain</p>
-            {mine.map((p) => <ProjectItem key={p.name} {...p} />)}
-            ...
-          </div>
-        </div>
-      </div>
-    </Section>
+      </Section>
     </div>
   );
 }
