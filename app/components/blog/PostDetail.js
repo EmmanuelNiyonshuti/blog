@@ -42,17 +42,27 @@ export default function PostDetail({ post }) {
           <div className="bg-white dark:bg-gray-800/50 rounded-3xl border border-gray-100 dark:border-gray-700/60 shadow-xl shadow-gray-200/50 dark:shadow-gray-950/40 overflow-hidden">
 
             <header className="px-7 pt-9 pb-8 sm:px-10 sm:pt-11">
-              {/* Category chip at the top left */}
-              {category && (
-                <div className="mb-5">
+
+              {/* Category chip at the top left + Edit on GitHub at top right */}
+              <div className="flex justify-between items-center mb-5">
+                {category && (
                   <Link
                     href={`/categories/${categorySlug}`}
                     className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-900/30 border border-sky-200 dark:border-sky-800 px-3 py-1 rounded-full hover:bg-sky-100 dark:hover:bg-sky-900/50 transition-colors"
                   >
                     {category}
                   </Link>
-                </div>
-              )}
+                )}
+                <a
+                  href={`https://github.com/EmmanuelNiyonshuti/blog/blob/main/posts/${slug}.md`}
+                  className="inline-flex items-center text-sm text-blue-600 hover:underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Edit on GitHub
+                </a>
+              </div>
+
               <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-50 leading-tight tracking-tight mb-5">
                 {title}
               </h1>
