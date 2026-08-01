@@ -2,7 +2,7 @@
 title: cancelling Asyncio.TaskGroup without boilerplate
 slug: cancelling-asyncio-taskgroup-without-boilerplate
 excerpt: Python>=315 have Asyncio.TaskGroup.cancel
-category: "backend development"
+category: "python"
 tags: []
 date: "2026-07-05"
 publishedAt: "2026-07-05"
