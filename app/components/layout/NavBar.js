@@ -49,6 +49,18 @@ export default function Navbar() {
               Blog
             </Link>
             <Link
+              href="/projects"
+              className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+            >
+              Projects
+            </Link>
+            <Link
+              href="/resources"
+              className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
+            >
+              Resources
+            </Link>
+            <Link
               href="/til"
               className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors"
             >
@@ -98,7 +110,13 @@ export default function Navbar() {
 
               {/* Nav Links */}
               <Link href="/blog" className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors" onClick={closeMenu}>
-                blog
+                Blog
+              </Link>
+              <Link href="/projects" className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors" onClick={closeMenu}>
+                Projects
+              </Link>
+              <Link href="/resources" className="text-gray-900 dark:text-gray-100 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors" onClick={closeMenu}>
+                Resources
               </Link>
               <Link
                 href="/til"
