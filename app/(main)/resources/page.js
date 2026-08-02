@@ -11,7 +11,7 @@ const resourceGroups = [
       {
         title: 'Simon Willison',
         url: 'https://simonwillison.net/',
-        description: 'Creator of Datasette; great for up to date Software Engineering, Python and Django content.',
+        description: 'Creator of Datasette; great for up to date agentic engineering trends, tips and python related contents.',
       },
       {
         title: 'Armin Ronacher',
@@ -21,12 +21,12 @@ const resourceGroups = [
       {
         title: 'Hynek Schlawack',
         url: 'https://hynek.me/articles/',
-        description: 'Creator of attrs and more; great for Python backend engineers.',
+        description: 'Creator of attrs and more; great blog for Python engineers.',
       },
       {
         title: 'Hugo van Kemenade',
         url: 'https://hugovk.dev/blog/',
-        description: 'Python 3.14/3.15 release manager and core developer; advanced Python and CPython internals.',
+        description: 'Python 3.14/3.15 release manager and core developer; advanced Python posts.',
       },
       {
         title: 'Nathaniel J. Smith',
@@ -36,12 +36,12 @@ const resourceGroups = [
       {
         title: 'Philip Jones',
         url: 'https://pgjones.dev/blog/',
-        description: 'Creator of Quart, core Flask maintainer. Great for Flask, Quart and Python backend development.',
+        description: 'Creator of Quart, core Flask maintainer. Great Flask, Quart and Python related posts.',
       },
       {
         title: 'Miguel Grinberg',
         url: 'https://blog.miguelgrinberg.com/index',
-        description: 'Known for the Flask Mega-Tutorial — great for Flask/SQLAlchemy/backend beginners/intermediate.',
+        description: 'Known for the Flask Mega-Tutorial — great for Flask/SQLAlchemy/backend beginners/intermediate developers.',
       },
       {
         title: 'William Woodruff',
@@ -56,17 +56,12 @@ const resourceGroups = [
       {
         title: 'Anthony Writes Code',
         url: 'https://www.youtube.com/anthonywritescode',
-        description: 'Creator of pre-commit and former core developer of pytest; mostly intermediate/advanced Python.',
+        description: 'Creator of pre-commit and former core developer of pytest; Great channel with mostly intermediate/advanced Python contents.',
       },
       {
         title: 'Corey Schafer',
         url: 'https://www.youtube.com/channel/UCCezIgC97PvUuR4_gbFUs5g',
-        description: 'Good channel for Python beginners and intermediate developers.',
-      },
-      {
-        title: 'Jon Gjengset',
-        url: 'https://www.youtube.com/c/JonGjengset',
-        description: 'Great for Rust developers or those who want intermediate Rust content.',
+        description: 'Great channel for Python developers both beginners and intermediate.',
       },
     ],
   },
@@ -76,7 +71,7 @@ const resourceGroups = [
       {
         title: 'The Pragmatic Programmer',
         url: 'https://www.amazon.com/Pragmatic-Programmer-Journeyman-Master/dp/020161622X',
-        description: `Great for software engineering best practices and software development principles.`,
+        description: `Great Book to learn software engineering best practices and software development principles.`,
       },
       {
         title: 'Design of Web APIs by Arnaud Lauret',
