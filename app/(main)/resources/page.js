@@ -1,5 +1,3 @@
-import Card from '@/app/components/links/Card';
-
 export const metadata = {
   title: 'Resources',
 };
@@ -9,44 +7,44 @@ const resourceGroups = [
     category: 'Blogs',
     resources: [
       {
-        title: 'Simon Willison',
+        title: 'Simon Willison blog',
         url: 'https://simonwillison.net/',
-        description: 'Creator of Datasette; great for up to date agentic engineering trends, tips and python related contents.',
+
       },
       {
-        title: 'Armin Ronacher',
+        title: 'Armin Ronacher blog',
         url: 'https://lucumr.pocoo.org/',
-        description: 'Creator of Flask and more. Great for software engineering and up to date software engineering trends.',
+
       },
       {
-        title: 'Hynek Schlawack',
+        title: 'Hynek Schlawack blog',
         url: 'https://hynek.me/articles/',
-        description: 'Creator of attrs and more; great blog for Python engineers.',
+
       },
       {
-        title: 'Hugo van Kemenade',
+        title: 'Hugo van Kemenade blog',
         url: 'https://hugovk.dev/blog/',
-        description: 'Python 3.14/3.15 release manager and core developer; advanced Python posts.',
+
       },
       {
-        title: 'Nathaniel J. Smith',
+        title: 'Nathaniel J. Smith blog',
         url: 'https://vorpus.org/',
-        description: 'Creator of Trio; Trio design-thought-process posts, great for learning concurrency.',
+
       },
       {
-        title: 'Philip Jones',
+        title: 'Philip Jones blog',
         url: 'https://pgjones.dev/blog/',
-        description: 'Creator of Quart, core Flask maintainer. Great Flask, Quart and Python related posts.',
+
       },
       {
-        title: 'Miguel Grinberg',
+        title: 'Miguel Grinberg blog',
         url: 'https://blog.miguelgrinberg.com/index',
-        description: 'Known for the Flask Mega-Tutorial — great for Flask/SQLAlchemy/backend beginners/intermediate developers.',
+
       },
       {
-        title: 'William Woodruff',
+        title: 'William Woodruff blog',
         url: 'https://blog.yossarian.net/',
-        description: 'Creator of zizmor; mostly in security, but also Rust and Python.',
+
       },
     ],
   },
@@ -54,14 +52,13 @@ const resourceGroups = [
     category: 'YouTube Channels',
     resources: [
       {
-        title: 'Anthony Writes Code',
+        title: 'Anthony Writes Code YT Channel',
         url: 'https://www.youtube.com/anthonywritescode',
-        description: 'Creator of pre-commit and former core developer of pytest; Great channel with mostly intermediate/advanced Python contents.',
       },
       {
-        title: 'Corey Schafer',
+        title: 'Corey Schafer YT Channel',
         url: 'https://www.youtube.com/channel/UCCezIgC97PvUuR4_gbFUs5g',
-        description: 'Great channel for Python developers both beginners and intermediate.',
+
       },
     ],
   },
@@ -69,39 +66,29 @@ const resourceGroups = [
     category: 'Software Engineering Books',
     resources: [
       {
-        title: 'The Pragmatic Programmer',
-        url: 'https://www.amazon.com/Pragmatic-Programmer-Journeyman-Master/dp/020161622X',
-        description: `Great Book to learn software engineering best practices and software development principles.`,
+        title: 'The Pragmatic Programmer by Andy Hunt and Dave Thomas',
       },
       {
         title: 'Design of Web APIs by Arnaud Lauret',
-        url: 'https://www.amazon.com/Design-Web-APIs-Arnaud-Lauret/dp/1617295108',
-        description: 'Great Book for API design and development.',
       },
     ],
   },
   {
-    category: 'Philosophy',
+    category: 'Philosophy Books',
     resources: [
       {
         title: 'Think by Simon Blackburn',
-        url: 'https://www.amazon.com/Think-Compelling-Introduction-Simon-Blackburn/dp/0192854259',
-        description: 'Great introduction to philosophy and critical thinking.',
       },
       {
         title: 'Nicomachean Ethics by Aristotle',
-        url: 'https://www.amazon.com/Nicomachean-Ethics-Penguin-Classics/dp/0140449493',
-        description: 'Great book on ethics.',
       },
     ],
   },
   {
-    category: 'Non-fiction',
+    category: 'Non-fiction Book(s)',
     resources: [
       {
         title: 'Random Family by Adrian Nicole LeBlanc',
-        url: 'https://www.amazon.com/Random-Family-Love-Drugs-Trouble/dp/0684863873',
-        description: `Great book.`,
       },
     ],
   },
@@ -109,20 +96,43 @@ const resourceGroups = [
 
 export default function ResourcesPage() {
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
+    <div className="max-w-3xl mx-auto px-2 sm:px-3 lg:px-4 py-6">
+      <div className="mb-3">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
           Resources
         </h1>
+        <p>List of resources that I have found helpful.</p>
       </div>
       {resourceGroups.map((group) => (
-        <section key={group.category} className="mb-10">
-          <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100 tracking-tight">
+        <section
+          key={group.category}
+          id={group.category.toLowerCase().replace(/\s+/g, '-')}
+          className="mb-3 scroll-mt-20"
+        >
+          <h2 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100 tracking-tight">
             {group.category}
           </h2>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
             {group.resources.map((resource) => (
-              <Card key={resource.title} {...resource} />
+              <li
+                key={resource.title}
+                className="rounded-lg bg-white dark:bg-gray-900 p-5"
+              >
+                {resource.url ? (
+                  <a
+                    href={resource.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-base font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  >
+                    {resource.title}
+                  </a>
+                ) : (
+                  <span className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                    {resource.title}
+                  </span>
+                )}
+              </li>
             ))}
           </ul>
         </section>
