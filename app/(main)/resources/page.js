@@ -77,7 +77,7 @@ const resourceGroups = [
     category: 'Philosophy Books',
     resources: [
       {
-        title: 'Think by Simon Blackburn',
+        title: 'Think: a compelling introduction to philosophy by Simon Blackburn',
       },
       {
         title: 'Nicomachean Ethics by Aristotle',
