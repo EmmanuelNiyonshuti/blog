@@ -116,7 +116,7 @@ export default function ResourcesPage() {
             {group.resources.map((resource) => (
               <li
                 key={resource.title}
-                className="rounded-lg bg-white dark:bg-gray-900 p-5"
+                className="rounded-sm bg-white dark:bg-gray-900 p-1"
               >
                 {resource.url ? (
                   <a
