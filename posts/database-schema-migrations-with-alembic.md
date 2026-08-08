@@ -2,7 +2,7 @@
 title: "Database schema migrations with Alembic"
 slug: "database-schema-migrations-with-alembic"
 excerpt: "Evolving database schema alongside your code with Alembic"
-category: "backend development"
+category: "python"
 tags: []
 coverImage: ""
 date: "2025-12-07"

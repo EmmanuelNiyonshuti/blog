@@ -2,7 +2,7 @@
 title: "blogging and llms"
 slug: "blogging-and-llms"
 excerpt: "blogging and llms"
-category: ""
+category: "AI"
 date: "2026-05-21"
 publishedAt: "2026-05-21"
 metaDescription: ""

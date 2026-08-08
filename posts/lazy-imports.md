@@ -10,9 +10,10 @@ metaDescription: ""
 ### eager imports
 Python loads and executes a module the moment you import it.
 
-Say I have a module named `heavy.py` pretending it's something like `matplotlib` that I want to import and use in my code.
+Let's take this toy example, let's say I have a module named `heavy.py` pretending it's something like `matplotlib` that I want to import and use in my code.
 
 ```python
+#heavy.py
 import time
 
 print("heavy.py: top-level code running")
@@ -22,7 +23,6 @@ print("heavy.py: done")
 def compute():
     return "some heavy computation result"
 ```
-
 Let's import this in the python repl:
 
 ```python
@@ -36,12 +36,10 @@ heavy.py: done
 'some heavy computation result'
 >>>
 ```
+We can see that default python import system, loads and executes the top-level code of the module you import. Taking an example we used of  `matplotlib` but in reality rather than using the toy script above, importing this package will pull in other packages like `numpy`, `pillow`, and other packages that it depends on. Just like many other python packages, sometimes they depend on each other and with how import system in python works this can add a small or significant overhead to your code depending on what modules you import and how you are importing them. 
 
-Default python import, loads and executes the top-level code of the module you import. a lot of modules depend on other modules that are significantly heavy, if we take `matplotlib` as an example, importing it pulls in other modules like `numpy`, `pillow`, etc, and none of those are trivial.
-
-Like if I add a library such as `matplotlib` to my virtual environment, python has a built-in way to see this:
-the `-X importtime` flag. it prints, for every module imported, how long that module's own code took to run (`self`),
-and how long it took including everything it pulls in underneath (`cumulative`).
+Lets actually install matplotlib as the example to see how long the modules it imports and itself takes to run. Luckily, Python has a built-in way to see this kind of thing.
+We can use `-X importtime` flag and print, for every module imported, how long that module's own code took to run, and how long it took including everything it pulls in(in other words its dependencies).
 
 ```bash
 $ python3 -X importtime -c "import matplotlib" 2>&1 | grep -E "numpy$|PIL$|matplotlib$"
@@ -51,14 +49,12 @@ import time:       233 |        526 |       PIL
 import time:      6169 |     175962 | matplotlib
 ```
 
-we can see on my computer that importing `matplotlib` alone costs about `176ms` cumulative, but matplotlib's own code only accounts for `6ms` of that (self). most of the cost is everything underneath it: `numpy` alone is `52ms` cumulative, and that's just one of matplotlib's dependencies. When your code imports many modules like this, which is most of the time the case, this adds up and can contribute to your application's slow startup.
+On my computer, importing matplotlib alone costs about 176ms cumulative, but matplotlib's own code only accounts for 6ms of that (self). Most of the cost comes from everything it depends on. numpy alone is 52ms cumulative, for example. Obviously this can vary depending on the computer, but there's still some kind of overhead because of how python's import system works. When your code imports many modules like this, which is normally the case, it can add up and contribute to your application's slow startup. You can check out the actual benchmarks in PEP 810, by the way -- I put the link in the conclusion section below. 
 
 ### lazy imports
 python3.15 comes with a feature called `lazy imports`. The idea is that instead of loading a module the moment it's imported, the import is deferred and the module is only loaded when it's actually used. Think of a trick people already do by importing a module inside a function instead of at the top of the file, so it's only loaded when that function runs. it's basically the same idea, now built into the language.
 
-This is also why it helps with `circular imports` which is a classic: module A's top-level code tries to run module B, whose top-level code tries to run module A back, before A has finished defining what B needs.
-
-Let's try the above same example on the python3.15 repl:
+Lets try the example we used above using but now python3.15 lazy import:
 
 ```python
 $ python3.15
@@ -91,7 +87,7 @@ True
 >>>
 ```
 
-The actual module loading is deferred until it's actually used.
+We can see that, the actual module loading is deferred until it's actually used.
 
 ### a couple of gotchas
 *you can lazy import something that doesn't exist*
@@ -125,6 +121,6 @@ run it and you get an `AttributeError`, because the module ends up loading right
 
 ### conclusion
 
-You can read more about lazy imports in [PEP 810](https://peps.python.org/pep-0810/). I hope you got something out of this, and you can now go start experimenting with and adopting this new feature.
+You can read more about lazy imports in [PEP 810](https://peps.python.org/pep-0810/). Ultimately, I hope you got something out of this, and you can now go start experimenting with and adopting this new feature.
 
 bye!
